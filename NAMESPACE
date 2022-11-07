@@ -2,6 +2,7 @@
 
 export(get_logo)
 export(hda_pal_discrete)
+export(multiply)
 export(scale_color_hda)
 export(scale_fill_hda)
 export(theme_hda)
