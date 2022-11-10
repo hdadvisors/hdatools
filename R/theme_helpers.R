@@ -5,10 +5,11 @@
 #' @import showtext
 add_google_fonts <- function() {
 
-  sysfonts::font_add_google("Lato", "Lato")
-  sysfonts::font_add_google("Roboto Slab", "Roboto Slab")
-  sysfonts::font_add_google("Open Sans", "Open Sans")
-  sysfonts::font_add_google("Poppins", "Poppins", bold.wt = 600)
+  sysfonts::font_add_google("Lato", "Lato") # HDA text
+  sysfonts::font_add_google("Roboto Slab", "Roboto Slab") # HDA headers
+  sysfonts::font_add_google("Open Sans", "Open Sans") # HFV text
+  sysfonts::font_add_google("Poppins", "Poppins", bold.wt = 600) # HFV headers
+  sysfonts::font_add_google("Noto Sans", "Noto Sans") # PHA text and headers
 
   showtext::showtext_auto()
 
