@@ -3,7 +3,6 @@
 export(get_logo)
 export(hda_pal_discrete)
 export(hfv_pal_discrete)
-export(multiply)
 export(pha_pal_discrete)
 export(scale_color_gradient_hda)
 export(scale_color_gradient_pha)

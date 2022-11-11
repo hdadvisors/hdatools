@@ -142,7 +142,7 @@ theme_hfv <- function(
 #' @import ggtext
 #' @export
 theme_pha <- function(
-    base_size = 14,
+    base_size = 10,
     base_family = "Noto Sans"
 ) {
 
@@ -192,7 +192,7 @@ theme_pha <- function(
         color = "#383c3d",
         hjust = 0L,
         vjust = 0L,
-        margin = ggplot2::margin(t = 3, b = 3, unit = "pt"),
+        margin = ggplot2::margin(t = 5, b = 20, unit = "pt"),
         face = "plain",
         family = "Noto Sans"
       ),
@@ -208,20 +208,24 @@ theme_pha <- function(
         family = "Noto Sans"
         ),
 
-      axis.title = ggplot2::element_blank(),
-
       panel.background = ggplot2::element_blank(),
-
-      legend.title = ggplot2::element_blank(),
-
-      axis.ticks = ggplot2::element_blank(),
 
       panel.grid.major.x = ggplot2::element_blank(),
 
       panel.grid.major.y = ggplot2::element_line(
         color = "grey95",
         size = 0.05
-        )
+        ),
+
+      panel.grid.minor = ggplot2::element_blank(),
+
+      legend.position = "none",
+
+      legend.title = ggplot2::element_blank(),
+
+      axis.title = ggplot2::element_blank(),
+
+      axis.ticks = ggplot2::element_blank()
 
     )
 

@@ -4,7 +4,7 @@
 \alias{theme_pha}
 \title{Use a PHA-branded ggplot2 theme}
 \usage{
-theme_pha(base_size = 14, base_family = "Noto Sans")
+theme_pha(base_size = 10, base_family = "Noto Sans")
 }
 \arguments{
 \item{base_size}{The base size of text elements; defaults to 14}
