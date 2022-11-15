@@ -1,10 +1,11 @@
 #' Generate a discrete HDA color palette
 #'
 #' @param direction If -1, reverse the palette; defaults to 1
+#' @param repeat_pal If TRUE, repeat the palette enough times to account for all discrete values
 #'
 #' @return n colors (generally passed to ggplot2)
 #' @export
-hda_pal_discrete <- function(direction = 1) {
+hda_pal_discrete <- function(direction = 1, repeat_pal = FALSE) {
 
   pal <- c(
     "#445ca9", # Blue
@@ -16,6 +17,13 @@ hda_pal_discrete <- function(direction = 1) {
   )
 
   function(n) {
+
+    if (repeat_pal) {
+      if (n > length(pal)) {
+        times <- ceiling(n / length(pal))
+        pal <- rep(pal, times)
+      }
+    }
 
     pal_n <- pal[1:n]
 
@@ -94,11 +102,14 @@ pha_pal_discrete <- function(direction = 1) {
 #' HDA-branded discrete color scale
 #'
 #' @param direction If -1, reverse the scale (defaults to 1)
+#' @param repeat_pal If TRUE, repeat the palette enough times to account for all discrete values
+#'
 #' @import ggplot2
 #' @export
-scale_color_hda <- function(direction = 1, ...) {
+scale_color_hda <- function(direction = 1, repeat_pal = FALSE, ...) {
   ggplot2::discrete_scale(
-    "colour", "hda", palette = hda_pal_discrete(direction = direction),
+    "colour", "hda", palette = hda_pal_discrete(direction = direction,
+                                                repeat_pal = repeat_pal),
     ...
   )
 }
@@ -132,9 +143,10 @@ scale_color_pha <- function(direction = 1, ...) {
 #' @param direction If -1, reverse the scale (defaults to 1)
 #' @import ggplot2
 #' @export
-scale_fill_hda <- function(direction = 1, ...) {
+scale_fill_hda <- function(direction = 1, repeat_pal = FALSE, ...) {
   ggplot2::discrete_scale(
-    "fill", "hda", palette = hda_pal_discrete(direction),
+    "fill", "hda", palette = hda_pal_discrete(direction,
+                                              repeat_pal = repeat_pal),
     ...
   )
 }
