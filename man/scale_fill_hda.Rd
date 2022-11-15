@@ -4,7 +4,7 @@
 \alias{scale_fill_hda}
 \title{HDA-branded discrete fill scale}
 \usage{
-scale_fill_hda(direction = 1, ...)
+scale_fill_hda(direction = 1, repeat_pal = FALSE, ...)
 }
 \arguments{
 \item{direction}{If -1, reverse the scale (defaults to 1)}
