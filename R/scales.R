@@ -178,7 +178,7 @@ scale_color_gradient_hda <- function(...,
                                      colors = c("#445ca9","#8baeaa","#e9ab3f","#e76f52"),
                                      values = NULL,
                                      space = "Lab",
-                                     na.value = "cfcfd0",
+                                     na.value = "#cfcfd0",
                                      guide = "colorbar") {
   ggplot2::continuous_scale(
     aesthetics = "color",
@@ -205,10 +205,37 @@ scale_color_gradient_pha <- function(...,
                                      colors = c("#5bab8e","#a6cccc","#f39152","#be451c"),
                                      values = NULL,
                                      space = "Lab",
-                                     na.value = "e2e4e3",
+                                     na.value = "#e2e4e3",
                                      guide = "colorbar") {
   ggplot2::continuous_scale(
     aesthetics = "color",
+    scale_name = "pha",
+    palette = scales::gradient_n_pal(colors, values, space),
+    na.value = na.value,
+    guide = guide,
+    ...
+  )
+}
+
+#' PHA-branded 4-color continuous fill scale
+#'
+#' @param colors Vector of colors
+#' @param values If colors should not be evenly positioned along the gradient, this vector gives the position (between 0 and 1) for each color in the vector
+#' @param space Color space in which to calculate gradient. Must be "Lab" - other values depreciated
+#' @param na.value Default color for NA values (#e2e4e3, PHA Light Gray)
+#' @param guide Legend representation for scale
+#' @param ... Other arguments passed on to continuous_scale()
+#' @import ggplot2
+#' @import scales
+#' @export
+scale_fill_gradient_pha <- function(...,
+                                     colors = c("#5bab8e","#a6cccc","#f39152","#be451c"),
+                                     values = NULL,
+                                     space = "Lab",
+                                     na.value = "#e2e4e3",
+                                     guide = "colorbar") {
+  ggplot2::continuous_scale(
+    aesthetics = "fill",
     scale_name = "pha",
     palette = scales::gradient_n_pal(colors, values, space),
     na.value = na.value,

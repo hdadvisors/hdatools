@@ -15,8 +15,6 @@ add_google_fonts <- function() {
 
 }
 
-
-
 #' Get a logo for use in a ggplot2 plot
 #'
 #' @param type one of "hda" or "hfv"
@@ -38,3 +36,28 @@ get_logo <- function(type = c("hda", "hfv"), width = 100) {
   out
 
   }
+
+#' Flip default major gridlines from horizontal to vertical
+#'
+#' @param color Gridline color
+#' @param size Gridline size
+#'
+#' @import ggplot2
+#' @export
+flip_gridlines <- function(
+    color = "#e2e4e3",
+    size = 0.05
+) {
+
+  ggplot2::theme(
+
+    panel.grid.major.y = ggplot2::element_blank(),
+
+    panel.grid.major.x = ggplot2::element_line(
+      color = color,
+      size = size
+    )
+
+  )
+
+}

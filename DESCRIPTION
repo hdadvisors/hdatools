@@ -1,7 +1,7 @@
 Package: hdatools
 Type: Package
 Title: Tools and Themes for 'HDAdvisors' Projects
-Version: 0.0.2
+Version: 0.0.3
 Author: HDAdvisors
 Authors@R: c(
     person("Walker", "Kyle", email = "kyle@walker-data.com", role = "cre"),
@@ -19,4 +19,4 @@ Imports:
   showtext,
   sysfonts,
   glue
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.2

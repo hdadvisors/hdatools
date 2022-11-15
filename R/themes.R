@@ -203,17 +203,21 @@ theme_pha <- function(
         hjust = 0L,
         vjust = 0L,
         margin = ggplot2::margin(t = 10, unit = "pt"),
-        lineheight = 0.9,
+        lineheight = 1.1,
         face = "plain",
         family = "Noto Sans"
         ),
+
+      plot.title.position = "plot",
+
+      plot.caption.position = "plot",
 
       panel.background = ggplot2::element_blank(),
 
       panel.grid.major.x = ggplot2::element_blank(),
 
       panel.grid.major.y = ggplot2::element_line(
-        color = "grey95",
+        color = "#e2e4e3",
         size = 0.05
         ),
 

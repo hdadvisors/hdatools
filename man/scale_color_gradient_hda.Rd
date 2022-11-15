@@ -9,7 +9,7 @@ scale_color_gradient_hda(
   colors = c("#445ca9", "#8baeaa", "#e9ab3f", "#e76f52"),
   values = NULL,
   space = "Lab",
-  na.value = "cfcfd0",
+  na.value = "#cfcfd0",
   guide = "colorbar"
 )
 }
