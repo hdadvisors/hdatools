@@ -1,9 +1,12 @@
 Package: hdatools
 Type: Package
 Title: Tools and Themes for 'HDAdvisors' Projects
-Version: 0.0.1
+Version: 0.0.3
 Author: HDAdvisors
-Maintainer: Kyle Walker <kyle@walker-data.com>
+Authors@R: c(
+    person("Walker", "Kyle", email = "kyle@walker-data.com", role = "cre"),
+    person("Knopf", "Jonathan", email = "jonathan@hdadvisors.net", role = "aut"),
+    person("Mai", "Eric", email = "eric@hdadvisors.net", role = "aut"))
 Description: Tools and workflows for HDAdvisors and HousingForward Virginia Projects.
     Functions include general analytical utilities and custom ggplot2 themes.
 License: file LICENSE
@@ -11,8 +14,9 @@ Encoding: UTF-8
 LazyData: true
 Imports: 
   ggplot2,
+  scales,
   ggtext,
   showtext,
   sysfonts,
   glue
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.2

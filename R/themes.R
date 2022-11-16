@@ -133,4 +133,104 @@ theme_hfv <- function(
 
 }
 
+#' Use a PHA-branded ggplot2 theme
+#'
+#' @param base_size The base size of text elements; defaults to 14
+#' @param base_family The base font family; defaults to "Noto Sans"
+#'
+#' @import ggplot2
+#' @import ggtext
+#' @export
+theme_pha <- function(
+    base_size = 10,
+    base_family = "Noto Sans"
+) {
 
+  # Add Noto Sans if not available
+  add_google_fonts()
+
+  ggplot2::theme_minimal() %+replace%
+
+    ggplot2::theme(
+
+      rect = ggplot2::element_rect(
+        fill = "white",
+        colour = "black",
+        size = 0.5,
+        linetype = 1L
+      ),
+
+      text = ggplot2::element_text(
+        family = base_family,
+        face = "plain",
+        size = base_size,
+        colour = "#383c3d",
+        hjust = 0.5,
+        vjust = 0.5,
+        angle = 0,
+        lineheight = 1,
+        margin = ggplot2::margin(),
+        debug = FALSE
+      ),
+
+      line = ggplot2::element_line(colour = "#000000",
+                                   size = 1,
+                                   linetype = 1L,
+                                   lineend = "butt"),
+
+      plot.title = ggplot2::element_text(
+        size = base_size * 1.25,
+        color = "#383c3d",
+        hjust = 0L,
+        vjust = 0L,
+        face = "bold",
+        family = "Noto Sans"
+      ),
+
+      plot.subtitle = ggplot2::element_text(
+        size = base_size * 1.125,
+        color = "#383c3d",
+        hjust = 0L,
+        vjust = 0L,
+        margin = ggplot2::margin(t = 5, b = 20, unit = "pt"),
+        face = "plain",
+        family = "Noto Sans"
+      ),
+
+      plot.caption = ggtext::element_markdown(
+        size = base_size * 0.875,
+        color = "#383c3d",
+        hjust = 0L,
+        vjust = 0L,
+        margin = ggplot2::margin(t = 10, unit = "pt"),
+        lineheight = 1.1,
+        face = "plain",
+        family = "Noto Sans"
+        ),
+
+      plot.title.position = "plot",
+
+      plot.caption.position = "plot",
+
+      panel.background = ggplot2::element_blank(),
+
+      panel.grid.major.x = ggplot2::element_blank(),
+
+      panel.grid.major.y = ggplot2::element_line(
+        color = "#e2e4e3",
+        size = 0.05
+        ),
+
+      panel.grid.minor = ggplot2::element_blank(),
+
+      legend.position = "none",
+
+      legend.title = ggplot2::element_blank(),
+
+      axis.title = ggplot2::element_blank(),
+
+      axis.ticks = ggplot2::element_blank()
+
+    )
+
+}
