@@ -4,10 +4,12 @@
 \alias{scale_fill_pha}
 \title{PHA-branded discrete fill scale}
 \usage{
-scale_fill_pha(direction = 1, ...)
+scale_fill_pha(direction = 1, repeat_pal = FALSE, ...)
 }
 \arguments{
 \item{direction}{If -1, reverse the scale (defaults to 1)}
+
+\item{repeat_pal}{If TRUE, repeat the palette enough times to account for all discrete values}
 }
 \description{
 PHA-branded discrete fill scale

@@ -4,10 +4,12 @@
 \alias{pha_pal_discrete}
 \title{Generate a discrete PHA color palette}
 \usage{
-pha_pal_discrete(direction = 1)
+pha_pal_discrete(direction = 1, repeat_pal = FALSE)
 }
 \arguments{
 \item{direction}{If -1, reverse the palette; defaults to 1}
+
+\item{repeat_pal}{If TRUE, repeat the palette enough times to account for all discrete values}
 }
 \value{
 n colors (generally passed to ggplot2)

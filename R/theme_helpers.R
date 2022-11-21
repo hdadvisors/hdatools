@@ -61,3 +61,32 @@ flip_gridlines <- function(
   )
 
 }
+
+#' Align axis line to zero and mark darker
+#'
+#' @param axis Apply to "x" or "y" axis
+#'
+#' @import ggplot2
+#' @export
+add_axis_line <- function(axis = c("x", "y")) {
+
+  if(axis == "x") {
+
+    list(
+      ggplot2::scale_x_continuous(expand = expansion(mult = c(0, 0.05))),
+      ggplot2::theme(
+        axis.line.y = element_line(color = "#383c3d", size = 0.5)
+      )
+    )
+
+  } else {
+
+    list(
+      ggplot2::scale_y_continuous(expand = expansion(mult = c(0, 0.05))),
+      ggplot2::theme(
+        axis.line.x = element_line(color = "#383c3d", size = 0.5)
+      )
+    )
+  }
+
+}
