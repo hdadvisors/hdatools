@@ -72,11 +72,11 @@ add_zero_line <- function(axis = c("x", "y")) {
 
   if(axis == "x") {
 
-    ggplot2::geom_vline(yintercept = 0, color = "#383c3d", size = 0.5)
+    ggplot2::geom_vline(xintercept = 0, color = "#383c3d", size = 0.5)
 
   } else {
 
-    ggplot2::geom_hline(xintercept = 0, color = "#383c3d", size = 0.5)
+    ggplot2::geom_hline(yintercept = 0, color = "#383c3d", size = 0.5)
 
   }
 
