@@ -178,7 +178,7 @@ theme_pha <- function(
                                    linetype = 1L,
                                    lineend = "butt"),
 
-      plot.title = ggplot2::element_text(
+      plot.title = ggtext::element_markdown(
         size = base_size * 1.25,
         color = "#383c3d",
         hjust = 0L,
@@ -187,7 +187,7 @@ theme_pha <- function(
         family = "Noto Sans"
       ),
 
-      plot.subtitle = ggplot2::element_text(
+      plot.subtitle = ggtext::element_markdown(
         size = base_size * 1.125,
         color = "#383c3d",
         hjust = 0L,
@@ -217,7 +217,7 @@ theme_pha <- function(
       panel.grid.major.x = ggplot2::element_blank(),
 
       panel.grid.major.y = ggplot2::element_line(
-        color = "#e2e4e3",
+        color = "#cbcdcc",
         size = 0.05
         ),
 

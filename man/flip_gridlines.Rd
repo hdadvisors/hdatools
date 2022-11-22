@@ -4,7 +4,7 @@
 \alias{flip_gridlines}
 \title{Flip default major gridlines from horizontal to vertical}
 \usage{
-flip_gridlines(color = "#e2e4e3", size = 0.05)
+flip_gridlines(color = "#cbcdcc", size = 0.05)
 }
 \arguments{
 \item{color}{Gridline color}
