@@ -11,9 +11,6 @@ theme_hda <- function(
     base_family = "Lato"
   ) {
 
-  # Add Lato / Roboto if not available
-  add_google_fonts()
-
   ggplot2::theme_minimal() %+replace%
 
   ggplot2::theme(
@@ -79,9 +76,6 @@ theme_hfv <- function(
     base_family = "Open Sans"
 ) {
 
-  # Add Lato / Roboto if not available
-  add_google_fonts()
-
   ggplot2::theme_minimal() %+replace%
 
     ggplot2::theme(
@@ -145,9 +139,6 @@ theme_pha <- function(
     base_size = 10,
     base_family = "Noto Sans"
 ) {
-
-  # Add Noto Sans if not available
-  add_google_fonts()
 
   ggplot2::theme_minimal() %+replace%
 

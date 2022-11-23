@@ -4,7 +4,7 @@
 \alias{hfv_pal_discrete}
 \title{Generate a discrete HFV color palette}
 \usage{
-hfv_pal_discrete(direction = 1)
+hfv_pal_discrete(direction = 1, repeat_pal = FALSE)
 }
 \arguments{
 \item{direction}{If -1, reverse the palette; defaults to 1}
