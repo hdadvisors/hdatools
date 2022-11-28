@@ -2,6 +2,7 @@ Package: hdatools
 Type: Package
 Title: Tools and Themes for 'HDAdvisors' Projects
 Version: 0.1.2
+Date: 2022-11-28
 Author: HDAdvisors
 Authors@R: c(
     person("Walker", "Kyle", email = "kyle@walker-data.com", role = "cre"),
