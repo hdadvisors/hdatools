@@ -44,7 +44,7 @@ hda_pal_discrete <- function(direction = 1, repeat_pal = FALSE) {
 #'
 #' @return n colors (generally passed to ggplot2)
 #' @export
-hfv_pal_discrete <- function(direction = 1) {
+hfv_pal_discrete <- function(direction = 1, repeat_pal = FALSE) {
 
   pal <- c(
     "#334a66", # Shadow
