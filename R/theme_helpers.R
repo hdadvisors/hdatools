@@ -81,3 +81,16 @@ add_zero_line <- function(axis = c("x", "y")) {
   }
 
 }
+
+
+align_categories <- function(input, category) {
+
+    # Example: we take the palette and order it in a way that makes sense
+    if (category == "race") {
+      possible_values <- c("White", "Black", "Hispanic", "Asian",
+                           "Multiracial", "Other")
+
+      return(possible_values[1:length(input)])
+    }
+  }
+

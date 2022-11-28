@@ -4,7 +4,7 @@
 \alias{scale_color_hda}
 \title{HDA-branded discrete color scale}
 \usage{
-scale_color_hda(direction = 1, repeat_pal = FALSE, ...)
+scale_color_hda(direction = 1, repeat_pal = FALSE, category = NULL, ...)
 }
 \arguments{
 \item{direction}{If -1, reverse the scale (defaults to 1)}

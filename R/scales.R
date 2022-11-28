@@ -121,7 +121,7 @@ pha_pal_discrete <- function(direction = 1, repeat_pal = FALSE) {
 #' @param repeat_pal If TRUE, repeat the palette enough times to account for all discrete values
 #' @import ggplot2
 #' @export
-scale_color_hda <- function(direction = 1, repeat_pal = FALSE, ...) {
+scale_color_hda <- function(direction = 1, repeat_pal = FALSE, category = NULL, ...) {
   ggplot2::discrete_scale(
     "colour", "hda", palette = hda_pal_discrete(direction = direction,
                                                 repeat_pal = repeat_pal),
@@ -163,12 +163,25 @@ scale_color_pha <- function(direction = 1, repeat_pal = FALSE, ...) {
 #' @param repeat_pal If TRUE, repeat the palette enough times to account for all discrete values
 #' @import ggplot2
 #' @export
-scale_fill_hda <- function(direction = 1, repeat_pal = FALSE, ...) {
-  ggplot2::discrete_scale(
-    "fill", "hda", palette = hda_pal_discrete(direction,
-                                              repeat_pal = repeat_pal),
-    ...
-  )
+scale_fill_hda <- function(direction = 1, repeat_pal = FALSE, category = NULL, ...) {
+
+  if (!is.null(category)) {
+
+    ggplot2::discrete_scale(
+      "fill", "hda", palette = hda_pal_discrete(direction,
+                                                repeat_pal = repeat_pal),
+      limits = function(x) align_categories(input = x, category = category), ...
+    )
+
+  } else {
+    ggplot2::discrete_scale(
+      "fill", "hda", palette = hda_pal_discrete(direction,
+                                                repeat_pal = repeat_pal),
+      ...
+    )
+  }
+
+
 }
 
 #' HFV-branded discrete fill scale
