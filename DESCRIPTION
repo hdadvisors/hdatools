@@ -1,7 +1,7 @@
 Package: hdatools
 Type: Package
 Title: Tools and Themes for 'HDAdvisors' Projects
-Version: 0.1.2
+Version: 0.1.3
 Date: 2022-11-28
 Author: HDAdvisors
 Authors@R: c(

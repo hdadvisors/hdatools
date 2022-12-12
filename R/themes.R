@@ -72,7 +72,7 @@ theme_hda <- function(
 #' @import ggtext
 #' @export
 theme_hfv <- function(
-    base_size = 14,
+    base_size = 12,
     base_family = "Open Sans"
 ) {
 
@@ -115,7 +115,7 @@ theme_hfv <- function(
       ),
 
       plot.subtitle = ggtext::element_markdown(
-        size = base_size * 1.125,
+        size = base_size,
         color = "#383c3d",
         hjust = 0L,
         vjust = 0L,
