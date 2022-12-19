@@ -90,7 +90,26 @@ align_categories <- function(input, category) {
       possible_values <- c("White", "Black", "Hispanic", "Asian",
                            "Multiracial", "Other")
 
-      return(possible_values[1:length(input)])
+
+    } else if (category == "tenure") {
+
+      possible_values <- c("Homeowner", "Renter")
+
+    } else if (category == "housing") {
+
+      possible_values <- c("Single-family", "Duplex",
+                           "3-4 units", "5 or more units")
     }
-  }
+
+  return(possible_values[1:length(input)])
+
+}
+
+# Function to try to automate tabulation of categories
+# for common use-cases
+
+# Think this through more
+collapse_acs_categories <- function(input, source = "tidycensus") {
+
+}
 
