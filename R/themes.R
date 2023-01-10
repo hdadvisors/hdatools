@@ -26,7 +26,7 @@ theme_hda <- function(
       family = base_family,
       face = "plain",
       size = base_size,
-      colour = "black",
+      colour = "#383c3d",
       hjust = 0.5,
       vjust = 0.5,
       angle = 0,
@@ -40,23 +40,58 @@ theme_hda <- function(
                                  linetype = 1L,
                                  lineend = "butt"),
 
-    plot.title = ggplot2::element_text(
-      size = base_size * 1.5,
-      hjust = 0L,
-      vjust = 0L,
-      face = "bold",
-      family = "Roboto Slab"
-    ),
-
-    plot.subtitle = ggplot2::element_text(
+    plot.title = ggtext::element_markdown(
       size = base_size * 1.25,
+      color = "#383c3d",
       hjust = 0L,
       vjust = 0L,
       face = "bold",
       family = "Roboto Slab"
     ),
 
-    plot.caption = ggtext::element_markdown(hjust = 1, vjust = 0)
+    plot.subtitle = ggtext::element_markdown(
+      size = base_size * 1.125,
+      color = "#383c3d",
+      hjust = 0L,
+      vjust = 0L,
+      margin = ggplot2::margin(t = 5, b = 20, unit = "pt"),
+      face = "plain",
+      family = "Roboto Slab"
+    ),
+
+    plot.caption = ggtext::element_markdown(
+      size = base_size * 0.875,
+      color = "#383c3d",
+      hjust = 0L,
+      vjust = 0L,
+      margin = ggplot2::margin(t = 10, unit = "pt"),
+      lineheight = 1.1,
+      face = "plain",
+      family = "Lato"
+    ),
+
+    plot.title.position = "plot",
+
+    plot.caption.position = "plot",
+
+    panel.background = ggplot2::element_blank(),
+
+    panel.grid.major.x = ggplot2::element_blank(),
+
+    panel.grid.major.y = ggplot2::element_line(
+      color = "#cbcdcc",
+      size = 0.05
+    ),
+
+    panel.grid.minor = ggplot2::element_blank(),
+
+    legend.position = "none",
+
+    legend.title = ggplot2::element_blank(),
+
+    axis.title = ggplot2::element_blank(),
+
+    axis.ticks = ggplot2::element_blank()
 
   )
 
