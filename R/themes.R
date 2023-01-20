@@ -45,6 +45,7 @@ theme_hda <- function(
       color = "#383c3d",
       hjust = 0L,
       vjust = 0L,
+      margin = ggplot2::margin(b = 10, unit = "pt"),
       face = "bold",
       family = "Roboto Slab"
     ),
@@ -54,7 +55,7 @@ theme_hda <- function(
       color = "#383c3d",
       hjust = 0L,
       vjust = 0L,
-      margin = ggplot2::margin(t = 5, b = 20, unit = "pt"),
+      margin = ggplot2::margin(t = -5, b = 10, unit = "pt"),
       face = "plain",
       family = "Roboto Slab"
     ),
