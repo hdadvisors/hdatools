@@ -3,6 +3,7 @@
 #' @keywords internal
 #' @import sysfonts
 #' @import showtext
+#' @importFrom knitr opts_chunk
 add_google_fonts <- function() {
 
   sysfonts::font_add_google("Lato", "Lato") # HDA text
@@ -12,6 +13,8 @@ add_google_fonts <- function() {
   sysfonts::font_add_google("Noto Sans", "Noto Sans") # PHA text and headers
 
   showtext::showtext_auto()
+
+  knitr::opts_chunk$set(fig.showtext = TRUE)
 
 }
 
