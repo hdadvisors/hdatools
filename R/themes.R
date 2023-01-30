@@ -7,7 +7,7 @@
 #' @import ggtext
 #' @export
 theme_hda <- function(
-    base_size = 14,
+    base_size = 12,
     base_family = "Lato"
   ) {
 
