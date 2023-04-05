@@ -1,8 +1,8 @@
 Package: hdatools
 Type: Package
 Title: Tools and Themes for 'HDAdvisors' Projects
-Version: 0.1.3
-Date: 2022-11-28
+Version: 0.1.4
+Date: 2023-01-25
 Author: HDAdvisors
 Authors@R: c(
     person("Walker", "Kyle", email = "kyle@walker-data.com", role = "cre"),
@@ -19,5 +19,6 @@ Imports:
   ggtext,
   showtext,
   sysfonts,
-  glue
+  glue,
+  knitr
 RoxygenNote: 7.2.3
