@@ -127,7 +127,7 @@ theme_hfv <- function(
         family = base_family,
         face = "plain",
         size = base_size,
-        colour = "black",
+        colour = "#383c3d",
         hjust = 0.5,
         vjust = 0.5,
         angle = 0,
@@ -141,21 +141,22 @@ theme_hfv <- function(
                                    linetype = 1L,
                                    lineend = "butt"),
 
-      plot.title = ggtext::element_markdown(
+      plot.title = ggtext::element_textbox_simple(
         size = base_size * 1.25,
         color = "#383c3d",
         hjust = 0L,
         vjust = 0L,
+        margin = ggplot2::margin(b = 10, unit = "pt"),
         face = "bold",
         family = "Open Sans"
       ),
 
-      plot.subtitle = ggtext::element_markdown(
+      plot.subtitle = ggtext::element_textbox_simple(
         size = base_size,
         color = "#383c3d",
         hjust = 0L,
         vjust = 0L,
-        margin = ggplot2::margin(t = 5, b = 20, unit = "pt"),
+        margin = ggplot2::margin(t = -5, b = 10, unit = "pt"),
         face = "plain",
         family = "Open Sans"
       ),
