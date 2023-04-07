@@ -84,3 +84,24 @@ add_zero_line <- function(axis = c("x", "y")) {
   }
 
 }
+
+#' Create dynamic graphic from plot object when document rendered as HTML
+#'
+#' @param plot ggplot object
+#'
+#' @import ggiraph
+#' @export
+publish_plot <- function(plot) {
+
+  if (knitr::is_html_output()) {
+
+    girafe(ggobj = plot,
+           height_svg = 4)
+
+  } else {
+
+    plot
+
+  }
+
+}
