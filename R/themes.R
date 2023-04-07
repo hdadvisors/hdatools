@@ -2,13 +2,15 @@
 #'
 #' @param base_size The base size of text elements; defaults to 14
 #' @param base_family The base font family; defaults to "Lato"
+#' @param flip_gridlines Orientation of major gridlines; defaults to FALSE for y-axis
 #'
 #' @import ggplot2
 #' @import ggtext
 #' @export
 theme_hda <- function(
     base_size = 12,
-    base_family = "Lato"
+    base_family = "Lato",
+    flip_gridlines = FALSE
   ) {
 
   ggplot2::theme_minimal() %+replace%
@@ -77,13 +79,6 @@ theme_hda <- function(
 
     panel.background = ggplot2::element_blank(),
 
-    panel.grid.major.x = ggplot2::element_blank(),
-
-    panel.grid.major.y = ggplot2::element_line(
-      color = "#cbcdcc",
-      size = 0.05
-    ),
-
     panel.grid.minor = ggplot2::element_blank(),
 
     legend.position = "none",
@@ -94,7 +89,35 @@ theme_hda <- function(
 
     axis.ticks = ggplot2::element_blank()
 
-  )
+  ) +
+
+    if(flip_gridlines == FALSE) {
+
+      ggplot2::theme(
+
+        panel.grid.major.x = ggplot2::element_blank(),
+
+        panel.grid.major.y = ggplot2::element_line(
+          color = "#cbcdcc",
+          size = 0.05
+        )
+
+      )
+
+    } else {
+
+      ggplot2::theme(
+
+        panel.grid.major.y = ggplot2::element_blank(),
+
+        panel.grid.major.x = ggplot2::element_line(
+          color = "#cbcdcc",
+          size = 0.05
+        )
+
+      )
+
+    }
 
 }
 
@@ -103,13 +126,15 @@ theme_hda <- function(
 #'
 #' @param base_size The base size of text elements; defaults to 14
 #' @param base_family The base font family; defaults to "Open Sans"
+#' @param flip_gridlines Orientation of major gridlines; defaults to FALSE for y-axis
 #'
 #' @import ggplot2
 #' @import ggtext
 #' @export
 theme_hfv <- function(
     base_size = 12,
-    base_family = "Open Sans"
+    base_family = "Open Sans",
+    flip_gridlines = FALSE
 ) {
 
   ggplot2::theme_minimal() %+replace%
@@ -178,13 +203,6 @@ theme_hfv <- function(
 
       panel.background = ggplot2::element_blank(),
 
-      panel.grid.major.x = ggplot2::element_blank(),
-
-      panel.grid.major.y = ggplot2::element_line(
-        color = "#cbcdcc",
-        size = 0.05
-      ),
-
       panel.grid.minor = ggplot2::element_blank(),
 
       legend.position = "none",
@@ -195,7 +213,35 @@ theme_hfv <- function(
 
       axis.ticks = ggplot2::element_blank()
 
-    )
+    ) +
+
+    if(flip_gridlines == FALSE) {
+
+      ggplot2::theme(
+
+        panel.grid.major.x = ggplot2::element_blank(),
+
+        panel.grid.major.y = ggplot2::element_line(
+          color = "#cbcdcc",
+          size = 0.05
+        )
+
+      )
+
+    } else {
+
+      ggplot2::theme(
+
+        panel.grid.major.y = ggplot2::element_blank(),
+
+        panel.grid.major.x = ggplot2::element_line(
+          color = "#cbcdcc",
+          size = 0.05
+        )
+
+      )
+
+    }
 
 }
 
