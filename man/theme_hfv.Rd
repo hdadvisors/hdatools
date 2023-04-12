@@ -4,7 +4,7 @@
 \alias{theme_hfv}
 \title{Use a HousingForward Virginia-branded ggplot2 theme}
 \usage{
-theme_hfv(base_size = 12, base_family = "Open Sans", flip_gridlines = FALSE)
+theme_hfv(base_size = 10, base_family = "Open Sans", flip_gridlines = FALSE)
 }
 \arguments{
 \item{base_size}{The base size of text elements; defaults to 14}

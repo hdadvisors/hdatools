@@ -132,7 +132,7 @@ theme_hda <- function(
 #' @import ggtext
 #' @export
 theme_hfv <- function(
-    base_size = 12,
+    base_size = 10,
     base_family = "Open Sans",
     flip_gridlines = FALSE
 ) {
