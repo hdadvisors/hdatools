@@ -7,7 +7,7 @@
 theme_hfv(base_size = 10, base_family = "Open Sans", flip_gridlines = FALSE)
 }
 \arguments{
-\item{base_size}{The base size of text elements; defaults to 14}
+\item{base_size}{The base size of text elements; defaults to 10}
 
 \item{base_family}{The base font family; defaults to "Open Sans"}
 

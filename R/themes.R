@@ -124,7 +124,7 @@ theme_hda <- function(
 
 #' Use a HousingForward Virginia-branded ggplot2 theme
 #'
-#' @param base_size The base size of text elements; defaults to 14
+#' @param base_size The base size of text elements; defaults to 10
 #' @param base_family The base font family; defaults to "Open Sans"
 #' @param flip_gridlines Orientation of major gridlines; defaults to FALSE for y-axis
 #'
