@@ -186,7 +186,7 @@ theme_hfv <- function(
         family = "Open Sans"
       ),
 
-      plot.caption = ggtext::element_markdown(
+      plot.caption = ggtext::element_textbox_simple(
         size = base_size * 0.875,
         color = "#383c3d",
         hjust = 0L,
