@@ -67,11 +67,13 @@ flip_gridlines <- function(
 
 #' Add darker line to zero intercept
 #'
-#' @param axis Apply to "x" or "y" axis
+#' @param axis Apply to "x" or "y" axis.  Defaults to "y".
 #'
 #' @import ggplot2
 #' @export
-add_zero_line <- function(axis = c("x", "y")) {
+add_zero_line <- function(axis = c("y", "x")) {
+
+  axis <- match.arg(axis)
 
   if(axis == "x") {
 

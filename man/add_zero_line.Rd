@@ -4,10 +4,10 @@
 \alias{add_zero_line}
 \title{Add darker line to zero intercept}
 \usage{
-add_zero_line(axis = c("x", "y"))
+add_zero_line(axis = c("y", "x"))
 }
 \arguments{
-\item{axis}{Apply to "x" or "y" axis}
+\item{axis}{Apply to "x" or "y" axis.  Defaults to "y".}
 }
 \description{
 Add darker line to zero intercept
