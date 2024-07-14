@@ -24,8 +24,7 @@ automatic factor level ordering. It creates a factor where the levels are
 ordered according to the sequence they appear in the case_when conditions.
 }
 \note{
-This function was adapted from an answer provided to StackOverflow post
-  [#69333730](https://stackoverflow.com/a/69333730).
+This function was adapted from an answer provided to StackOverflow post #69333730 (\url{https://stackoverflow.com/a/69333730})
 }
 \examples{
 library(dplyr)

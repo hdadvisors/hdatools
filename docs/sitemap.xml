@@ -4,9 +4,6 @@
     <loc>/404.html</loc>
   </url>
   <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
     <loc>/articles/branded-themes.html</loc>
   </url>
   <url>
@@ -19,13 +16,22 @@
     <loc>/index.html</loc>
   </url>
   <url>
+    <loc>/LICENSE-text.html</loc>
+  </url>
+  <url>
     <loc>/news/index.html</loc>
   </url>
   <url>
     <loc>/reference/add_google_fonts.html</loc>
   </url>
   <url>
+    <loc>/reference/add_reliability.html</loc>
+  </url>
+  <url>
     <loc>/reference/add_zero_line.html</loc>
+  </url>
+  <url>
+    <loc>/reference/fct_case_when.html</loc>
   </url>
   <url>
     <loc>/reference/flip_gridlines.html</loc>
@@ -47,6 +53,9 @@
   </url>
   <url>
     <loc>/reference/pha_pal_discrete.html</loc>
+  </url>
+  <url>
+    <loc>/reference/publish_plot.html</loc>
   </url>
   <url>
     <loc>/reference/scale_color_gradient_hda.html</loc>

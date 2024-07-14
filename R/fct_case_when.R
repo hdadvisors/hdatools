@@ -15,8 +15,7 @@
 #'
 #' @import dplyr
 #'
-#' @note This function was adapted from an answer provided to StackOverflow post
-#'   [#69333730](https://stackoverflow.com/a/69333730).
+#' @note This function was adapted from an answer provided to StackOverflow post #69333730 (\url{https://stackoverflow.com/a/69333730})
 #'
 #' @examples
 #' library(dplyr)
