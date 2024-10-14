@@ -4,7 +4,12 @@
 \alias{theme_hda}
 \title{Use an HDAdvisors-branded ggplot2 theme}
 \usage{
-theme_hda(base_size = 12, base_family = "Lato", flip_gridlines = FALSE)
+theme_hda(
+  base_size = 14,
+  base_family = "Lato",
+  flip_gridlines = FALSE,
+  output_format = NULL
+)
 }
 \arguments{
 \item{base_size}{The base size of text elements; defaults to 14}

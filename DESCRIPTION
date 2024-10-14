@@ -1,8 +1,8 @@
 Package: hdatools
 Type: Package
 Title: Tools and Themes for 'HDAdvisors' Projects
-Version: 0.1.5
-Date: 2024-07-13
+Version: 0.1.6
+Date: 2024-10-14
 Author: HDAdvisors
 Authors@R: c(
     person("Walker", "Kyle", email = "kyle@walker-data.com", role = "cre"),
@@ -21,8 +21,10 @@ Imports:
   sysfonts,
   glue,
   knitr,
-  ggiraph
-RoxygenNote: 7.3.1
+  ggiraph,
+  stringr,
+  dplyr
+RoxygenNote: 7.3.2
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

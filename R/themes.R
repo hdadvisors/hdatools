@@ -8,10 +8,17 @@
 #' @import ggtext
 #' @export
 theme_hda <- function(
-    base_size = 12,
+    base_size = 14,
     base_family = "Lato",
-    flip_gridlines = FALSE
+    flip_gridlines = FALSE,
+    output_format = NULL
   ) {
+
+  # Determine the actual output format
+  actual_format <- get_output_format(output_format)
+
+  # Adjust base_size based on output format
+  adjusted_base_size <- adjust_base_size(base_size, 4, 7, actual_format)
 
   ggplot2::theme_minimal() %+replace%
 
@@ -27,7 +34,7 @@ theme_hda <- function(
     text = ggplot2::element_text(
       family = base_family,
       face = "plain",
-      size = base_size,
+      size = adjusted_base_size,
       colour = "#383c3d",
       hjust = 0.5,
       vjust = 0.5,
@@ -43,7 +50,7 @@ theme_hda <- function(
                                  lineend = "butt"),
 
     plot.title = ggtext::element_markdown(
-      size = base_size * 1.25,
+      size = adjusted_base_size * 1.25,
       color = "#383c3d",
       hjust = 0L,
       vjust = 0L,
@@ -53,7 +60,7 @@ theme_hda <- function(
     ),
 
     plot.subtitle = ggtext::element_markdown(
-      size = base_size * 1.125,
+      size = adjusted_base_size * 1.125,
       color = "#383c3d",
       hjust = 0L,
       vjust = 0L,
@@ -63,7 +70,7 @@ theme_hda <- function(
     ),
 
     plot.caption = ggtext::element_markdown(
-      size = base_size * 0.875,
+      size = adjusted_base_size * 0.875,
       color = "#383c3d",
       hjust = 0L,
       vjust = 0L,
@@ -71,6 +78,15 @@ theme_hda <- function(
       lineheight = 1.1,
       face = "plain",
       family = "Lato"
+    ),
+
+    strip.text = ggtext::element_markdown(
+      size = adjusted_base_size,
+      family = "Lato",
+      color = "#383c3d",
+      margin = ggplot2::margin(b = 5, t = 0),
+      vjust = 0,
+      lineheight = 1.1
     ),
 
     plot.title.position = "plot",
