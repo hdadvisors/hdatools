@@ -72,4 +72,4 @@ data_with_factor <- data |>
   ))
 ```
 
-![](img/hda_plot.png)
+![](man/figures/hda_plot.png)
