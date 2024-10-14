@@ -1,96 +1,37 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/articles/branded-themes.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/add_google_fonts.html</loc>
-  </url>
-  <url>
-    <loc>/reference/add_reliability.html</loc>
-  </url>
-  <url>
-    <loc>/reference/add_zero_line.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fct_case_when.html</loc>
-  </url>
-  <url>
-    <loc>/reference/flip_gridlines.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get_logo.html</loc>
-  </url>
-  <url>
-    <loc>/reference/hda_pal_discrete.html</loc>
-  </url>
-  <url>
-    <loc>/reference/hello.html</loc>
-  </url>
-  <url>
-    <loc>/reference/hfv_pal_discrete.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pha_pal_discrete.html</loc>
-  </url>
-  <url>
-    <loc>/reference/publish_plot.html</loc>
-  </url>
-  <url>
-    <loc>/reference/scale_color_gradient_hda.html</loc>
-  </url>
-  <url>
-    <loc>/reference/scale_color_gradient_pha.html</loc>
-  </url>
-  <url>
-    <loc>/reference/scale_color_hda.html</loc>
-  </url>
-  <url>
-    <loc>/reference/scale_color_hfv.html</loc>
-  </url>
-  <url>
-    <loc>/reference/scale_color_pha.html</loc>
-  </url>
-  <url>
-    <loc>/reference/scale_fill_gradient_pha.html</loc>
-  </url>
-  <url>
-    <loc>/reference/scale_fill_hda.html</loc>
-  </url>
-  <url>
-    <loc>/reference/scale_fill_hfv.html</loc>
-  </url>
-  <url>
-    <loc>/reference/scale_fill_pha.html</loc>
-  </url>
-  <url>
-    <loc>/reference/theme_hda.html</loc>
-  </url>
-  <url>
-    <loc>/reference/theme_hfv.html</loc>
-  </url>
-  <url>
-    <loc>/reference/theme_pha.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/articles/branded-themes.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/LICENSE-text.html</loc></url>
+<url><loc>/news/index.html</loc></url>
+<url><loc>/reference/add_google_fonts.html</loc></url>
+<url><loc>/reference/add_reliability.html</loc></url>
+<url><loc>/reference/add_zero_line.html</loc></url>
+<url><loc>/reference/adjust_base_size.html</loc></url>
+<url><loc>/reference/fct_case_when.html</loc></url>
+<url><loc>/reference/flip_gridlines.html</loc></url>
+<url><loc>/reference/get_logo.html</loc></url>
+<url><loc>/reference/get_output_format.html</loc></url>
+<url><loc>/reference/hda_pal_discrete.html</loc></url>
+<url><loc>/reference/hello.html</loc></url>
+<url><loc>/reference/hfv_pal_discrete.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/markdown_wrap_gen.html</loc></url>
+<url><loc>/reference/pha_pal_discrete.html</loc></url>
+<url><loc>/reference/publish_plot.html</loc></url>
+<url><loc>/reference/scale_color_gradient_hda.html</loc></url>
+<url><loc>/reference/scale_color_gradient_pha.html</loc></url>
+<url><loc>/reference/scale_color_hda.html</loc></url>
+<url><loc>/reference/scale_color_hfv.html</loc></url>
+<url><loc>/reference/scale_color_pha.html</loc></url>
+<url><loc>/reference/scale_fill_gradient_pha.html</loc></url>
+<url><loc>/reference/scale_fill_hda.html</loc></url>
+<url><loc>/reference/scale_fill_hfv.html</loc></url>
+<url><loc>/reference/scale_fill_pha.html</loc></url>
+<url><loc>/reference/theme_hda.html</loc></url>
+<url><loc>/reference/theme_hfv.html</loc></url>
+<url><loc>/reference/theme_pha.html</loc></url>
 </urlset>
+
