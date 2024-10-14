@@ -83,36 +83,104 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
+<div class="section level1">
+<div class="page-header"><h1 id="hdatools">hdatools<a class="anchor" aria-label="anchor" href="#hdatools"></a>
+</h1></div>
+<p>The <code>hdatools</code> package provides a set of functions and tools for data analysis and visualization.</p>
 <div class="section level2">
-<h2 id="hdatools">hdatools<a class="anchor" aria-label="anchor" href="#hdatools"></a>
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>Tools and ggplot2 themes for HDAdvisors projects</p>
-<p>Example usage:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"walkerke/hdatools"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">hdatools</span><span class="op">)</span></span>
-<span></span>
+<code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"hdadvisors/hdatools"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
+</h2>
+<div class="section level3">
+<h3 id="themes">Themes<a class="anchor" aria-label="anchor" href="#themes"></a>
+</h3>
+<ul>
+<li>
+<code><a href="reference/theme_hda.html">theme_hda()</a></code>: HDAdvisors-branded ggplot2 theme</li>
+<li>
+<code><a href="reference/theme_hfv.html">theme_hfv()</a></code>: HousingForward Virginia-branded ggplot2 theme</li>
+<li>
+<code><a href="reference/theme_pha.html">theme_pha()</a></code>: PHA-branded ggplot2 theme</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="color-scales">Color Scales<a class="anchor" aria-label="anchor" href="#color-scales"></a>
+</h3>
+<ul>
+<li>
+<code><a href="reference/scale_color_hda.html">scale_color_hda()</a></code>, <code><a href="reference/scale_fill_hda.html">scale_fill_hda()</a></code>: HDA-branded discrete color scales</li>
+<li>
+<code><a href="reference/scale_color_hfv.html">scale_color_hfv()</a></code>, <code><a href="reference/scale_fill_hfv.html">scale_fill_hfv()</a></code>: HFV-branded discrete color scales</li>
+<li>
+<code><a href="reference/scale_color_pha.html">scale_color_pha()</a></code>, <code><a href="reference/scale_fill_pha.html">scale_fill_pha()</a></code>: PHA-branded discrete color scales</li>
+<li>
+<code><a href="reference/scale_color_gradient_hda.html">scale_color_gradient_hda()</a></code>: HDA-branded continuous color scale</li>
+<li>
+<code><a href="reference/scale_color_gradient_pha.html">scale_color_gradient_pha()</a></code>, <code><a href="reference/scale_fill_gradient_pha.html">scale_fill_gradient_pha()</a></code>: PHA-branded continuous color scales</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="utility-functions">Utility Functions<a class="anchor" aria-label="anchor" href="#utility-functions"></a>
+</h3>
+<ul>
+<li>
+<code><a href="reference/add_reliability.html">add_reliability()</a></code>: Add reliability labels based on coefficient of variation</li>
+<li>
+<code><a href="reference/fct_case_when.html">fct_case_when()</a></code>: Create a factor with case_when logic and automatic level ordering</li>
+<li>
+<code><a href="reference/markdown_wrap_gen.html">markdown_wrap_gen()</a></code>: Generate a function to wrap and format facet labels with markdown</li>
+<li>
+<code><a href="reference/add_zero_line.html">add_zero_line()</a></code>: Add darker line to zero intercept</li>
+<li>
+<code><a href="reference/publish_plot.html">publish_plot()</a></code>: Create dynamic graphic from plot object when document rendered as HTML</li>
+</ul>
+</div>
+</div>
+<div class="section level2">
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+</h2>
+<p>Basic example:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">hdatools</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">hdatools</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1983</span><span class="op">)</span></span>
-<span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span></span>
-<span><span class="va">b</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span></span>
-<span><span class="va">category</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">letters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, <span class="fl">1000</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co"># Create a sample dataset</span></span>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">8</span>, <span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span>,</span>
+<span>  group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span><span class="op">)</span>, each <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span><span class="va">a</span>, <span class="va">b</span>, <span class="va">category</span><span class="op">)</span></span>
+<span><span class="co"># Create a plot with HDA theme and colors</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, fill <span class="op">=</span> <span class="va">group</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="reference/scale_fill_hda.html">scale_fill_hda</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="reference/add_zero_line.html">add_zero_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="reference/theme_hda.html">theme_hda</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Sample Plot with HDA Theme"</span>,</span>
+<span>       subtitle <span class="op">=</span> <span class="st">"Using *hdatools* package"</span>,</span>
+<span>       caption <span class="op">=</span> <span class="st">"**Source:** Data source."</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">a</span>, <span class="va">b</span>, color <span class="op">=</span> <span class="va">category</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="reference/theme_hda.html">theme_hda</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="reference/scale_color_hda.html">scale_color_hda</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"An example plot"</span>,</span>
-<span>       subtitle <span class="op">=</span> <span class="st">"With interesting results"</span>,</span>
-<span>       x <span class="op">=</span> <span class="st">"A data series"</span>,</span>
-<span>       y <span class="op">=</span> <span class="st">"Another data series"</span>,</span>
-<span>       caption <span class="op">=</span> <span class="fu"><a href="reference/get_logo.html">get_logo</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"hda"</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
-<p><img src="img/branded_plot.png"></p>
+<span><span class="co"># Add reliability labels to a dataset</span></span>
+<span><span class="va">data_with_reliability</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>cv <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">0</span>, <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="reference/add_reliability.html">add_reliability</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Create a factor with custom ordering</span></span>
+<span><span class="va">data_with_factor</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>factor_col <span class="op">=</span> <span class="fu"><a href="reference/fct_case_when.html">fct_case_when</a></span><span class="op">(</span></span>
+<span>    <span class="va">x</span> <span class="op">&lt;</span> <span class="fl">3</span> <span class="op">~</span> <span class="st">"Low"</span>,</span>
+<span>    <span class="va">x</span> <span class="op">&lt;</span> <span class="fl">7</span> <span class="op">~</span> <span class="st">"Medium"</span>,</span>
+<span>    <span class="cn">TRUE</span> <span class="op">~</span> <span class="st">"High"</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="img/hda_plot.png"></p>
+</div>
 </div>
   </div>
 
