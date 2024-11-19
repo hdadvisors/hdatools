@@ -88,7 +88,7 @@ theme_hda <- function(
         size = adjusted_base_size,
         family = "Lato",
         color = "#383c3d",
-        margin = ggplot2::margin(b = 5, t = 0),
+        margin = ggplot2::margin(b = 5, t = 2),
         vjust = 0,
         lineheight = 1.1
       ),
@@ -150,17 +150,28 @@ theme_hda <- function(
 #' @param base_size The base size of text elements; defaults to 10
 #' @param base_family The base font family; defaults to "Open Sans"
 #' @param flip_gridlines Orientation of major gridlines; defaults to FALSE for y-axis
+#' @param output_format Optional manual specification of output format
+#' @param ... Additional arguments passed to ggplot2::theme()
 #'
 #' @import ggplot2
 #' @import ggtext
 #' @export
 theme_hfv <- function(
-    base_size = 10,
+    base_size = 14,
     base_family = "Open Sans",
-    flip_gridlines = FALSE
+    flip_gridlines = FALSE,
+    output_format = NULL,
+    ... # Additional ggplot2::theme() arguments
 ) {
 
-  ggplot2::theme_minimal() %+replace%
+  # Determine the actual output format
+  actual_format <- get_output_format(output_format)
+
+  # Adjust base_size based on output format
+  adjusted_base_size <- adjust_base_size(base_size, 4, 7, actual_format)
+
+  # Create base theme
+  base_theme <- ggplot2::theme_minimal() %+replace%
 
     ggplot2::theme(
 
@@ -174,7 +185,7 @@ theme_hfv <- function(
       text = ggplot2::element_text(
         family = base_family,
         face = "plain",
-        size = base_size,
+        size = adjusted_base_size,
         colour = "#383c3d",
         hjust = 0.5,
         vjust = 0.5,
@@ -189,35 +200,44 @@ theme_hfv <- function(
                                    linetype = 1L,
                                    lineend = "butt"),
 
-      plot.title = ggtext::element_textbox_simple(
-        size = base_size * 1.25,
+      plot.title = ggtext::element_markdown(
+        size = adjusted_base_size * 1.25,
         color = "#383c3d",
         hjust = 0L,
         vjust = 0L,
         margin = ggplot2::margin(b = 10, unit = "pt"),
         face = "bold",
-        family = "Open Sans"
+        family = base_family
       ),
 
-      plot.subtitle = ggtext::element_textbox_simple(
-        size = base_size,
+      plot.subtitle = ggtext::element_markdown(
+        size = adjusted_base_size * 1.125,
         color = "#383c3d",
         hjust = 0L,
         vjust = 0L,
         margin = ggplot2::margin(t = -5, b = 10, unit = "pt"),
         face = "plain",
-        family = "Open Sans"
+        family = base_family
       ),
 
-      plot.caption = ggtext::element_textbox_simple(
-        size = base_size * 0.875,
+      plot.caption = ggtext::element_markdown(
+        size = adjusted_base_size * 0.875,
         color = "#383c3d",
         hjust = 0L,
         vjust = 0L,
         margin = ggplot2::margin(t = 10, unit = "pt"),
         lineheight = 1.1,
         face = "plain",
-        family = "Open Sans"
+        family = base_family
+      ),
+
+      strip.text = ggtext::element_markdown(
+        size = adjusted_base_size,
+        family = base_family,
+        color = "#383c3d",
+        margin = ggplot2::margin(b = 5, t = 2),
+        vjust = 0,
+        lineheight = 1.1
       ),
 
       plot.title.position = "plot",
@@ -265,6 +285,9 @@ theme_hfv <- function(
       )
 
     }
+
+  # Combine base theme and additional arguments
+  base_theme + ggplot2::theme(...)
 
 }
 

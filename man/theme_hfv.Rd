@@ -4,7 +4,13 @@
 \alias{theme_hfv}
 \title{Use a HousingForward Virginia-branded ggplot2 theme}
 \usage{
-theme_hfv(base_size = 10, base_family = "Open Sans", flip_gridlines = FALSE)
+theme_hfv(
+  base_size = 14,
+  base_family = "Open Sans",
+  flip_gridlines = FALSE,
+  output_format = NULL,
+  ...
+)
 }
 \arguments{
 \item{base_size}{The base size of text elements; defaults to 10}
@@ -12,6 +18,10 @@ theme_hfv(base_size = 10, base_family = "Open Sans", flip_gridlines = FALSE)
 \item{base_family}{The base font family; defaults to "Open Sans"}
 
 \item{flip_gridlines}{Orientation of major gridlines; defaults to FALSE for y-axis}
+
+\item{output_format}{Optional manual specification of output format}
+
+\item{...}{Additional arguments passed to ggplot2::theme()}
 }
 \description{
 Use a HousingForward Virginia-branded ggplot2 theme

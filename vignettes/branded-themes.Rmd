@@ -4,13 +4,16 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
+
 knitr::opts_chunk$set(message = FALSE, warning = FALSE, fig.width = 8,
                       fig.showtext = TRUE)
+
 ```
 
 Let's get some data:
 
 ```{r get-data}
+
 library(tidyverse)
 library(tidycensus)
 library(scales)
@@ -19,43 +22,48 @@ library(ggtext)
 
 rva_inc <- get_acs(
   geography = "county",
-  state = "Virginia",
+  state = "Virginia", 
   county = c("Richmond city", "Chesterfield County", "Henrico County"),
   variables = "B19013_001",
   year = 2021
 ) |> 
   mutate(NAME = str_remove(NAME, ", Virginia"))
+
 ```
 
 Now, let's build an HDAdvisors-branded plot:
 
 ```{r theme-hda}
+
 ggplot(rva_inc, aes(x = estimate, y = reorder(NAME, estimate), fill = NAME)) +
   geom_col() +
   scale_fill_hda() +
   scale_x_continuous(labels = label_dollar()) +
-  theme_hda() +
-  flip_gridlines() +
+  theme_hda(flip_gridlines = T) +
+  add_zero_line("x") +
   labs(
     title = "Median household income",
     subtitle = "Richmond-area localities",
     caption = "**Source:** American Community Survey, 2017-2021 5-year estimates.<br>**Note:** Incomes adjusted to 2021 dollars."
   )
+
 ```
 
 Next, we'll build a HousingForward Virginia-branded plot:
 
 ```{r theme-hfv}
+
 ggplot(rva_inc, aes(x = estimate, y = reorder(NAME, estimate), fill = NAME)) +
   geom_col() +
   scale_fill_hfv() +
   scale_x_continuous(labels = label_dollar()) +
-  theme_hfv() +
-  flip_gridlines() +
+  theme_hfv(flip_gridlines = T) +
+  add_zero_line("x") +
   labs(
     title = "Median household income",
     subtitle = "Richmond-area localities",
     caption = "**Source:** American Community Survey, 2017-2021 5-year estimates.<br>**Note:** Incomes adjusted to 2021 dollars."
   )
+
 ```
 
