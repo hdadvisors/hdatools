@@ -31,7 +31,7 @@ theme_hda <- function(
       rect = ggplot2::element_rect(
         fill = "white",
         colour = "black",
-        size = 0.5,
+        linewidth = 0.5,
         linetype = 1L
       ),
 
@@ -49,7 +49,7 @@ theme_hda <- function(
       ),
 
       line = ggplot2::element_line(colour = "#000000",
-                                   size = 1,
+                                   linewidth = 1,
                                    linetype = 1L,
                                    lineend = "butt"),
 
@@ -119,7 +119,7 @@ theme_hda <- function(
 
         panel.grid.major.y = ggplot2::element_line(
           color = "#cbcdcc",
-          size = 0.05
+          linewidth = 0.05
         )
 
       )
@@ -132,7 +132,7 @@ theme_hda <- function(
 
         panel.grid.major.x = ggplot2::element_line(
           color = "#cbcdcc",
-          size = 0.05
+          linewidth = 0.05
         )
 
       )
@@ -178,7 +178,7 @@ theme_hfv <- function(
       rect = ggplot2::element_rect(
         fill = "white",
         colour = "black",
-        size = 0.5,
+        linewidth = 0.5,
         linetype = 1L
       ),
 
@@ -196,7 +196,7 @@ theme_hfv <- function(
       ),
 
       line = ggplot2::element_line(colour = "#000000",
-                                   size = 1,
+                                   linewidth = 1,
                                    linetype = 1L,
                                    lineend = "butt"),
 
@@ -266,7 +266,7 @@ theme_hfv <- function(
 
         panel.grid.major.y = ggplot2::element_line(
           color = "#cbcdcc",
-          size = 0.05
+          linewidth = 0.05
         )
 
       )
@@ -279,7 +279,7 @@ theme_hfv <- function(
 
         panel.grid.major.x = ggplot2::element_line(
           color = "#cbcdcc",
-          size = 0.05
+          linewidth = 0.05
         )
 
       )
@@ -311,7 +311,7 @@ theme_pha <- function(
       rect = ggplot2::element_rect(
         fill = "white",
         colour = "black",
-        size = 0.5,
+        linewidth = 0.5,
         linetype = 1L
       ),
 
@@ -329,7 +329,7 @@ theme_pha <- function(
       ),
 
       line = ggplot2::element_line(colour = "#000000",
-                                   size = 1,
+                                   linewidth = 1,
                                    linetype = 1L,
                                    lineend = "butt"),
 
@@ -373,7 +373,7 @@ theme_pha <- function(
 
       panel.grid.major.y = ggplot2::element_line(
         color = "#cbcdcc",
-        size = 0.05
+        linewidth = 0.05
         ),
 
       panel.grid.minor = ggplot2::element_blank(),

@@ -4,12 +4,18 @@
 \alias{flip_gridlines}
 \title{Flip default major gridlines from horizontal to vertical}
 \usage{
-flip_gridlines(color = "#cbcdcc", size = 0.05)
+flip_gridlines(
+  color = "#cbcdcc",
+  linewidth = 0.05,
+  size = lifecycle::deprecated()
+)
 }
 \arguments{
 \item{color}{Gridline color}
 
-\item{size}{Gridline size}
+\item{linewidth}{Gridline width}
+
+\item{size}{`r lifecycle::badge("deprecated")` Use `linewidth` instead.}
 }
 \description{
 Flip default major gridlines from horizontal to vertical

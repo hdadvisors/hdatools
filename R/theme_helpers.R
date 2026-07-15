@@ -124,14 +124,23 @@ adjust_base_size <- function(base_size, html_adjust, pdf_adjust, format) {
 #' Flip default major gridlines from horizontal to vertical
 #'
 #' @param color Gridline color
-#' @param size Gridline size
+#' @param linewidth Gridline width
+#' @param size `r lifecycle::badge("deprecated")` Use `linewidth` instead.
 #'
 #' @import ggplot2
 #' @export
 flip_gridlines <- function(
     color = "#cbcdcc",
-    size = 0.05
+    linewidth = 0.05,
+    size = lifecycle::deprecated()
 ) {
+
+  if (lifecycle::is_present(size)) {
+    lifecycle::deprecate_warn(
+      "0.2.0", "flip_gridlines(size)", "flip_gridlines(linewidth)"
+    )
+    linewidth <- size
+  }
 
   ggplot2::theme(
 
@@ -139,7 +148,7 @@ flip_gridlines <- function(
 
     panel.grid.major.x = ggplot2::element_line(
       color = color,
-      size = size
+      linewidth = linewidth
     )
 
   )
@@ -158,11 +167,11 @@ add_zero_line <- function(axis = c("y", "x")) {
 
   if(axis == "x") {
 
-    ggplot2::geom_vline(xintercept = 0, color = "#4b4f50", size = 0.5)
+    ggplot2::geom_vline(xintercept = 0, color = "#4b4f50", linewidth = 0.5)
 
   } else {
 
-    ggplot2::geom_hline(yintercept = 0, color = "#4b4f50", size = 0.5)
+    ggplot2::geom_hline(yintercept = 0, color = "#4b4f50", linewidth = 0.5)
 
   }
 

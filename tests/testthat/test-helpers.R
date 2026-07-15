@@ -33,6 +33,24 @@ test_that("add_zero_line draws a line at the expected linewidth and colour", {
   expect_equal(unique(layer$colour), "#4b4f50")
 })
 
+test_that("flip_gridlines applies linewidth to the vertical gridlines", {
+  full <- suppressWarnings(theme_hda()) + flip_gridlines(linewidth = 0.2)
+  expect_equal(ggplot2::calc_element("panel.grid.major.x", full)$linewidth, 0.2)
+  expect_true(has_element_class(
+    ggplot2::calc_element("panel.grid.major.y", full), "element_blank"
+  ))
+})
+
+test_that("flip_gridlines(size=) warns but still applies the value", {
+  withr::local_options(lifecycle_verbosity = "warning")
+  expect_warning(
+    th <- flip_gridlines(size = 0.2),
+    class = "lifecycle_warning_deprecated"
+  )
+  full <- suppressWarnings(theme_hda()) + th
+  expect_equal(ggplot2::calc_element("panel.grid.major.x", full)$linewidth, 0.2)
+})
+
 test_that("publish_plot returns the plot unchanged outside HTML output", {
   withr::local_options(knitr.in.progress = NULL)
   p <- ggplot2::ggplot(data.frame(x = 1:3, y = 1:3), ggplot2::aes(x, y)) +
