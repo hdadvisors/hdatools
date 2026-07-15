@@ -123,8 +123,8 @@ pha_pal_discrete <- function(direction = 1, repeat_pal = FALSE) {
 #' @export
 scale_color_hda <- function(direction = 1, repeat_pal = FALSE, ...) {
   ggplot2::discrete_scale(
-    "colour", "hda", palette = hda_pal_discrete(direction = direction,
-                                                repeat_pal = repeat_pal),
+    aesthetics = "colour",
+    palette = hda_pal_discrete(direction = direction, repeat_pal = repeat_pal),
     ...
   )
 }
@@ -137,8 +137,8 @@ scale_color_hda <- function(direction = 1, repeat_pal = FALSE, ...) {
 #' @export
 scale_color_hfv <- function(direction = 1, repeat_pal = FALSE, ...) {
   ggplot2::discrete_scale(
-    "colour", "hfv", palette = hfv_pal_discrete(direction = direction,
-                                                repeat_pal = repeat_pal),
+    aesthetics = "colour",
+    palette = hfv_pal_discrete(direction = direction, repeat_pal = repeat_pal),
     ...
   )
 }
@@ -151,8 +151,8 @@ scale_color_hfv <- function(direction = 1, repeat_pal = FALSE, ...) {
 #' @export
 scale_color_pha <- function(direction = 1, repeat_pal = FALSE, ...) {
   ggplot2::discrete_scale(
-    "colour", "pha", palette = pha_pal_discrete(direction = direction,
-                                                repeat_pal = repeat_pal),
+    aesthetics = "colour",
+    palette = pha_pal_discrete(direction = direction, repeat_pal = repeat_pal),
     ...
   )
 }
@@ -165,8 +165,8 @@ scale_color_pha <- function(direction = 1, repeat_pal = FALSE, ...) {
 #' @export
 scale_fill_hda <- function(direction = 1, repeat_pal = FALSE, ...) {
   ggplot2::discrete_scale(
-    "fill", "hda", palette = hda_pal_discrete(direction,
-                                              repeat_pal = repeat_pal),
+    aesthetics = "fill",
+    palette = hda_pal_discrete(direction = direction, repeat_pal = repeat_pal),
     ...
   )
 }
@@ -179,8 +179,8 @@ scale_fill_hda <- function(direction = 1, repeat_pal = FALSE, ...) {
 #' @export
 scale_fill_hfv <- function(direction = 1, repeat_pal = FALSE, ...) {
   ggplot2::discrete_scale(
-    "fill", "hfv", palette = hfv_pal_discrete(direction,
-                                              repeat_pal = repeat_pal),
+    aesthetics = "fill",
+    palette = hfv_pal_discrete(direction = direction, repeat_pal = repeat_pal),
     ...
   )
 }
@@ -193,8 +193,8 @@ scale_fill_hfv <- function(direction = 1, repeat_pal = FALSE, ...) {
 #' @export
 scale_fill_pha <- function(direction = 1, repeat_pal = FALSE, ...) {
   ggplot2::discrete_scale(
-    "fill", "pha", palette = pha_pal_discrete(direction,
-                                              repeat_pal = repeat_pal),
+    aesthetics = "fill",
+    palette = pha_pal_discrete(direction = direction, repeat_pal = repeat_pal),
     ...
   )
 }
@@ -218,7 +218,6 @@ scale_color_gradient_hda <- function(...,
                                      guide = "colorbar") {
   ggplot2::continuous_scale(
     aesthetics = "color",
-    scale_name = "hda",
     palette = scales::gradient_n_pal(colors, values, space),
     na.value = na.value,
     guide = guide,
@@ -245,7 +244,6 @@ scale_color_gradient_pha <- function(...,
                                      guide = "colorbar") {
   ggplot2::continuous_scale(
     aesthetics = "color",
-    scale_name = "pha",
     palette = scales::gradient_n_pal(colors, values, space),
     na.value = na.value,
     guide = guide,
@@ -272,7 +270,6 @@ scale_fill_gradient_pha <- function(...,
                                      guide = "colorbar") {
   ggplot2::continuous_scale(
     aesthetics = "fill",
-    scale_name = "pha",
     palette = scales::gradient_n_pal(colors, values, space),
     na.value = na.value,
     guide = guide,
