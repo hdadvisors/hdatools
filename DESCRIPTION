@@ -13,7 +13,7 @@ Description: Tools and workflows for HDAdvisors and HousingForward Virginia Proj
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true
-Imports: 
+Imports:
   ggplot2,
   scales,
   ggtext,
@@ -23,8 +23,11 @@ Imports:
   knitr,
   ggiraph,
   stringr,
-  dplyr
-RoxygenNote: 7.3.2
-Suggests: 
-    testthat (>= 3.0.0)
+  dplyr,
+  rlang,
+  lifecycle
+Suggests:
+    testthat (>= 3.1.5),
+    withr
 Config/testthat/edition: 3
+Config/roxygen2/version: 8.0.0
