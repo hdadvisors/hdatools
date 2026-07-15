@@ -8,6 +8,8 @@ get_logo(type = c("hda", "hfv"), width = 100)
 }
 \arguments{
 \item{type}{one of "hda" or "hfv"}
+
+\item{width}{Image width in pixels; defaults to 100}
 }
 \value{
 a path to an image to be used in ggplot2 plots

@@ -58,6 +58,17 @@ test_that("publish_plot returns the plot unchanged outside HTML output", {
   expect_identical(publish_plot(p), p)
 })
 
+test_that("get_logo returns an <img> tag pointing at an installed file", {
+  for (type in c("hda", "hfv")) {
+    out <- as.character(get_logo(type))
+    expect_match(out, "^<img src=")
+    path <- sub(".*src='([^']+)'.*", "\\1", out)
+    expect_true(nzchar(path))
+    expect_true(file.exists(path))
+  }
+  expect_match(as.character(get_logo("hfv", width = 250)), "width = '250'")
+})
+
 test_that("fct_case_when orders levels by first appearance", {
   x <- c(0.1, 0.4, 0.7)
   f <- fct_case_when(

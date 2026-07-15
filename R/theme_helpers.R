@@ -201,6 +201,7 @@ publish_plot <- function(plot) {
 #' Get a logo for use in a ggplot2 plot
 #'
 #' @param type one of "hda" or "hfv"
+#' @param width Image width in pixels; defaults to 100
 #'
 #' @return a path to an image to be used in ggplot2 plots
 #' @export
@@ -208,14 +209,14 @@ get_logo <- function(type = c("hda", "hfv"), width = 100) {
 
   type <- match.arg(type)
 
-  if (type == "hda") {
-    path <- "inst/logos/hda-logo-color.png"
-  } else {
-    path <- "inst/logos/logo_primary.png"
+  file <- if (type == "hda") "hda-logo-color.png" else "logo_primary.png"
+
+  path <- system.file("logos", file, package = "hdatools")
+
+  if (!nzchar(path)) {
+    stop("Logo file '", file, "' not found in the hdatools installation.")
   }
 
-  out <- glue::glue("<img src='{path}' width = '{width}'>")
-
-  out
+  glue::glue("<img src='{path}' width = '{width}'>")
 
 }
