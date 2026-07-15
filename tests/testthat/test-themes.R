@@ -29,9 +29,35 @@ test_that("theme_pha applies base_size to text, including under knitr", {
     ggplot2::calc_element("text", suppressWarnings(theme_pha(base_size = 60)))$size,
     60
   )
+  # html_adjust/pdf_adjust default to 0, so a knitr render must not shrink it
   withr::local_options(knitr.in.progress = TRUE)
   expect_equal(
     ggplot2::calc_element("text", suppressWarnings(theme_pha(base_size = 60)))$size,
     60
   )
+})
+
+test_that("theme_pha uses element_markdown for strip text", {
+  expect_true(has_element_class(
+    ggplot2::calc_element("strip.text", suppressWarnings(theme_pha())),
+    "element_markdown"
+  ))
+})
+
+test_that("theme_pha flip_gridlines swaps major gridline orientation", {
+  default <- suppressWarnings(theme_pha())
+  flipped <- suppressWarnings(theme_pha(flip_gridlines = TRUE))
+  expect_true(has_element_class(
+    ggplot2::calc_element("panel.grid.major.y", default), "element_line"))
+  expect_true(has_element_class(
+    ggplot2::calc_element("panel.grid.major.x", default), "element_blank"))
+  expect_true(has_element_class(
+    ggplot2::calc_element("panel.grid.major.x", flipped), "element_line"))
+  expect_true(has_element_class(
+    ggplot2::calc_element("panel.grid.major.y", flipped), "element_blank"))
+})
+
+test_that("theme_pha passes ... through to ggplot2::theme()", {
+  th <- suppressWarnings(theme_pha(legend.position = "bottom"))
+  expect_equal(th[["legend.position"]], "bottom")
 })

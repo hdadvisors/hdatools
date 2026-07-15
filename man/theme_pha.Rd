@@ -4,13 +4,37 @@
 \alias{theme_pha}
 \title{Use a PHA-branded ggplot2 theme}
 \usage{
-theme_pha(base_size = 10, base_family = "Noto Sans")
+theme_pha(
+  base_size = 10,
+  base_family = "Noto Sans",
+  flip_gridlines = FALSE,
+  output_format = NULL,
+  html_adjust = 0,
+  pdf_adjust = 0,
+  ...
+)
 }
 \arguments{
-\item{base_size}{The base size of text elements; defaults to 14}
+\item{base_size}{The base size of text elements; defaults to 10}
 
 \item{base_family}{The base font family; defaults to "Noto Sans"}
+
+\item{flip_gridlines}{Orientation of major gridlines; defaults to FALSE for y-axis}
+
+\item{output_format}{Optional manual specification of output format}
+
+\item{html_adjust}{Amount subtracted from base_size for HTML output; defaults to 0}
+
+\item{pdf_adjust}{Amount subtracted from base_size for PDF output; defaults to 0}
+
+\item{...}{Additional arguments passed to ggplot2::theme()}
 }
 \description{
 Use a PHA-branded ggplot2 theme
+}
+\details{
+When overriding strip text under ggplot2 >= 4.0, use
+  `ggtext::element_markdown()`, never a raw `ggplot2::element_text()`: the
+  branded strip element is a ggtext markdown element, and ggplot2 4.0 only
+  merges theme elements of the same class.
 }

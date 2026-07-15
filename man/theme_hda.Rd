@@ -9,6 +9,8 @@ theme_hda(
   base_family = "Lato",
   flip_gridlines = FALSE,
   output_format = NULL,
+  html_adjust = 4,
+  pdf_adjust = 7,
   ...
 )
 }
@@ -21,8 +23,18 @@ theme_hda(
 
 \item{output_format}{Optional manual specification of output format}
 
+\item{html_adjust}{Amount subtracted from base_size for HTML output; defaults to 4}
+
+\item{pdf_adjust}{Amount subtracted from base_size for PDF output; defaults to 7}
+
 \item{...}{Additional arguments passed to ggplot2::theme()}
 }
 \description{
 Use an HDAdvisors-branded ggplot2 theme
+}
+\details{
+When overriding strip text under ggplot2 >= 4.0, use
+  `ggtext::element_markdown()`, never a raw `ggplot2::element_text()`: the
+  branded strip element is a ggtext markdown element, and ggplot2 4.0 only
+  merges theme elements of the same class.
 }

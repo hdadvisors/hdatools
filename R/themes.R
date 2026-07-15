@@ -4,7 +4,14 @@
 #' @param base_family The base font family; defaults to "Lato"
 #' @param flip_gridlines Orientation of major gridlines; defaults to FALSE for y-axis
 #' @param output_format Optional manual specification of output format
+#' @param html_adjust Amount subtracted from base_size for HTML output; defaults to 4
+#' @param pdf_adjust Amount subtracted from base_size for PDF output; defaults to 7
 #' @param ... Additional arguments passed to ggplot2::theme()
+#'
+#' @details When overriding strip text under ggplot2 >= 4.0, use
+#'   `ggtext::element_markdown()`, never a raw `ggplot2::element_text()`: the
+#'   branded strip element is a ggtext markdown element, and ggplot2 4.0 only
+#'   merges theme elements of the same class.
 #'
 #' @import ggplot2
 #' @import ggtext
@@ -14,6 +21,8 @@ theme_hda <- function(
     base_family = "Lato",
     flip_gridlines = FALSE,
     output_format = NULL,
+    html_adjust = 4,
+    pdf_adjust = 7,
     ... # Additional ggplot2::theme() arguments
 ) {
 
@@ -21,7 +30,7 @@ theme_hda <- function(
   actual_format <- get_output_format(output_format)
 
   # Adjust base_size based on output format
-  adjusted_base_size <- adjust_base_size(base_size, 4, 7, actual_format)
+  adjusted_base_size <- adjust_base_size(base_size, html_adjust, pdf_adjust, actual_format)
 
   # Create base theme
   base_theme <- ggplot2::theme_minimal() %+replace%
@@ -147,11 +156,18 @@ theme_hda <- function(
 
 #' Use a HousingForward Virginia-branded ggplot2 theme
 #'
-#' @param base_size The base size of text elements; defaults to 10
+#' @param base_size The base size of text elements; defaults to 14
 #' @param base_family The base font family; defaults to "Open Sans"
 #' @param flip_gridlines Orientation of major gridlines; defaults to FALSE for y-axis
 #' @param output_format Optional manual specification of output format
+#' @param html_adjust Amount subtracted from base_size for HTML output; defaults to 4
+#' @param pdf_adjust Amount subtracted from base_size for PDF output; defaults to 7
 #' @param ... Additional arguments passed to ggplot2::theme()
+#'
+#' @details When overriding strip text under ggplot2 >= 4.0, use
+#'   `ggtext::element_markdown()`, never a raw `ggplot2::element_text()`: the
+#'   branded strip element is a ggtext markdown element, and ggplot2 4.0 only
+#'   merges theme elements of the same class.
 #'
 #' @import ggplot2
 #' @import ggtext
@@ -161,6 +177,8 @@ theme_hfv <- function(
     base_family = "Open Sans",
     flip_gridlines = FALSE,
     output_format = NULL,
+    html_adjust = 4,
+    pdf_adjust = 7,
     ... # Additional ggplot2::theme() arguments
 ) {
 
@@ -168,7 +186,7 @@ theme_hfv <- function(
   actual_format <- get_output_format(output_format)
 
   # Adjust base_size based on output format
-  adjusted_base_size <- adjust_base_size(base_size, 4, 7, actual_format)
+  adjusted_base_size <- adjust_base_size(base_size, html_adjust, pdf_adjust, actual_format)
 
   # Create base theme
   base_theme <- ggplot2::theme_minimal() %+replace%
@@ -293,18 +311,40 @@ theme_hfv <- function(
 
 #' Use a PHA-branded ggplot2 theme
 #'
-#' @param base_size The base size of text elements; defaults to 14
+#' @param base_size The base size of text elements; defaults to 10
 #' @param base_family The base font family; defaults to "Noto Sans"
+#' @param flip_gridlines Orientation of major gridlines; defaults to FALSE for y-axis
+#' @param output_format Optional manual specification of output format
+#' @param html_adjust Amount subtracted from base_size for HTML output; defaults to 0
+#' @param pdf_adjust Amount subtracted from base_size for PDF output; defaults to 0
+#' @param ... Additional arguments passed to ggplot2::theme()
+#'
+#' @details When overriding strip text under ggplot2 >= 4.0, use
+#'   `ggtext::element_markdown()`, never a raw `ggplot2::element_text()`: the
+#'   branded strip element is a ggtext markdown element, and ggplot2 4.0 only
+#'   merges theme elements of the same class.
 #'
 #' @import ggplot2
 #' @import ggtext
 #' @export
 theme_pha <- function(
     base_size = 10,
-    base_family = "Noto Sans"
+    base_family = "Noto Sans",
+    flip_gridlines = FALSE,
+    output_format = NULL,
+    html_adjust = 0,
+    pdf_adjust = 0,
+    ... # Additional ggplot2::theme() arguments
 ) {
 
-  ggplot2::theme_minimal() %+replace%
+  # Determine the actual output format
+  actual_format <- get_output_format(output_format)
+
+  # Adjust base_size based on output format (defaults 0/0 make this a no-op)
+  adjusted_base_size <- adjust_base_size(base_size, html_adjust, pdf_adjust, actual_format)
+
+  # Create base theme
+  base_theme <- ggplot2::theme_minimal() %+replace%
 
     ggplot2::theme(
 
@@ -318,7 +358,7 @@ theme_pha <- function(
       text = ggplot2::element_text(
         family = base_family,
         face = "plain",
-        size = base_size,
+        size = adjusted_base_size,
         colour = "#383c3d",
         hjust = 0.5,
         vjust = 0.5,
@@ -334,7 +374,7 @@ theme_pha <- function(
                                    lineend = "butt"),
 
       plot.title = ggtext::element_markdown(
-        size = base_size * 1.25,
+        size = adjusted_base_size * 1.25,
         color = "#383c3d",
         hjust = 0L,
         vjust = 0L,
@@ -343,7 +383,7 @@ theme_pha <- function(
       ),
 
       plot.subtitle = ggtext::element_markdown(
-        size = base_size * 1.125,
+        size = adjusted_base_size * 1.125,
         color = "#383c3d",
         hjust = 0L,
         vjust = 0L,
@@ -353,7 +393,7 @@ theme_pha <- function(
       ),
 
       plot.caption = ggtext::element_markdown(
-        size = base_size * 0.875,
+        size = adjusted_base_size * 0.875,
         color = "#383c3d",
         hjust = 0L,
         vjust = 0L,
@@ -363,18 +403,20 @@ theme_pha <- function(
         family = "Noto Sans"
         ),
 
+      strip.text = ggtext::element_markdown(
+        size = adjusted_base_size,
+        family = base_family,
+        color = "#383c3d",
+        margin = ggplot2::margin(b = 5, t = 2),
+        vjust = 0,
+        lineheight = 1.1
+      ),
+
       plot.title.position = "plot",
 
       plot.caption.position = "plot",
 
       panel.background = ggplot2::element_blank(),
-
-      panel.grid.major.x = ggplot2::element_blank(),
-
-      panel.grid.major.y = ggplot2::element_line(
-        color = "#cbcdcc",
-        linewidth = 0.05
-        ),
 
       panel.grid.minor = ggplot2::element_blank(),
 
@@ -386,6 +428,37 @@ theme_pha <- function(
 
       axis.ticks = ggplot2::element_blank()
 
-    )
+    ) +
+
+    if(flip_gridlines == FALSE) {
+
+      ggplot2::theme(
+
+        panel.grid.major.x = ggplot2::element_blank(),
+
+        panel.grid.major.y = ggplot2::element_line(
+          color = "#cbcdcc",
+          linewidth = 0.05
+        )
+
+      )
+
+    } else {
+
+      ggplot2::theme(
+
+        panel.grid.major.y = ggplot2::element_blank(),
+
+        panel.grid.major.x = ggplot2::element_line(
+          color = "#cbcdcc",
+          linewidth = 0.05
+        )
+
+      )
+
+    }
+
+  # Combine base theme and additional arguments
+  base_theme + ggplot2::theme(...)
 
 }
