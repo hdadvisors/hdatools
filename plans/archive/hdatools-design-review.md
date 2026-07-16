@@ -1,8 +1,11 @@
-# hdatools 2026 design review — investigation & recommendations
+> **ARCHIVED — superseded by ROADMAP.md, 2026-07-16.** This review's
+> recommendations were decomposed into `plans/ROADMAP.md` + per-phase plan
+> files; open questions Q1–Q10 are tracked in `plans/DECISIONS.md` and settled
+> at phase gates. Content below is unedited (apart from replacing the original
+> status header) and remains the evidence base — phase plans cite it by
+> section (§) rather than restating it.
 
-> **Status:** approved 2026-07-16; awaiting implementation. Work proceeds in
-> future sessions, item by item — Tier 1 first (release sequencing at the end of
-> §4). No package code has been changed yet.
+# hdatools 2026 design review — investigation & recommendations
 
 ## Context
 

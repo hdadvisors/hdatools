@@ -1,0 +1,38 @@
+# Decisions log
+
+> Append-only. One row per settled decision. Before proposing a change that
+> touches a decided area, check here — a settled decision is not re-litigated
+> unless implementation surfaces a contradiction, in which case raise it with
+> Jonathan explicitly and record the revision as a **new row** (don't edit the
+> old one).
+>
+> "Q#" rows refer to the open questions in
+> [archive/hdatools-design-review.md §3](archive/hdatools-design-review.md).
+> OPEN rows get filled at their phase gate (see ROADMAP.md).
+
+## Settled
+
+| Date | Ref | Decision | Rationale | Binds |
+|---|---|---|---|---|
+| 2026-07-16 | process | **Git flow:** one long-lived branch per release phase; sessions commit to it; single PR to main at phase end, after CI green + release checklist. Tidyverse conventions throughout. | Keeps `main` always-installable for floating consumers; matches R-community best practice. | all phases |
+| 2026-07-16 | process | **Open questions settle via phase-gate interviews** — short structured interview at each phase's first session, covering only that phase's questions; answers recorded here immediately. | Decide when the information is freshest; don't lock font/CVD calls months early. | all phases |
+| 2026-07-16 | process | **Plan files: one per release phase**, written just-in-time, plus ROADMAP.md + this log. Completed plans move to `plans/archive/`. | Phase-level granularity shows the arc; JIT drafting lets interview answers shape later plans. | plans/ folder |
+| 2026-07-16 | process | **Phase 0 exists**: CI + pha-update-2026 survey + consumer-pinning notes land before any refactor. | Refactor needs a safety net and full blast-radius knowledge. | Phase 0 |
+| 2026-07-16 | review | **Compatibility contract: fhfh's surface is the only inviolable one** — `theme_hda()` signature + `...` passthrough + `flip_gridlines`, `add_zero_line("x"/"y")`, `scale_fill_hda()` named args. Everything else may change behind `lifecycle` soft-deprecations. | Per Jonathan during the design review; faar/others are archived or small. | Phases 1–3 |
+| 2026-07-16 | review | **Design goal: brands are data, not code.** Adding a client brand = one registry entry (+ optional bundled fonts); palettes, scales, and a theme fall out of it. | PHA/VHA precedent; recurring client work. | architecture |
+| 2026-07-16 | review | **Release sequencing:** Tier 1 → 0.3.0, Tier 2 → 0.4.0, fonts → 0.5.0; brand.yml/vdiffr/use_hdatools deferred to 0.6.0+; package split (§3.5) rejected. | Isolates the rendering-change release (fonts) so diffs are attributable. | phase table |
+
+## Open — settle at phase gates
+
+| Ref | Question (short) | Recommended default (review §3) | Gate |
+|---|---|---|---|
+| Q1 | Palette single source of truth? | Plain named character vectors in an internal registry + exported vectors; not `data/`, not brand.yml-driven | Phase 1 |
+| Q3 | Deprecate old names or break them? | fhfh surface inviolable; soft-deprecate `scale_*_gradient_*` and `*_pal_discrete()` now, remove 0.5+ | Phase 1 |
+| Q2 | Adopt `_brand.yml`? | Yes as an *output* generated from the registry (Tier 3.2), never a runtime input | Phase 2 |
+| Q4 | Raise ggplot2 floor to ≥ 4.0? | Yes, at the 0.4.0 release (theme-carried palettes need it) | Phase 2 |
+| Q6 | Continuous ramp design method? | Programmatic from brand anchors via colorspace HCL, then eyeballed + CVD-checked | Phase 2 |
+| Q7 | Reorder palettes for CVD safety? | Audit + document now; reorder only with explicit sign-off (it recolors existing charts) | Phase 2 |
+| Q8 | Add VHA as first-class brand? | Yes; confirm hex ownership, bundle Montserrat (OFL) | Phase 2 |
+| Q9 | Keep house theme defaults (no legend, blank axis titles)? | Keep — ~150 call sites depend on them | Phase 2 |
+| Q5 | Migrate fonts to systemfonts/ragg? | Yes, in a dedicated release with a side-by-side render comparison in one consumer first | Phase 3 |
+| Q10 | `add_reliability()` — anything more? | Verify against fhfh's real data in *fhfh's* session, then retire its ban there | n/a (fhfh repo) |

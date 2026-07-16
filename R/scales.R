@@ -203,7 +203,7 @@ scale_fill_pha <- function(direction = 1, repeat_pal = FALSE, ...) {
 #'
 #' @param colors Vector of colors
 #' @param values If colors should not be evenly positioned along the gradient, this vector gives the position (between 0 and 1) for each color in the vector
-#' @param space Color space in which to calculate gradient. Must be "Lab" - other values depreciated
+#' @param space Color space in which to calculate gradient. Must be "Lab" - other values deprecated
 #' @param na.value Default color for NA values (#cfcfd0, HDA Light Gray)
 #' @param guide Legend representation for scale
 #' @param ... Other arguments passed on to continuous_scale()
@@ -227,7 +227,7 @@ scale_color_gradient_hda <- function(...,
 #'
 #' @param colors Vector of colors
 #' @param values If colors should not be evenly positioned along the gradient, this vector gives the position (between 0 and 1) for each color in the vector
-#' @param space Color space in which to calculate gradient. Must be "Lab" - other values depreciated
+#' @param space Color space in which to calculate gradient. Must be "Lab" - other values deprecated
 #' @param na.value Default color for NA values (#e2e4e3, PHA Light Gray)
 #' @param guide Legend representation for scale
 #' @param ... Other arguments passed on to continuous_scale()
@@ -251,7 +251,7 @@ scale_color_gradient_pha <- function(...,
 #'
 #' @param colors Vector of colors
 #' @param values If colors should not be evenly positioned along the gradient, this vector gives the position (between 0 and 1) for each color in the vector
-#' @param space Color space in which to calculate gradient. Must be "Lab" - other values depreciated
+#' @param space Color space in which to calculate gradient. Must be "Lab" - other values deprecated
 #' @param na.value Default color for NA values (#e2e4e3, PHA Light Gray)
 #' @param guide Legend representation for scale
 #' @param ... Other arguments passed on to continuous_scale()

@@ -20,7 +20,7 @@ scale_color_gradient_hda(
 
 \item{values}{If colors should not be evenly positioned along the gradient, this vector gives the position (between 0 and 1) for each color in the vector}
 
-\item{space}{Color space in which to calculate gradient. Must be "Lab" - other values depreciated}
+\item{space}{Color space in which to calculate gradient. Must be "Lab" - other values deprecated}
 
 \item{na.value}{Default color for NA values (#cfcfd0, HDA Light Gray)}
 
