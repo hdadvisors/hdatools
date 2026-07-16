@@ -6,24 +6,24 @@ functions for HDAdvisors / HousingForward Virginia projects. Proprietary
 
 ## Running R (read this first)
 
-**R is not on PATH.** Rscript lives at:
-
-```
-C:\Program Files\R\R-4.6.1\bin\Rscript.exe
-```
+**R is often not on `PATH`** — it isn't on the maintainer's Windows setup. If a
+bare `Rscript` isn't found, it's installed at
+`C:\Program Files\R\R-<version>\bin\Rscript.exe` on Windows; look under
+`C:\Program Files\R\` for the version folder actually installed on your machine
+(paths differ per machine, so don't assume a specific version).
 
 **Never run R inline** (`Rscript -e "..."`) — Windows shell quoting mangles it.
-Always write the R code to a temp file and execute that file:
+Always write the R code to a temp file and execute that file, e.g.:
 
 ```bash
-"/c/Program Files/R/R-4.6.1/bin/Rscript.exe" /path/to/script.R 2>&1
+"/c/Program Files/R/R-<version>/bin/Rscript.exe" /path/to/script.R 2>&1
 ```
 
-Start each script with `setwd("C:/repos/hda/hdatools")` so `devtools`/`pkgdown`
-find the package root.
+Start each script with `setwd()` pointing at this repo's root (the folder that
+contains `DESCRIPTION`) so `devtools`/`pkgdown` find the package.
 
-All of DESCRIPTION's Imports/Suggests plus devtools, roxygen2 (8.0.0), and
-pkgdown are installed and working.
+DESCRIPTION's Imports/Suggests plus devtools, roxygen2 (matching
+`Config/roxygen2/version`), and pkgdown must all be installed.
 
 ## The dev loop
 
@@ -37,8 +37,10 @@ Run these in order after changing R source or roxygen comments:
    regression — investigate it.
 4. `pkgdown::build_site()` — rebuilds the site into `docs/`. Two gotchas when
    running via standalone Rscript (no RStudio):
-   - pkgdown/rmarkdown need Pandoc. Point R at Quarto's copy first:
-     `Sys.setenv(RSTUDIO_PANDOC = "C:/Program Files/Quarto/bin/tools")`.
+   - pkgdown/rmarkdown need Pandoc, which standalone Rscript may not find. Point R
+     at a bundled copy before building — Quarto and RStudio both ship one, e.g.
+     `Sys.setenv(RSTUDIO_PANDOC = "C:/Program Files/Quarto/bin/tools")` (adjust the
+     path to your own Quarto/RStudio install).
    - `build_site()` re-knits `vignettes/articles/branded-themes.Rmd`, which needs
      tidycensus + a Census API key + network and will fail offline. For doc/theme
      changes, rebuild only what changed instead:
