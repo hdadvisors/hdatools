@@ -58,6 +58,22 @@ test_that("publish_plot returns the plot unchanged outside HTML output", {
   expect_identical(publish_plot(p), p)
 })
 
+test_that("publish_plot returns a girafe object for HTML output", {
+  skip_if_not_installed("ggiraph")
+  local_mocked_bindings(is_html_output = function(...) TRUE, .package = "knitr")
+  p <- ggplot2::ggplot(data.frame(x = 1:3, y = 1:3), ggplot2::aes(x, y)) +
+    ggplot2::geom_point()
+  expect_s3_class(publish_plot(p), "girafe")
+})
+
+test_that("publish_plot errors with an install hint when ggiraph is missing", {
+  local_mocked_bindings(is_html_output = function(...) TRUE, .package = "knitr")
+  local_mocked_bindings(requireNamespace = function(...) FALSE, .package = "base")
+  p <- ggplot2::ggplot(data.frame(x = 1:3, y = 1:3), ggplot2::aes(x, y)) +
+    ggplot2::geom_point()
+  expect_error(publish_plot(p), "ggiraph")
+})
+
 test_that("get_logo returns an <img> tag pointing at an installed file", {
   for (type in c("hda", "hfv")) {
     out <- as.character(get_logo(type))

@@ -1,6 +1,6 @@
 # Legacy path (no cv_col supplied): auto-detects a `_cv` column, treats values as
-# 0-1 proportions, and uses strict `<` boundaries. Preserved byte-for-byte by the
-# 0.2.0 redesign; the new tidy-eval path is exercised in commit 5.
+# 0-1 proportions, and uses strict `<` boundaries. The new tidy-eval path
+# (cv_col supplied) uses `<=` boundaries on the chosen scale.
 
 test_that("add_reliability legacy path classifies by _cv column with < boundaries", {
   df <- data.frame(
@@ -14,6 +14,13 @@ test_that("add_reliability legacy path classifies by _cv column with < boundarie
 
 test_that("add_reliability legacy path errors when no _cv column is present", {
   expect_error(add_reliability(data.frame(a = 1:3)), "_cv")
+})
+
+test_that("add_reliability legacy path warns and uses the first of multiple _cv columns", {
+  df <- data.frame(a_cv = c(0.05, 0.20), b_cv = c(0.40, 0.40))
+  expect_warning(out <- add_reliability(df), "Multiple columns")
+  # Classification comes from a_cv (the first column), not b_cv
+  expect_identical(out$reliability, c("High", "Medium"))
 })
 
 # New path (cv_col supplied): tidy-eval, `<=` boundaries, NA -> NA, character out.
