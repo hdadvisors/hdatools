@@ -200,7 +200,6 @@ adjust_base_size <- function(base_size, html_adjust, pdf_adjust, format) {
 #' @param linewidth Gridline width
 #' @param size `r lifecycle::badge("deprecated")` Use `linewidth` instead.
 #'
-#' @import ggplot2
 #' @export
 flip_gridlines <- function(
     color = "#cbcdcc",
@@ -232,7 +231,6 @@ flip_gridlines <- function(
 #'
 #' @param axis Apply to "x" or "y" axis.  Defaults to "y".
 #'
-#' @import ggplot2
 #' @export
 add_zero_line <- function(axis = c("y", "x")) {
 
@@ -254,14 +252,21 @@ add_zero_line <- function(axis = c("y", "x")) {
 #'
 #' @param plot ggplot object
 #'
-#' @import ggiraph
 #' @export
 publish_plot <- function(plot) {
 
+  if (!requireNamespace("ggiraph", quietly = TRUE)) {
+    stop(
+      "Package \"ggiraph\" is required to use publish_plot(). ",
+      "Install it with install.packages(\"ggiraph\").",
+      call. = FALSE
+    )
+  }
+
   if (knitr::is_html_output()) {
 
-    girafe(ggobj = plot,
-           height_svg = 4)
+    ggiraph::girafe(ggobj = plot,
+                     height_svg = 4)
 
   } else {
 

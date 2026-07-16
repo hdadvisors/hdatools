@@ -13,17 +13,15 @@
 #' @return A factor with levels ordered according to their appearance in the
 #'   case_when conditions, and the specified direction.
 #'
-#' @import dplyr
 #'
 #' @note This function was adapted from an answer provided to StackOverflow post #69333730 (\url{https://stackoverflow.com/a/69333730})
 #'
 #' @examples
 #' library(dplyr)
-#' library(tibble)
 #'
 #' # Create a sample dataset of cost burden percent values
 #' set.seed(123)
-#' cost_burden <- tibble(
+#' cost_burden <- data.frame(
 #'   pct = runif(100, min = 0, max = 1)
 #' )
 #'
@@ -40,7 +38,6 @@
 #' # Check the levels of the new factor column
 #' levels(cost_burden_label$cb)
 #'
-#' @import dplyr
 #' @export
 
 fct_case_when <- function(..., dir = 1) {

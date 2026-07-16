@@ -28,11 +28,10 @@ This function was adapted from an answer provided to StackOverflow post #6933373
 }
 \examples{
 library(dplyr)
-library(tibble)
 
 # Create a sample dataset of cost burden percent values
 set.seed(123)
-cost_burden <- tibble(
+cost_burden <- data.frame(
   pct = runif(100, min = 0, max = 1)
 )
 

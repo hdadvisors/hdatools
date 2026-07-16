@@ -119,7 +119,7 @@ pha_pal_discrete <- function(direction = 1, repeat_pal = FALSE) {
 #'
 #' @param direction If -1, reverse the scale (defaults to 1)
 #' @param repeat_pal If TRUE, repeat the palette enough times to account for all discrete values
-#' @import ggplot2
+#' @param ... Additional arguments passed to ggplot2::discrete_scale()
 #' @export
 scale_color_hda <- function(direction = 1, repeat_pal = FALSE, ...) {
   ggplot2::discrete_scale(
@@ -133,7 +133,7 @@ scale_color_hda <- function(direction = 1, repeat_pal = FALSE, ...) {
 #'
 #' @param direction If -1, reverse the scale (defaults to 1)
 #' @param repeat_pal If TRUE, repeat the palette enough times to account for all discrete values
-#' @import ggplot2
+#' @param ... Additional arguments passed to ggplot2::discrete_scale()
 #' @export
 scale_color_hfv <- function(direction = 1, repeat_pal = FALSE, ...) {
   ggplot2::discrete_scale(
@@ -147,7 +147,7 @@ scale_color_hfv <- function(direction = 1, repeat_pal = FALSE, ...) {
 #'
 #' @param direction If -1, reverse the scale (defaults to 1)
 #' @param repeat_pal If TRUE, repeat the palette enough times to account for all discrete values
-#' @import ggplot2
+#' @param ... Additional arguments passed to ggplot2::discrete_scale()
 #' @export
 scale_color_pha <- function(direction = 1, repeat_pal = FALSE, ...) {
   ggplot2::discrete_scale(
@@ -161,7 +161,7 @@ scale_color_pha <- function(direction = 1, repeat_pal = FALSE, ...) {
 #'
 #' @param direction If -1, reverse the scale (defaults to 1)
 #' @param repeat_pal If TRUE, repeat the palette enough times to account for all discrete values
-#' @import ggplot2
+#' @param ... Additional arguments passed to ggplot2::discrete_scale()
 #' @export
 scale_fill_hda <- function(direction = 1, repeat_pal = FALSE, ...) {
   ggplot2::discrete_scale(
@@ -175,7 +175,7 @@ scale_fill_hda <- function(direction = 1, repeat_pal = FALSE, ...) {
 #'
 #' @param direction If -1, reverse the scale (defaults to 1)
 #' @param repeat_pal If TRUE, repeat the palette enough times to account for all discrete values
-#' @import ggplot2
+#' @param ... Additional arguments passed to ggplot2::discrete_scale()
 #' @export
 scale_fill_hfv <- function(direction = 1, repeat_pal = FALSE, ...) {
   ggplot2::discrete_scale(
@@ -189,7 +189,7 @@ scale_fill_hfv <- function(direction = 1, repeat_pal = FALSE, ...) {
 #'
 #' @param direction If -1, reverse the scale (defaults to 1)
 #' @param repeat_pal If TRUE, repeat the palette enough times to account for all discrete values
-#' @import ggplot2
+#' @param ... Additional arguments passed to ggplot2::discrete_scale()
 #' @export
 scale_fill_pha <- function(direction = 1, repeat_pal = FALSE, ...) {
   ggplot2::discrete_scale(
@@ -207,8 +207,6 @@ scale_fill_pha <- function(direction = 1, repeat_pal = FALSE, ...) {
 #' @param na.value Default color for NA values (#cfcfd0, HDA Light Gray)
 #' @param guide Legend representation for scale
 #' @param ... Other arguments passed on to continuous_scale()
-#' @import ggplot2
-#' @import scales
 #' @export
 scale_color_gradient_hda <- function(...,
                                      colors = c("#445ca9","#8baeaa","#e9ab3f","#e76f52"),
@@ -233,8 +231,6 @@ scale_color_gradient_hda <- function(...,
 #' @param na.value Default color for NA values (#e2e4e3, PHA Light Gray)
 #' @param guide Legend representation for scale
 #' @param ... Other arguments passed on to continuous_scale()
-#' @import ggplot2
-#' @import scales
 #' @export
 scale_color_gradient_pha <- function(...,
                                      colors = c("#5bab8e","#a6cccc","#f39152","#be451c"),
@@ -259,8 +255,6 @@ scale_color_gradient_pha <- function(...,
 #' @param na.value Default color for NA values (#e2e4e3, PHA Light Gray)
 #' @param guide Legend representation for scale
 #' @param ... Other arguments passed on to continuous_scale()
-#' @import ggplot2
-#' @import scales
 #' @export
 scale_fill_gradient_pha <- function(...,
                                      colors = c("#5bab8e","#a6cccc","#f39152","#be451c"),

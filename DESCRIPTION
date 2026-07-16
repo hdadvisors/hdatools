@@ -1,32 +1,33 @@
 Package: hdatools
 Type: Package
 Title: Tools and Themes for 'HDAdvisors' Projects
-Version: 0.1.7
-Date: 2024-11-19
-Author: HDAdvisors
+Version: 0.2.0
 Authors@R: c(
-    person("Walker", "Kyle", email = "kyle@walker-data.com", role = "cre"),
-    person("Knopf", "Jonathan", email = "jonathan@hdadvisors.net", role = "aut"),
-    person("Mai", "Eric", email = "eric@hdadvisors.net", role = "aut"))
+    person("Jonathan", "Knopf", email = "jonathan@hdadvisors.net", role = "cre"),
+    person("Kyle", "Walker", email = "kyle@walker-data.com", role = "aut"),
+    person("Eric", "Mai", email = "eric@hdadvisors.net", role = "aut"))
 Description: Tools and workflows for HDAdvisors and HousingForward Virginia Projects.
     Functions include general analytical utilities and custom ggplot2 themes.
 License: file LICENSE
+URL: https://github.com/hdadvisors/hdatools
+BugReports: https://github.com/hdadvisors/hdatools/issues
 Encoding: UTF-8
-LazyData: true
+Depends:
+  R (>= 4.1)
 Imports:
-  ggplot2,
-  scales,
-  ggtext,
-  showtext,
-  sysfonts,
-  glue,
-  knitr,
-  ggiraph,
-  stringr,
-  dplyr,
-  rlang,
+  ggplot2 (>= 3.5.0),
+  scales (>= 1.3.0),
+  ggtext (>= 0.1.2),
+  showtext (>= 0.9),
+  sysfonts (>= 0.8),
+  glue (>= 1.6.0),
+  knitr (>= 1.42),
+  stringr (>= 1.5.0),
+  dplyr (>= 1.1.0),
+  rlang (>= 1.1.0),
   lifecycle
 Suggests:
+    ggiraph (>= 0.8.7),
     testthat (>= 3.1.5),
     withr
 Config/testthat/edition: 3

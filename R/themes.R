@@ -13,8 +13,6 @@
 #'   branded strip element is a ggtext markdown element, and ggplot2 4.0 only
 #'   merges theme elements of the same class.
 #'
-#' @import ggplot2
-#' @import ggtext
 #' @export
 theme_hda <- function(
     base_size = 14,
@@ -169,8 +167,6 @@ theme_hda <- function(
 #'   branded strip element is a ggtext markdown element, and ggplot2 4.0 only
 #'   merges theme elements of the same class.
 #'
-#' @import ggplot2
-#' @import ggtext
 #' @export
 theme_hfv <- function(
     base_size = 14,
@@ -324,8 +320,6 @@ theme_hfv <- function(
 #'   branded strip element is a ggtext markdown element, and ggplot2 4.0 only
 #'   merges theme elements of the same class.
 #'
-#' @import ggplot2
-#' @import ggtext
 #' @export
 theme_pha <- function(
     base_size = 10,
