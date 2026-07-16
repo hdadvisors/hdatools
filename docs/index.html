@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">hdatools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -92,7 +92,8 @@
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"hdadvisors/hdatools"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/install-deprecated.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"hdadvisors/hdatools"</span><span class="op">)</span></span></code></pre></div>
+<p>hdatools bundles the Lato, Roboto Slab, Open Sans, Poppins, and Noto Sans faces used by its themes and registers them offline the first time the package loads — no network request, no per-session Google Fonts download. To skip registration (for example, to supply your own font setup), set <code>options(hdatools.fonts = FALSE)</code> or the environment variable <code>HDATOOLS_NO_FONTS</code> before loading the package.</p>
 </div>
 <div class="section level2">
 <h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
@@ -108,6 +109,7 @@
 <li>
 <code><a href="reference/theme_pha.html">theme_pha()</a></code>: PHA-branded ggplot2 theme</li>
 </ul>
+<p>Under ggplot2 &gt;= 4.0, override a theme’s <code>strip.text</code> (e.g. for faceted plots) with <code><a href="https://wilkelab.org/ggtext/reference/element_markdown.html" class="external-link">ggtext::element_markdown()</a></code>, never a raw <code><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">ggplot2::element_text()</a></code> — the themes’ own strip element is a ggtext markdown element, and ggplot2 4.0 only merges theme elements of the same class.</p>
 </div>
 <div class="section level3">
 <h3 id="color-scales">Color Scales<a class="anchor" aria-label="anchor" href="#color-scales"></a>
@@ -139,6 +141,8 @@
 <code><a href="reference/add_zero_line.html">add_zero_line()</a></code>: Add darker line to zero intercept</li>
 <li>
 <code><a href="reference/publish_plot.html">publish_plot()</a></code>: Create dynamic graphic from plot object when document rendered as HTML</li>
+<li>
+<code><a href="reference/register_hda_fonts.html">register_hda_fonts()</a></code>: Register hdatools’ bundled fonts (called automatically on load)</li>
 </ul>
 </div>
 </div>
@@ -147,7 +151,7 @@
 </h2>
 <p>Basic example:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">hdatools</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/hdadvisors/hdatools" class="external-link">hdatools</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create a sample dataset</span></span>
@@ -167,9 +171,14 @@
 <span>       subtitle <span class="op">=</span> <span class="st">"Using *hdatools* package"</span>,</span>
 <span>       caption <span class="op">=</span> <span class="st">"**Source:** Data source."</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Add reliability labels to a dataset</span></span>
+<span><span class="co"># Add reliability labels to a dataset, naming the CV column (percent scale)</span></span>
 <span><span class="va">data_with_reliability</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>cv <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">0</span>, <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>cv <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">8</span>, <span class="fl">0</span>, <span class="fl">50</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="reference/add_reliability.html">add_reliability</a></span><span class="op">(</span>cv_col <span class="op">=</span> <span class="va">cv</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Legacy path: auto-detects a single column ending in "_cv" (0-1 proportion)</span></span>
+<span><span class="va">data_with_legacy_cv</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>value_cv <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">8</span>, <span class="fl">0</span>, <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="reference/add_reliability.html">add_reliability</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create a factor with custom ordering</span></span>
@@ -185,7 +194,15 @@
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <div class="license">
+    <div class="links">
+<h2 data-toc-skip>Links</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/hdadvisors/hdatools/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/hdadvisors/hdatools/issues" class="external-link">Report a bug</a></li>
+</ul>
+</div>
+
+<div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>file <a href="LICENSE-text.html">LICENSE</a>
@@ -204,9 +221,9 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Walker Kyle <br><small class="roles"> Maintainer </small>  </li>
-<li>Knopf Jonathan <br><small class="roles"> Author </small>  </li>
-<li>Mai Eric <br><small class="roles"> Author </small>  </li>
+<li>Jonathan Knopf <br><small class="roles"> Maintainer </small>   </li>
+<li>Kyle Walker <br><small class="roles"> Author </small>   </li>
+<li>Eric Mai <br><small class="roles"> Author </small>   </li>
 </ul>
 </div>
 
@@ -218,12 +235,12 @@
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Walker Kyle, Knopf Jonathan, Mai Eric.</p>
+<p>Developed by Jonathan Knopf, Kyle Walker, Eric Mai.</p>
 </div>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
       </footer>

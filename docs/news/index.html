@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">hdatools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -60,9 +60,72 @@
   <div class="col-md-9 contents">
     <div class="page-header">
       <h1 data-toc-skip>Changelog <small></small></h1>
-
+      <small>Source: <a href="https://github.com/hdadvisors/hdatools/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.2.0" id="hdatools-020">hdatools 0.2.0<a class="anchor" aria-label="anchor" href="#hdatools-020"></a></h2>
+<div class="section level3">
+<h3 id="breaking-changes-0-2-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-2-0"></a></h3>
+<ul><li>
+<code><a href="../reference/add_reliability.html">add_reliability()</a></code> gains a <code>cv_col</code> argument. Supplying it switches to a new classification path: tidy-eval column selection, a <code>scale</code> argument (<code>"percent"</code>, the default, or <code>"proportion"</code>), and <code>&lt;=</code> boundaries (a CV of exactly 15 percent is now “High”). Omitting <code>cv_col</code> keeps the original behavior byte-for-byte: auto-detect a single column ending in <code>_cv</code>, treat it as a 0-1 proportion, and use strict <code>&lt;</code> boundaries.</li>
+<li>
+<code><a href="../reference/flip_gridlines.html">flip_gridlines()</a></code>’s <code>size</code> argument is deprecated in favor of <code>linewidth</code>, matching ggplot2’s own <code>size</code> → <code>linewidth</code> rename.</li>
+<li>
+<code>ggiraph</code> moves from Imports to Suggests. <code><a href="../reference/publish_plot.html">publish_plot()</a></code> now errors with an install hint if ggiraph isn’t installed, instead of failing to load the package at all.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-features-0-2-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-2-0"></a></h3>
+<ul><li>Fonts are bundled and registered offline. <code>inst/fonts/</code> ships the exact static TTF faces <code><a href="../reference/theme_hda.html">theme_hda()</a></code>, <code><a href="../reference/theme_hfv.html">theme_hfv()</a></code>, and <code><a href="../reference/theme_pha.html">theme_pha()</a></code> use (Lato, Roboto Slab, Open Sans, Poppins, Noto Sans), registered by the new exported <code><a href="../reference/register_hda_fonts.html">register_hda_fonts()</a></code> — no more per-session network download from Google Fonts, and no more silent failure when a render happens offline. Opt out with <code>options(hdatools.fonts = FALSE)</code> or the <code>HDATOOLS_NO_FONTS</code> environment variable. See <code>inst/fonts/LICENSES.md</code> for the OFL and Apache 2.0 texts covering each face.</li>
+<li>
+<code><a href="../reference/theme_pha.html">theme_pha()</a></code> reaches parity with <code><a href="../reference/theme_hda.html">theme_hda()</a></code>/<code><a href="../reference/theme_hfv.html">theme_hfv()</a></code>: new <code>output_format</code>, <code>html_adjust</code>/<code>pdf_adjust</code>, and <code>...</code> passthrough arguments, and a <code>strip.text</code> element so <code><a href="../reference/markdown_wrap_gen.html">markdown_wrap_gen()</a></code> facet labels render correctly. <code>html_adjust</code>/<code>pdf_adjust</code> default to 0/0, so existing <code><a href="../reference/theme_pha.html">theme_pha()</a></code> output is unchanged. <code><a href="../reference/theme_hda.html">theme_hda()</a></code>/<code><a href="../reference/theme_hfv.html">theme_hfv()</a></code> also gain explicit <code>html_adjust</code>/<code>pdf_adjust</code> parameters (defaults match prior hardcoded behavior).</li>
+<li>
+<code><a href="../reference/get_logo.html">get_logo()</a></code> now resolves its image path from the installed package (<code><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file()</a></code>) instead of a hardcoded relative path, so it works correctly once the package is installed rather than only from source.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="modernization-for-ggplot2-0-2-0">Modernization for ggplot2 4.0<a class="anchor" aria-label="anchor" href="#modernization-for-ggplot2-0-2-0"></a></h3>
+<ul><li>Dropped the deprecated positional <code>scale_name</code> argument from all discrete and gradient scales.</li>
+<li>Renamed every deprecated <code>size=</code> to <code>linewidth=</code> in the themes and in <code><a href="../reference/add_zero_line.html">add_zero_line()</a></code>.</li>
+<li>Raised the <code>ggplot2</code> floor to &gt;= 3.5.0 (required for the <code>scale_name</code> deprecation shape) and added floors to all other Imports, chosen below every known consumer’s lockfile.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation--housekeeping-0-2-0">Documentation &amp; housekeeping<a class="anchor" aria-label="anchor" href="#documentation--housekeeping-0-2-0"></a></h3>
+<ul><li>Fixed a broken <code><a href="../reference/add_reliability.html">add_reliability()</a></code> README example (it passed 10 values into an 8-row data frame and relied on <code>_cv</code> auto-detection against a column literally named <code>cv</code>).</li>
+<li>Documented that <code>strip.text</code> overrides on any theme must use <code><a href="https://wilkelab.org/ggtext/reference/element_markdown.html" class="external-link">ggtext::element_markdown()</a></code>, not a raw <code><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">ggplot2::element_text()</a></code> — ggplot2 4.0 only merges theme elements of the same class.</li>
+<li>Slimmed the namespace: replaced blanket <code>@import</code> package imports with qualified <code>pkg::</code> calls throughout, keeping only <code>%+replace%</code> and rlang’s tidy-eval helpers as bare imports.</li>
+<li>Fixed the <code>Authors@R</code> given/family name order for all three authors. Jonathan Knopf is now the maintainer; Kyle Walker moves to <code>aut</code>.</li>
+<li>Added <code>URL</code>/<code>BugReports</code>, dropped <code>Date</code>/<code>LazyData</code>, and removed the legacy <code>Author:</code> field.</li>
+<li>Removed the dead <code>data-raw/DATASET.R</code> stub and moved <code>vignettes/branded-themes.Rmd</code> to <code>vignettes/articles/</code> (pkgdown builds it as a long-form article; it was never wired up as a real package vignette).</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.1.7" id="hdatools-017">hdatools 0.1.7<a class="anchor" aria-label="anchor" href="#hdatools-017"></a></h2>
+<ul><li>See git history.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.1.6" id="hdatools-016">hdatools 0.1.6<a class="anchor" aria-label="anchor" href="#hdatools-016"></a></h2>
+<ul><li>See git history.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.1.5" id="hdatools-015">hdatools 0.1.5<a class="anchor" aria-label="anchor" href="#hdatools-015"></a></h2>
+<ul><li>See git history.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.1.4" id="hdatools-014">hdatools 0.1.4<a class="anchor" aria-label="anchor" href="#hdatools-014"></a></h2>
+<ul><li>See git history.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.1.3" id="hdatools-013">hdatools 0.1.3<a class="anchor" aria-label="anchor" href="#hdatools-013"></a></h2>
+<ul><li>See git history.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.1.2" id="hdatools-012">hdatools 0.1.2<a class="anchor" aria-label="anchor" href="#hdatools-012"></a></h2>
+<ul><li>See git history.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.1.1" id="hdatools-011">hdatools 0.1.1<a class="anchor" aria-label="anchor" href="#hdatools-011"></a></h2>
+<ul><li>See git history.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.1.0" id="hdatools-010">hdatools 0.1.0<a class="anchor" aria-label="anchor" href="#hdatools-010"></a></h2>
 <ul><li>Merges updates in <code>jtk</code> branch to original build-out in <code>main</code>.</li>
@@ -82,11 +145,11 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Walker Kyle, Knopf Jonathan, Mai Eric.</p>
+  <p></p><p>Developed by Jonathan Knopf, Kyle Walker, Eric Mai.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
       </footer></div>

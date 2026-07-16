@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">hdatools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -86,7 +86,7 @@
       <h1 data-toc-skip>Using branded themes in hdatools</h1>
             
       
-
+      <small class="dont-index">Source: <a href="https://github.com/hdadvisors/hdatools/blob/HEAD/vignettes/articles/branded-themes.Rmd" class="external-link"><code>vignettes/articles/branded-themes.Rmd</code></a></small>
       <div class="hidden name"><code>branded-themes.Rmd</code></div>
 
     </div>
@@ -98,12 +98,12 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/" class="external-link">tidycensus</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://scales.r-lib.org" class="external-link">scales</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">hdatools</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/hdadvisors/hdatools" class="external-link">hdatools</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://wilkelab.org/ggtext/" class="external-link">ggtext</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">rva_inc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://walker-data.com/tidycensus/reference/get_acs.html" class="external-link">get_acs</a></span><span class="op">(</span></span>
 <span>  geography <span class="op">=</span> <span class="st">"county"</span>,</span>
-<span>  state <span class="op">=</span> <span class="st">"Virginia"</span>,</span>
+<span>  state <span class="op">=</span> <span class="st">"Virginia"</span>, </span>
 <span>  county <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Richmond city"</span>, <span class="st">"Chesterfield County"</span>, <span class="st">"Henrico County"</span><span class="op">)</span>,</span>
 <span>  variables <span class="op">=</span> <span class="st">"B19013_001"</span>,</span>
 <span>  year <span class="op">=</span> <span class="fl">2021</span></span>
@@ -115,28 +115,28 @@
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/scale_fill_hda.html">scale_fill_hda</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/dollar_format.html" class="external-link">label_dollar</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/theme_hda.html">theme_hda</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/flip_gridlines.html">flip_gridlines</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/theme_hda.html">theme_hda</a></span><span class="op">(</span>flip_gridlines <span class="op">=</span> <span class="cn">T</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/add_zero_line.html">add_zero_line</a></span><span class="op">(</span><span class="st">"x"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
 <span>    title <span class="op">=</span> <span class="st">"Median household income"</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="st">"Richmond-area localities"</span>,</span>
 <span>    caption <span class="op">=</span> <span class="st">"**Source:** American Community Survey, 2017-2021 5-year estimates.&lt;br&gt;**Note:** Incomes adjusted to 2021 dollars."</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="branded-themes_files/figure-html/theme-hda-1.png" width="768"></p>
+<p><img src="branded-themes_files/figure-html/theme-hda-1.png" class="r-plt" alt="" width="768"></p>
 <p>Next, we’ll build a HousingForward Virginia-branded plot:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">rva_inc</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">estimate</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/reorder.factor.html" class="external-link">reorder</a></span><span class="op">(</span><span class="va">NAME</span>, <span class="va">estimate</span><span class="op">)</span>, fill <span class="op">=</span> <span class="va">NAME</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/scale_fill_hfv.html">scale_fill_hfv</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/dollar_format.html" class="external-link">label_dollar</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/theme_hfv.html">theme_hfv</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/flip_gridlines.html">flip_gridlines</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/theme_hfv.html">theme_hfv</a></span><span class="op">(</span>flip_gridlines <span class="op">=</span> <span class="cn">T</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/add_zero_line.html">add_zero_line</a></span><span class="op">(</span><span class="st">"x"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
 <span>    title <span class="op">=</span> <span class="st">"Median household income"</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="st">"Richmond-area localities"</span>,</span>
 <span>    caption <span class="op">=</span> <span class="st">"**Source:** American Community Survey, 2017-2021 5-year estimates.&lt;br&gt;**Note:** Incomes adjusted to 2021 dollars."</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="branded-themes_files/figure-html/theme-hfv-1.png" width="768"></p>
+<p><img src="branded-themes_files/figure-html/theme-hfv-1.png" class="r-plt" alt="" width="768"></p>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -149,12 +149,12 @@
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Walker Kyle, Knopf Jonathan, Mai Eric.</p>
+<p>Developed by Jonathan Knopf, Kyle Walker, Eric Mai.</p>
 </div>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
       </footer>

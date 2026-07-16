@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">hdatools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -60,7 +60,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Flip default major gridlines from horizontal to vertical</h1>
-
+    <small class="dont-index">Source: <a href="https://github.com/hdadvisors/hdatools/blob/HEAD/R/theme_helpers.R" class="external-link"><code>R/theme_helpers.R</code></a></small>
     <div class="hidden name"><code>flip_gridlines.Rd</code></div>
     </div>
 
@@ -69,7 +69,11 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">flip_gridlines</span><span class="op">(</span>color <span class="op">=</span> <span class="st">"#cbcdcc"</span>, size <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">flip_gridlines</span><span class="op">(</span></span>
+<span>  color <span class="op">=</span> <span class="st">"#cbcdcc"</span>,</span>
+<span>  linewidth <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  size <span class="op">=</span> <span class="fu">lifecycle</span><span class="fu">::</span><span class="fu"><a href="https://lifecycle.r-lib.org/reference/deprecated.html" class="external-link">deprecated</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -80,8 +84,12 @@
 <dd><p>Gridline color</p></dd>
 
 
+<dt id="arg-linewidth">linewidth<a class="anchor" aria-label="anchor" href="#arg-linewidth"></a></dt>
+<dd><p>Gridline width</p></dd>
+
+
 <dt id="arg-size">size<a class="anchor" aria-label="anchor" href="#arg-size"></a></dt>
-<dd><p>Gridline size</p></dd>
+<dd><p>`r lifecycle::badge("deprecated")` Use `linewidth` instead.</p></dd>
 
 </dl></div>
 
@@ -93,11 +101,11 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Walker Kyle, Knopf Jonathan, Mai Eric.</p>
+  <p></p><p>Developed by Jonathan Knopf, Kyle Walker, Eric Mai.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
       </footer></div>
