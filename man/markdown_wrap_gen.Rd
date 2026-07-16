@@ -12,7 +12,7 @@ before wrapping the text. Default is 25.}
 }
 \value{
 A function that takes a vector of labels and returns a list of
-  wrapped and formatted labels.
+wrapped and formatted labels.
 }
 \description{
 This function creates a labeller function for use with ggplot2 facets.

@@ -15,7 +15,7 @@ flip_gridlines(
 
 \item{linewidth}{Gridline width}
 
-\item{size}{`r lifecycle::badge("deprecated")` Use `linewidth` instead.}
+\item{size}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Use \code{linewidth} instead.}
 }
 \description{
 Flip default major gridlines from horizontal to vertical
