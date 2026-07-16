@@ -35,7 +35,14 @@ Run these in order after changing R source or roxygen comments:
    **only** accepted NOTE is the proprietary-license one
    (`Non-standard license specification: file LICENSE`). Any other NOTE is a
    regression — investigate it.
-4. `pkgdown::build_site()` — rebuilds the site into `docs/`.
+4. `pkgdown::build_site()` — rebuilds the site into `docs/`. Two gotchas when
+   running via standalone Rscript (no RStudio):
+   - pkgdown/rmarkdown need Pandoc. Point R at Quarto's copy first:
+     `Sys.setenv(RSTUDIO_PANDOC = "C:/Program Files/Quarto/bin/tools")`.
+   - `build_site()` re-knits `vignettes/articles/branded-themes.Rmd`, which needs
+     tidycensus + a Census API key + network and will fail offline. For doc/theme
+     changes, rebuild only what changed instead:
+     `init_site()` + `build_home()` + `build_reference()` + `build_news()`.
 
 ## Generated files — never hand-edit
 
