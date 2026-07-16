@@ -6,17 +6,17 @@ functions for HDAdvisors / HousingForward Virginia projects. Proprietary
 
 ## Running R (read this first)
 
-**R is often not on `PATH`** — it isn't on the maintainer's Windows setup. If a
-bare `Rscript` isn't found, it's installed at
-`C:\Program Files\R\R-<version>\bin\Rscript.exe` on Windows; look under
-`C:\Program Files\R\` for the version folder actually installed on your machine
-(paths differ per machine, so don't assume a specific version).
+Run R via the `Rscript` on the caller's `PATH` — assume it resolves to a working
+R install. **Don't hard-code an install path or version anywhere**; those differ
+across machines and change on every R upgrade. If `Rscript` isn't on `PATH`,
+don't guess where R lives — stop and tell the user, and point them to add R's
+`bin` directory to `PATH` (or to supply the path to their `Rscript`).
 
 **Never run R inline** (`Rscript -e "..."`) — Windows shell quoting mangles it.
-Always write the R code to a temp file and execute that file, e.g.:
+Always write the R code to a temp file and execute that file:
 
 ```bash
-"/c/Program Files/R/R-<version>/bin/Rscript.exe" /path/to/script.R 2>&1
+Rscript /path/to/script.R 2>&1
 ```
 
 Start each script with `setwd()` pointing at this repo's root (the folder that
@@ -37,10 +37,11 @@ Run these in order after changing R source or roxygen comments:
    regression — investigate it.
 4. `pkgdown::build_site()` — rebuilds the site into `docs/`. Two gotchas when
    running via standalone Rscript (no RStudio):
-   - pkgdown/rmarkdown need Pandoc, which standalone Rscript may not find. Point R
-     at a bundled copy before building — Quarto and RStudio both ship one, e.g.
-     `Sys.setenv(RSTUDIO_PANDOC = "C:/Program Files/Quarto/bin/tools")` (adjust the
-     path to your own Quarto/RStudio install).
+   - pkgdown/rmarkdown need Pandoc, which a bare `Rscript` may not find. If a build
+     fails with "Pandoc not available," point R at a bundled copy via
+     `Sys.setenv(RSTUDIO_PANDOC = <dir>)` — Quarto and RStudio each ship one in a
+     `tools` directory. Locate the copy on the current machine rather than
+     assuming a path.
    - `build_site()` re-knits `vignettes/articles/branded-themes.Rmd`, which needs
      tidycensus + a Census API key + network and will fail offline. For doc/theme
      changes, rebuild only what changed instead:
