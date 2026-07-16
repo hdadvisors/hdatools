@@ -255,15 +255,15 @@ add_zero_line <- function(axis = c("y", "x")) {
 #' @export
 publish_plot <- function(plot) {
 
-  if (!requireNamespace("ggiraph", quietly = TRUE)) {
-    stop(
-      "Package \"ggiraph\" is required to use publish_plot(). ",
-      "Install it with install.packages(\"ggiraph\").",
-      call. = FALSE
-    )
-  }
-
   if (knitr::is_html_output()) {
+
+    if (!requireNamespace("ggiraph", quietly = TRUE)) {
+      stop(
+        "Package \"ggiraph\" is required to use publish_plot() for HTML output. ",
+        "Install it with install.packages(\"ggiraph\").",
+        call. = FALSE
+      )
+    }
 
     ggiraph::girafe(ggobj = plot,
                      height_svg = 4)
