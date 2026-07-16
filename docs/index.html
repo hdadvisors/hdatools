@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">hdatools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0.9000</span>
       </span>
     </div>
 
@@ -140,7 +140,15 @@
 <li>
 <code><a href="reference/add_zero_line.html">add_zero_line()</a></code>: Add darker line to zero intercept</li>
 <li>
+<code><a href="reference/flip_gridlines.html">flip_gridlines()</a></code>: Flip major gridlines from horizontal to vertical</li>
+<li>
 <code><a href="reference/publish_plot.html">publish_plot()</a></code>: Create dynamic graphic from plot object when document rendered as HTML</li>
+<li>
+<code><a href="reference/get_logo.html">get_logo()</a></code>: Get an HDA/HFV logo <code>&lt;img&gt;</code> tag for use in a plot</li>
+<li>
+<code><a href="reference/get_output_format.html">get_output_format()</a></code>: Detect the current output format (studio, HTML, or PDF)</li>
+<li>
+<code><a href="reference/adjust_base_size.html">adjust_base_size()</a></code>: Adjust a base font size for the detected output format</li>
 <li>
 <code><a href="reference/register_hda_fonts.html">register_hda_fonts()</a></code>: Register hdatools’ bundled fonts (called automatically on load)</li>
 </ul>
@@ -151,7 +159,7 @@
 </h2>
 <p>Basic example:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/hdadvisors/hdatools" class="external-link">hdatools</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">hdatools</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create a sample dataset</span></span>
@@ -162,28 +170,28 @@
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create a plot with HDA theme and colors</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, fill <span class="op">=</span> <span class="va">group</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="fu">ggplot</span><span class="op">(</span><span class="va">data</span>, <span class="fu">aes</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, fill <span class="op">=</span> <span class="va">group</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_col</span><span class="op">(</span>position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="reference/scale_fill_hda.html">scale_fill_hda</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="reference/add_zero_line.html">add_zero_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="reference/theme_hda.html">theme_hda</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Sample Plot with HDA Theme"</span>,</span>
+<span>  <span class="fu">labs</span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Sample Plot with HDA Theme"</span>,</span>
 <span>       subtitle <span class="op">=</span> <span class="st">"Using *hdatools* package"</span>,</span>
 <span>       caption <span class="op">=</span> <span class="st">"**Source:** Data source."</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Add reliability labels to a dataset, naming the CV column (percent scale)</span></span>
 <span><span class="va">data_with_reliability</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>cv <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">8</span>, <span class="fl">0</span>, <span class="fl">50</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">mutate</span><span class="op">(</span>cv <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">8</span>, <span class="fl">0</span>, <span class="fl">50</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="reference/add_reliability.html">add_reliability</a></span><span class="op">(</span>cv_col <span class="op">=</span> <span class="va">cv</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Legacy path: auto-detects a single column ending in "_cv" (0-1 proportion)</span></span>
 <span><span class="va">data_with_legacy_cv</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>value_cv <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">8</span>, <span class="fl">0</span>, <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">mutate</span><span class="op">(</span>value_cv <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">8</span>, <span class="fl">0</span>, <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="reference/add_reliability.html">add_reliability</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create a factor with custom ordering</span></span>
 <span><span class="va">data_with_factor</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>factor_col <span class="op">=</span> <span class="fu"><a href="reference/fct_case_when.html">fct_case_when</a></span><span class="op">(</span></span>
+<span>  <span class="fu">mutate</span><span class="op">(</span>factor_col <span class="op">=</span> <span class="fu"><a href="reference/fct_case_when.html">fct_case_when</a></span><span class="op">(</span></span>
 <span>    <span class="va">x</span> <span class="op">&lt;</span> <span class="fl">3</span> <span class="op">~</span> <span class="st">"Low"</span>,</span>
 <span>    <span class="va">x</span> <span class="op">&lt;</span> <span class="fl">7</span> <span class="op">~</span> <span class="st">"Medium"</span>,</span>
 <span>    <span class="cn">TRUE</span> <span class="op">~</span> <span class="st">"High"</span></span>
