@@ -1,4 +1,7 @@
 .onLoad <- function(libname, pkgname) {
-  packageStartupMessage("Loading on-brand Google fonts")
-  add_google_fonts()
+  register_hda_fonts(quiet = TRUE)
+}
+
+.onAttach <- function(libname, pkgname) {
+  packageStartupMessage("Loading on-brand fonts")
 }

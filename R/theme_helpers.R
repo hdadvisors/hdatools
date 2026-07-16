@@ -1,21 +1,94 @@
-#' Automatically make Google Fonts available
+#' Register hdatools' bundled fonts for use in plots and knitr output
 #'
+#' Registers the font faces bundled in `inst/fonts/` (Lato and Roboto Slab for
+#' `theme_hda()`, Open Sans and Poppins for `theme_hfv()`, Noto Sans for
+#' `theme_pha()`) with \pkg{sysfonts}, then enables \pkg{showtext} rendering.
+#' Everything is read from files installed with the package, so this never
+#' makes a network request.
+#'
+#' Registration can be skipped by setting `options(hdatools.fonts = FALSE)`
+#' or the environment variable `HDATOOLS_NO_FONTS` to any non-empty value —
+#' useful if a consumer wants to supply its own font setup.
+#'
+#' @param quiet If `TRUE`, suppresses the message emitted when registration
+#'   fails. Registration failure is non-fatal: hdatools falls back to
+#'   whatever fonts are already available on the system.
+#'
+#' @return Invisibly, `TRUE` if fonts were registered, `FALSE` if skipped via
+#'   the opt-out or if registration failed.
+#'
+#' @export
+register_hda_fonts <- function(quiet = FALSE) {
+
+  opt_in <- isTRUE(getOption("hdatools.fonts", TRUE)) &&
+    !nzchar(Sys.getenv("HDATOOLS_NO_FONTS"))
+
+  if (!opt_in) {
+    return(invisible(FALSE))
+  }
+
+  font_path <- function(family_dir, file) {
+    system.file("fonts", family_dir, file, package = "hdatools")
+  }
+
+  registered <- tryCatch({
+
+    sysfonts::font_add(
+      family  = "Lato",
+      regular = font_path("lato", "Lato-Regular.ttf"),
+      bold    = font_path("lato", "Lato-Bold.ttf"),
+      italic  = font_path("lato", "Lato-Italic.ttf")
+    )
+
+    sysfonts::font_add(
+      family  = "Roboto Slab",
+      regular = font_path("roboto-slab", "RobotoSlab-Regular.ttf"),
+      bold    = font_path("roboto-slab", "RobotoSlab-Bold.ttf")
+    )
+
+    sysfonts::font_add(
+      family  = "Open Sans",
+      regular = font_path("open-sans", "OpenSans-Regular.ttf"),
+      bold    = font_path("open-sans", "OpenSans-Bold.ttf"),
+      italic  = font_path("open-sans", "OpenSans-Italic.ttf")
+    )
+
+    sysfonts::font_add(
+      family  = "Poppins",
+      regular = font_path("poppins", "Poppins-Regular.ttf"),
+      bold    = font_path("poppins", "Poppins-SemiBold.ttf")
+    )
+
+    sysfonts::font_add(
+      family  = "Noto Sans",
+      regular = font_path("noto-sans", "NotoSans-Regular.ttf"),
+      bold    = font_path("noto-sans", "NotoSans-Bold.ttf"),
+      italic  = font_path("noto-sans", "NotoSans-Italic.ttf")
+    )
+
+    TRUE
+
+  }, error = function(e) {
+    if (!quiet) {
+      packageStartupMessage("hdatools: could not register bundled fonts (", conditionMessage(e), ")")
+    }
+    FALSE
+  })
+
+  if (isTRUE(registered)) {
+    tryCatch({
+      showtext::showtext_auto()
+      knitr::opts_chunk$set(fig.showtext = TRUE)
+    }, error = function(e) NULL)
+  }
+
+  invisible(registered)
+
+}
+
 #' @keywords internal
-#' @import sysfonts
-#' @import showtext
-#' @importFrom knitr opts_chunk
-add_google_fonts <- function() {
-
-  sysfonts::font_add_google("Lato", "Lato") # HDA text
-  sysfonts::font_add_google("Roboto Slab", "Roboto Slab") # HDA headers
-  sysfonts::font_add_google("Open Sans", "Open Sans") # HFV text
-  sysfonts::font_add_google("Poppins", "Poppins", bold.wt = 600) # HFV headers
-  sysfonts::font_add_google("Noto Sans", "Noto Sans") # PHA text and headers
-
-  showtext::showtext_auto()
-
-  knitr::opts_chunk$set(fig.showtext = TRUE)
-
+add_google_fonts <- function(quiet = FALSE) {
+  register_hda_fonts(quiet = quiet)
 }
 
 #' Generate a function to wrap and format facet labels with markdown
