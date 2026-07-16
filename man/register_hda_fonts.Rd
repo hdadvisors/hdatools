@@ -7,23 +7,23 @@
 register_hda_fonts(quiet = FALSE)
 }
 \arguments{
-\item{quiet}{If `TRUE`, suppresses the message emitted when registration
+\item{quiet}{If \code{TRUE}, suppresses the message emitted when registration
 fails. Registration failure is non-fatal: hdatools falls back to
 whatever fonts are already available on the system.}
 }
 \value{
-Invisibly, `TRUE` if fonts were registered, `FALSE` if skipped via
-  the opt-out or if registration failed.
+Invisibly, \code{TRUE} if fonts were registered, \code{FALSE} if skipped via
+the opt-out or if registration failed.
 }
 \description{
-Registers the font faces bundled in `inst/fonts/` (Lato and Roboto Slab for
-`theme_hda()`, Open Sans and Poppins for `theme_hfv()`, Noto Sans for
-`theme_pha()`) with \pkg{sysfonts}, then enables \pkg{showtext} rendering.
+Registers the font faces bundled in \verb{inst/fonts/} (Lato and Roboto Slab for
+\code{theme_hda()}, Open Sans and Poppins for \code{theme_hfv()}, Noto Sans for
+\code{theme_pha()}) with \pkg{sysfonts}, then enables \pkg{showtext} rendering.
 Everything is read from files installed with the package, so this never
 makes a network request.
 }
 \details{
-Registration can be skipped by setting `options(hdatools.fonts = FALSE)`
-or the environment variable `HDATOOLS_NO_FONTS` to any non-empty value —
+Registration can be skipped by setting \code{options(hdatools.fonts = FALSE)}
+or the environment variable \code{HDATOOLS_NO_FONTS} to any non-empty value —
 useful if a consumer wants to supply its own font setup.
 }

@@ -12,7 +12,7 @@ this overrides the automatic detection.}
 }
 \value{
 A string indicating the detected format: "studio" for interactive
-  sessions, "html" for HTML output, or "pdf" for PDF output.
+sessions, "html" for HTML output, or "pdf" for PDF output.
 }
 \description{
 This function checks the current environment to determine whether the code

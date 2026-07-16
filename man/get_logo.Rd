@@ -12,7 +12,9 @@ get_logo(type = c("hda", "hfv"), width = 100)
 \item{width}{Image width in pixels; defaults to 100}
 }
 \value{
-a path to an image to be used in ggplot2 plots
+A length-one character (glue) string containing an HTML \verb{<img>} tag
+that points at the installed logo file, sized to \code{width}. Intended for use
+in ggtext-rendered plot elements such as a markdown title or caption.
 }
 \description{
 Get a logo for use in a ggplot2 plot

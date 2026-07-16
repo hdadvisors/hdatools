@@ -34,7 +34,7 @@ Use an HDAdvisors-branded ggplot2 theme
 }
 \details{
 When overriding strip text under ggplot2 >= 4.0, use
-  `ggtext::element_markdown()`, never a raw `ggplot2::element_text()`: the
-  branded strip element is a ggtext markdown element, and ggplot2 4.0 only
-  merges theme elements of the same class.
+\code{ggtext::element_markdown()}, never a raw \code{ggplot2::element_text()}: the
+branded strip element is a ggtext markdown element, and ggplot2 4.0 only
+merges theme elements of the same class.
 }

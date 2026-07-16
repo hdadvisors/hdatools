@@ -44,7 +44,11 @@ class.
 - `fct_case_when()`: Create a factor with case_when logic and automatic level ordering
 - `markdown_wrap_gen()`: Generate a function to wrap and format facet labels with markdown
 - `add_zero_line()`: Add darker line to zero intercept
+- `flip_gridlines()`: Flip major gridlines from horizontal to vertical
 - `publish_plot()`: Create dynamic graphic from plot object when document rendered as HTML
+- `get_logo()`: Get an HDA/HFV logo `<img>` tag for use in a plot
+- `get_output_format()`: Detect the current output format (studio, HTML, or PDF)
+- `adjust_base_size()`: Adjust a base font size for the detected output format
 - `register_hda_fonts()`: Register hdatools' bundled fonts (called automatically on load)
 
 ## Usage

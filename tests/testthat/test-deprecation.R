@@ -1,9 +1,8 @@
-# Deprecated ggplot2 idioms (`size=` on elements/geoms, positional `scale_name`)
-# are hard errors under `lifecycle_verbosity = "error"`. Unlike deprecation
-# *warnings*, these errors are not subject to lifecycle's once-per-session
-# frequency gating, so each check fires reliably every time. On pre-Tier-1 code
-# these expectations fail (red); once the deprecated idioms are removed they pass
-# (green).
+# Regression guard: the themes, scales, and helpers must use no deprecated
+# ggplot2 idioms (e.g. `size=` on elements/geoms, positional `scale_name`).
+# Running under `lifecycle_verbosity = "error"` turns any such idiom into a hard
+# error, and unlike deprecation *warnings* these errors are not subject to
+# lifecycle's once-per-session frequency gating, so each check fires every time.
 
 test_that("themes use no deprecated ggplot2 idioms", {
   withr::local_options(lifecycle_verbosity = "error")

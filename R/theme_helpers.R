@@ -86,11 +86,6 @@ register_hda_fonts <- function(quiet = FALSE) {
 
 }
 
-#' @keywords internal
-add_google_fonts <- function(quiet = FALSE) {
-  register_hda_fonts(quiet = quiet)
-}
-
 #' Generate a function to wrap and format facet labels with markdown
 #'
 #' This function creates a labeller function for use with ggplot2 facets.
@@ -115,7 +110,6 @@ add_google_fonts <- function(quiet = FALSE) {
 #'   theme_hda()
 #' }
 #'
-#' @importFrom stringr str_wrap
 #' @export
 markdown_wrap_gen <- function(width = 25) {
   function(labels) {
@@ -281,7 +275,9 @@ publish_plot <- function(plot) {
 #' @param type one of "hda" or "hfv"
 #' @param width Image width in pixels; defaults to 100
 #'
-#' @return a path to an image to be used in ggplot2 plots
+#' @return A length-one character (glue) string containing an HTML `<img>` tag
+#'   that points at the installed logo file, sized to `width`. Intended for use
+#'   in ggtext-rendered plot elements such as a markdown title or caption.
 #' @export
 get_logo <- function(type = c("hda", "hfv"), width = 100) {
 

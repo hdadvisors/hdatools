@@ -16,7 +16,7 @@ or -1 to reverse the order.}
 }
 \value{
 A factor with levels ordered according to their appearance in the
-  case_when conditions, and the specified direction.
+case_when conditions, and the specified direction.
 }
 \description{
 This function combines the functionality of \code{dplyr::case_when()} with

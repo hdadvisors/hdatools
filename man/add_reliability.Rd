@@ -9,30 +9,30 @@ add_reliability(data, cv_col = NULL, scale = c("percent", "proportion"))
 \arguments{
 \item{data}{A data frame or tibble.}
 
-\item{cv_col}{The column of CV values to classify. If `NULL` (the default),
-the legacy `_cv` auto-detection path is used.}
+\item{cv_col}{The column of CV values to classify. If \code{NULL} (the default),
+the legacy \verb{_cv} auto-detection path is used.}
 
-\item{scale}{Whether `cv_col` is on a `"percent"` (0-100, the default) or
-`"proportion"` (0-1) scale. Ignored on the legacy path.}
+\item{scale}{Whether \code{cv_col} is on a \code{"percent"} (0-100, the default) or
+\code{"proportion"} (0-1) scale. Ignored on the legacy path.}
 }
 \value{
-The input data frame with an additional `reliability` character column.
+The input data frame with an additional \code{reliability} character column.
 }
 \description{
-Adds a `reliability` column that classifies each row by its coefficient of
+Adds a \code{reliability} column that classifies each row by its coefficient of
 variation (CV). There are two ways to call it:
 }
 \details{
 \itemize{
-  \item **Supply `cv_col` (recommended).** The named column is classified with
-    `<=` boundaries on the chosen `scale`. With `scale = "percent"` (the
-    default) a CV of exactly 15 is "High" and exactly 30 is "Medium".
-  \item **Omit `cv_col` (legacy).** The single column ending in `_cv` is
-    auto-detected and treated as a 0-1 proportion with strict `<` boundaries
-    (High: CV < 0.15; Medium: 0.15 <= CV < 0.30; Low: CV >= 0.30).
+\item \strong{Supply \code{cv_col} (recommended).} The named column is classified with
+\code{<=} boundaries on the chosen \code{scale}. With \code{scale = "percent"} (the
+default) a CV of exactly 15 is "High" and exactly 30 is "Medium".
+\item \strong{Omit \code{cv_col} (legacy).} The single column ending in \verb{_cv} is
+auto-detected and treated as a 0-1 proportion with strict \code{<} boundaries
+(High: CV < 0.15; Medium: 0.15 <= CV < 0.30; Low: CV >= 0.30).
 }
 
-Missing CV values yield `NA`. The result is a character column (not a factor).
+Missing CV values yield \code{NA}. The result is a character column (not a factor).
 }
 \examples{
 # Recommended: name the CV column (percent scale)
