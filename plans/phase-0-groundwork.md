@@ -103,10 +103,38 @@ reference index shows the four groups; `devtools::check()` still
 
 ### pha-update-2026 usage survey
 
-| Symbol | Call sites | Notes |
-|---|---|---|
-| *(to fill)* | | |
+Survey run 2026-07-16 against `C:\repos\hda\pha-update-2026`. All chapter `.qmd`
+files are stubs (sourcing `_common.R` only; chart code not yet written). Active
+call sites are limited to `_common.R` and archived SOH-2026 scripts.
+
+| Symbol | Call sites (active) | Call sites (archive) | Notes |
+|---|---|---|---|
+| `theme_pha` | 0 | 7 | Archive: `soh-2026/scripts/demographics.R` (×2), `market-rental.R` (×2), `market-sale.R` (×5). Chapters are stubs; all future `theme_pha()` calls are in-scope. |
+| `scale_fill_pha` | 0 | 2 | Archive: `demographics.R`. `_common.R` comments list it as an expected import. |
+| `scale_color_pha` | 0 | 0 | `_common.R` comments list it as expected; no calls yet. |
+| `scale_color_gradient_pha` | 0 | 0 | No usage anywhere. |
+| `scale_fill_gradient_pha` | 0 | 0 | No usage anywhere. |
+| `pha_pal_discrete` | 0 | 0 | Not used; repo defines a local `pha_pal` hardcoded vector instead (matches the hdatools palette). |
+| `add_zero_line` | 0 | 4 | Archive: `demographics.R` (×2), `market-rental.R` (×1), `market-sale.R` (×1). `_common.R` comment lists it as expected import. |
+| `add_reliability` | 0 | 0 | Explicitly bypassed: `_common.R` defines a local `flag_reliability()` wrapper because repo stores CV on 0-100 scale while `add_reliability()` legacy path expects 0-1. |
+| `flip_gridlines` | 0 | 0 | No usage. |
+| `fct_case_when` | 0 | 0 | No usage. |
+| `publish_plot` | 0 | 0 | No usage. |
+| `get_logo` | 0 | 0 | No usage. |
+
+**renv pin status:** renv.lock locks hdatools at v0.1.7 / SHA
+`7ac3e5f04bac009c5da7d06684d43d374a5e9de3` from `RemoteRef: "main"` — effectively
+pinned at that SHA, but on the `main` ref. Needs explicit SHA or tag pin before
+Phase 1 merges (see ROADMAP ledger).
+
+**Design-review consistency:** no surprises. No gradient scale usage in any active
+or planned code. The local `pha_pal` vector duplicates `hdatools::pha_pal_discrete`'s
+colors — the Phase 2 `*_colors` export will let this be cleaned up after 0.4.0.
+The `add_reliability()` bypass is expected per the design review (Q10 in DECISIONS.md).
 
 ### Other findings
 
-- *(to fill)*
+- `.github/` must be in `.Rbuildignore` to suppress the hidden-files NOTE from
+  `R CMD check`. Added in this session.
+- pkgdown `fa-home fa-lg` icon lacks `aria-label` (accessibility advisory from
+  pkgdown 1.x → 2.x); not a build error. Address if pkgdown ever enforces it.
