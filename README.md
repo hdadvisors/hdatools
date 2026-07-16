@@ -9,6 +9,13 @@ The `hdatools` package provides a set of functions and tools for data analysis a
 devtools::install_github("hdadvisors/hdatools")
 ```
 
+hdatools bundles the Lato, Roboto Slab, Open Sans, Poppins, and Noto Sans
+faces used by its themes and registers them offline the first time the
+package loads — no network request, no per-session Google Fonts download.
+To skip registration (for example, to supply your own font setup), set
+`options(hdatools.fonts = FALSE)` or the environment variable
+`HDATOOLS_NO_FONTS` before loading the package.
+
 ## Features
 
 ### Themes
@@ -16,6 +23,12 @@ devtools::install_github("hdadvisors/hdatools")
 - `theme_hda()`: HDAdvisors-branded ggplot2 theme
 - `theme_hfv()`: HousingForward Virginia-branded ggplot2 theme
 - `theme_pha()`: PHA-branded ggplot2 theme
+
+Under ggplot2 >= 4.0, override a theme's `strip.text` (e.g. for faceted
+plots) with `ggtext::element_markdown()`, never a raw
+`ggplot2::element_text()` — the themes' own strip element is a ggtext
+markdown element, and ggplot2 4.0 only merges theme elements of the same
+class.
 
 ### Color Scales
 
@@ -32,6 +45,7 @@ devtools::install_github("hdadvisors/hdatools")
 - `markdown_wrap_gen()`: Generate a function to wrap and format facet labels with markdown
 - `add_zero_line()`: Add darker line to zero intercept
 - `publish_plot()`: Create dynamic graphic from plot object when document rendered as HTML
+- `register_hda_fonts()`: Register hdatools' bundled fonts (called automatically on load)
 
 ## Usage
 
@@ -58,9 +72,14 @@ ggplot(data, aes(x, y, fill = group)) +
        subtitle = "Using *hdatools* package",
        caption = "**Source:** Data source.")
 
-# Add reliability labels to a dataset
+# Add reliability labels to a dataset, naming the CV column (percent scale)
 data_with_reliability <- data |> 
-  mutate(cv = runif(10, 0, 0.5)) |> 
+  mutate(cv = runif(8, 0, 50)) |> 
+  add_reliability(cv_col = cv)
+
+# Legacy path: auto-detects a single column ending in "_cv" (0-1 proportion)
+data_with_legacy_cv <- data |> 
+  mutate(value_cv = runif(8, 0, 0.5)) |> 
   add_reliability()
 
 # Create a factor with custom ordering

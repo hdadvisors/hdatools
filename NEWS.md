@@ -1,3 +1,98 @@
+# hdatools 0.2.0
+
+## Breaking changes
+
+* `add_reliability()` gains a `cv_col` argument. Supplying it switches to a
+  new classification path: tidy-eval column selection, a `scale` argument
+  (`"percent"`, the default, or `"proportion"`), and `<=` boundaries (a CV
+  of exactly 15 percent is now "High"). Omitting `cv_col` keeps the
+  original behavior byte-for-byte: auto-detect a single column ending in
+  `_cv`, treat it as a 0-1 proportion, and use strict `<` boundaries.
+* `flip_gridlines()`'s `size` argument is deprecated in favor of
+  `linewidth`, matching ggplot2's own `size` → `linewidth` rename.
+* `ggiraph` moves from Imports to Suggests. `publish_plot()` now errors
+  with an install hint if ggiraph isn't installed, instead of failing to
+  load the package at all.
+
+## New features
+
+* Fonts are bundled and registered offline. `inst/fonts/` ships the exact
+  static TTF faces `theme_hda()`, `theme_hfv()`, and `theme_pha()` use
+  (Lato, Roboto Slab, Open Sans, Poppins, Noto Sans), registered by the
+  new exported `register_hda_fonts()` — no more per-session network
+  download from Google Fonts, and no more silent failure when a render
+  happens offline. Opt out with `options(hdatools.fonts = FALSE)` or the
+  `HDATOOLS_NO_FONTS` environment variable. See `inst/fonts/LICENSES.md`
+  for the OFL and Apache 2.0 texts covering each face.
+* `theme_pha()` reaches parity with `theme_hda()`/`theme_hfv()`: new
+  `output_format`, `html_adjust`/`pdf_adjust`, and `...` passthrough
+  arguments, and a `strip.text` element so `markdown_wrap_gen()` facet
+  labels render correctly. `html_adjust`/`pdf_adjust` default to 0/0, so
+  existing `theme_pha()` output is unchanged. `theme_hda()`/`theme_hfv()`
+  also gain explicit `html_adjust`/`pdf_adjust` parameters (defaults match
+  prior hardcoded behavior).
+* `get_logo()` now resolves its image path from the installed package
+  (`system.file()`) instead of a hardcoded relative path, so it works
+  correctly once the package is installed rather than only from source.
+
+## Modernization for ggplot2 4.0
+
+* Dropped the deprecated positional `scale_name` argument from all
+  discrete and gradient scales.
+* Renamed every deprecated `size=` to `linewidth=` in the themes and in
+  `add_zero_line()`.
+* Raised the `ggplot2` floor to >= 3.5.0 (required for the `scale_name`
+  deprecation shape) and added floors to all other Imports, chosen below
+  every known consumer's lockfile.
+
+## Documentation & housekeeping
+
+* Fixed a broken `add_reliability()` README example (it passed 10 values
+  into an 8-row data frame and relied on `_cv` auto-detection against a
+  column literally named `cv`).
+* Documented that `strip.text` overrides on any theme must use
+  `ggtext::element_markdown()`, not a raw `ggplot2::element_text()` —
+  ggplot2 4.0 only merges theme elements of the same class.
+* Slimmed the namespace: replaced blanket `@import` package imports with
+  qualified `pkg::` calls throughout, keeping only `%+replace%` and
+  rlang's tidy-eval helpers as bare imports.
+* Fixed the `Authors@R` given/family name order for all three authors.
+  Jonathan Knopf is now the maintainer; Kyle Walker moves to `aut`.
+* Added `URL`/`BugReports`, dropped `Date`/`LazyData`, and removed the
+  legacy `Author:` field.
+* Removed the dead `data-raw/DATASET.R` stub and moved
+  `vignettes/branded-themes.Rmd` to `vignettes/articles/` (pkgdown builds
+  it as a long-form article; it was never wired up as a real package
+  vignette).
+
+# hdatools 0.1.7
+
+* See git history.
+
+# hdatools 0.1.6
+
+* See git history.
+
+# hdatools 0.1.5
+
+* See git history.
+
+# hdatools 0.1.4
+
+* See git history.
+
+# hdatools 0.1.3
+
+* See git history.
+
+# hdatools 0.1.2
+
+* See git history.
+
+# hdatools 0.1.1
+
+* See git history.
+
 # hdatools 0.1.0
 
 * Merges updates in `jtk` branch to original build-out in `main`.
