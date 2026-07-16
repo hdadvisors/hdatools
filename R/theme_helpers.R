@@ -86,11 +86,6 @@ register_hda_fonts <- function(quiet = FALSE) {
 
 }
 
-#' @keywords internal
-add_google_fonts <- function(quiet = FALSE) {
-  register_hda_fonts(quiet = quiet)
-}
-
 #' Generate a function to wrap and format facet labels with markdown
 #'
 #' This function creates a labeller function for use with ggplot2 facets.

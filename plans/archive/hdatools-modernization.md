@@ -1,3 +1,8 @@
+> **ARCHIVED — completed.** Shipped as v0.2.0, 2026-07-15; see NEWS.md.
+> Items 1–18 all landed. Open item — the consumer `add_reliability()` swap —
+> is tracked in the consumer repos, not here. Kept for historical reference;
+> content below is unedited.
+
 # hdatools 0.2.0 — Modernization Release Plan
 
 > Approved 2026-07-15. Investigation performed plan-only; execution happens in a separate session. No package source was modified while producing this plan.

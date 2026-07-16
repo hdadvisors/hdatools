@@ -1,3 +1,8 @@
+> **ARCHIVED — completed.** Ran during v0.2.0 development (shipped 2026-07-15;
+> see NEWS.md). Its post-commit-4 confirmations hold: `theme_pha()` reached
+> parity and its `strip.text` uses `ggtext::element_markdown()`. Kept for
+> historical reference; content below is unedited.
+
 # strip.text diagnostic — theme_pha parity (Verification §2)
 
 Run **before** editing `R/themes.R` for commit 4 (theme_pha parity + strip.text),

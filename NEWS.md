@@ -1,3 +1,12 @@
+# hdatools (development version)
+
+* Internal cleanup only, no behavior changes: enabled Roxygen markdown so help
+  pages and the pkgdown site render `code`/**bold** correctly, corrected the
+  `get_logo()` `@return` description, dropped unused namespace imports, added
+  `flip_gridlines()`/`get_logo()`/`get_output_format()`/`adjust_base_size()` to
+  the README, removed the dead internal `add_google_fonts()` alias, and made the
+  package startup message fire only when font registration actually succeeds.
+
 # hdatools 0.2.0
 
 ## Breaking changes
