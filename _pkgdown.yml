@@ -1,8 +1,7 @@
 url: https://hdadvisors.github.io/hdatools/
 
 template:
-  params:
-    bootswatch: cosmo
+  bootstrap: 5
 
 navbar:
   structure:
@@ -28,3 +27,49 @@ navbar:
     github:
       icon: fa-github fa-lg
       href: https://github.com/hdadvisors/hdatools
+
+reference:
+  - title: Themes
+    desc: >
+      ggplot2 themes for HDAdvisors, HousingForward Virginia, and PHA projects.
+    contents:
+      - theme_hda
+      - theme_hfv
+      - theme_pha
+
+  - title: Palettes & scales
+    desc: >
+      Discrete and continuous color palettes and ggplot2 scale functions.
+    contents:
+      - hda_pal_discrete
+      - hfv_pal_discrete
+      - pha_pal_discrete
+      - scale_color_hda
+      - scale_color_hfv
+      - scale_color_pha
+      - scale_fill_hda
+      - scale_fill_hfv
+      - scale_fill_pha
+      - scale_color_gradient_hda
+      - scale_color_gradient_pha
+      - scale_fill_gradient_pha
+
+  - title: Helpers
+    desc: >
+      Theme utilities, font registration, and output helpers.
+    contents:
+      - register_hda_fonts
+      - flip_gridlines
+      - add_zero_line
+      - adjust_base_size
+      - get_output_format
+      - get_logo
+      - publish_plot
+      - markdown_wrap_gen
+
+  - title: Analysis utils
+    desc: >
+      General-purpose analytical utilities for housing data workflows.
+    contents:
+      - add_reliability
+      - fct_case_when

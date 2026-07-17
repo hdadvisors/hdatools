@@ -1,5 +1,12 @@
 # hdatools (development version)
 
+* pkgdown site rebuilt on Bootstrap 5 (`template: bootstrap: 5`); reference
+  index now groups exports into **Themes**, **Palettes & scales**, **Helpers**,
+  and **Analysis utils**. Fixed "depreciated" → "deprecated" wording in the
+  `space` parameter docs for `scale_color_gradient_hda()`,
+  `scale_color_gradient_pha()`, and `scale_fill_gradient_pha()`. No behavior
+  change.
+
 * Internal cleanup only, no behavior changes: enabled Roxygen markdown so help
   pages and the pkgdown site render `code`/**bold** correctly, corrected the
   `get_logo()` `@return` description, dropped unused namespace imports, added
