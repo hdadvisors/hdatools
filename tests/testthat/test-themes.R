@@ -73,3 +73,89 @@ test_that("theme_pha passes ... through to ggplot2::theme()", {
   th <- theme_pha(legend.position = "bottom")
   expect_equal(th[["legend.position"]], "bottom")
 })
+
+# --- Pre-refactor identity tests: colours, lineheights, default sizes ---
+
+test_that("theme_hda default text colour, lineheight, and base_size", {
+  el <- ggplot2::calc_element("text", theme_hda())
+  expect_identical(el$colour, "#383c3d")
+  expect_equal(el$lineheight, 0.9)
+  expect_equal(el$size, 14)
+})
+
+test_that("theme_hfv default text colour, lineheight, and base_size", {
+  el <- ggplot2::calc_element("text", theme_hfv())
+  expect_identical(el$colour, "#383c3d")
+  expect_equal(el$lineheight, 0.9)
+  expect_equal(el$size, 14)
+})
+
+test_that("theme_pha default text colour, lineheight, and base_size", {
+  el <- ggplot2::calc_element("text", theme_pha())
+  expect_identical(el$colour, "#383c3d")
+  expect_equal(el$lineheight, 1)
+  expect_equal(el$size, 10)
+})
+
+test_that("all themes use #cbcdcc gridlines at linewidth 0.05 (default orientation)", {
+  for (th in list(theme_hda(), theme_hfv(), theme_pha())) {
+    y_el <- ggplot2::calc_element("panel.grid.major.y", th)
+    expect_true(has_element_class(y_el, "element_line"))
+    expect_identical(y_el$colour, "#cbcdcc")
+    expect_equal(y_el$linewidth, 0.05)
+    expect_true(has_element_class(
+      ggplot2::calc_element("panel.grid.major.x", th), "element_blank"
+    ))
+  }
+})
+
+test_that("theme_hda flip_gridlines swaps major gridline orientation", {
+  default <- theme_hda()
+  flipped <- theme_hda(flip_gridlines = TRUE)
+  expect_true(has_element_class(
+    ggplot2::calc_element("panel.grid.major.y", default), "element_line"))
+  expect_true(has_element_class(
+    ggplot2::calc_element("panel.grid.major.x", default), "element_blank"))
+  expect_true(has_element_class(
+    ggplot2::calc_element("panel.grid.major.x", flipped), "element_line"))
+  expect_true(has_element_class(
+    ggplot2::calc_element("panel.grid.major.y", flipped), "element_blank"))
+  expect_identical(
+    ggplot2::calc_element("panel.grid.major.x", flipped)$colour, "#cbcdcc"
+  )
+})
+
+test_that("theme_hfv flip_gridlines swaps major gridline orientation", {
+  default <- theme_hfv()
+  flipped <- theme_hfv(flip_gridlines = TRUE)
+  expect_true(has_element_class(
+    ggplot2::calc_element("panel.grid.major.y", default), "element_line"))
+  expect_true(has_element_class(
+    ggplot2::calc_element("panel.grid.major.x", default), "element_blank"))
+  expect_true(has_element_class(
+    ggplot2::calc_element("panel.grid.major.x", flipped), "element_line"))
+  expect_true(has_element_class(
+    ggplot2::calc_element("panel.grid.major.y", flipped), "element_blank"))
+})
+
+test_that("theme_hda passes ... through to ggplot2::theme()", {
+  th <- theme_hda(legend.position = "bottom")
+  expect_equal(th[["legend.position"]], "bottom")
+})
+
+test_that("theme_hfv passes ... through to ggplot2::theme()", {
+  th <- theme_hfv(legend.position = "bottom")
+  expect_equal(th[["legend.position"]], "bottom")
+})
+
+test_that("plot.title size is base_size * 1.25 for all themes", {
+  expect_equal(ggplot2::calc_element("plot.title", theme_hda())$size, 14 * 1.25)
+  expect_equal(ggplot2::calc_element("plot.title", theme_hfv())$size, 14 * 1.25)
+  expect_equal(ggplot2::calc_element("plot.title", theme_pha())$size, 10 * 1.25)
+})
+
+test_that("plot.subtitle size is base_size * 1.125 for all themes", {
+  expect_equal(ggplot2::calc_element("plot.subtitle", theme_hda())$size, 14 * 1.125)
+  expect_equal(ggplot2::calc_element("plot.subtitle", theme_hfv())$size, 14 * 1.125)
+  expect_equal(ggplot2::calc_element("plot.subtitle", theme_pha())$size, 10 * 1.125)
+})

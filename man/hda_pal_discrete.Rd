@@ -15,5 +15,6 @@ hda_pal_discrete(direction = 1, repeat_pal = FALSE)
 n colors (generally passed to ggplot2)
 }
 \description{
-Generate a discrete HDA color palette
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Use \code{scale_color_hda()}/\code{scale_fill_hda()}
+directly instead of calling this palette generator.
 }

@@ -2,14 +2,24 @@
 % Please edit documentation in R/scales.R
 \name{scale_color_gradient_pha}
 \alias{scale_color_gradient_pha}
+\alias{scale_colour_gradient_pha}
 \title{PHA-branded 4-color continuous color scale}
 \usage{
 scale_color_gradient_pha(
   ...,
-  colors = c("#5bab8e", "#a6cccc", "#f39152", "#be451c"),
+  colors = .brands$pha$gradient,
   values = NULL,
   space = "Lab",
-  na.value = "#e2e4e3",
+  na.value = .brands$pha$na_color,
+  guide = "colorbar"
+)
+
+scale_colour_gradient_pha(
+  ...,
+  colors = .brands$pha$gradient,
+  values = NULL,
+  space = "Lab",
+  na.value = .brands$pha$na_color,
   guide = "colorbar"
 )
 }
@@ -27,5 +37,5 @@ scale_color_gradient_pha(
 \item{guide}{Legend representation for scale}
 }
 \description{
-PHA-branded 4-color continuous color scale
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 }

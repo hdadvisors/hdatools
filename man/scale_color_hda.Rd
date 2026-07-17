@@ -2,9 +2,12 @@
 % Please edit documentation in R/scales.R
 \name{scale_color_hda}
 \alias{scale_color_hda}
+\alias{scale_colour_hda}
 \title{HDA-branded discrete color scale}
 \usage{
 scale_color_hda(direction = 1, repeat_pal = FALSE, ...)
+
+scale_colour_hda(direction = 1, repeat_pal = FALSE, ...)
 }
 \arguments{
 \item{direction}{If -1, reverse the scale (defaults to 1)}

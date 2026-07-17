@@ -2,9 +2,12 @@
 % Please edit documentation in R/scales.R
 \name{scale_color_hfv}
 \alias{scale_color_hfv}
+\alias{scale_colour_hfv}
 \title{HFV-branded discrete color scale}
 \usage{
 scale_color_hfv(direction = 1, repeat_pal = FALSE, ...)
+
+scale_colour_hfv(direction = 1, repeat_pal = FALSE, ...)
 }
 \arguments{
 \item{direction}{If -1, reverse the scale (defaults to 1)}

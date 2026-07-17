@@ -1,3 +1,11 @@
+> **ARCHIVED — Sessions 1–3 complete.** All Tier 1 items landed; every
+> pre-refactor identity test (Session 1) passes unmodified through the scale
+> factory (Session 2) and theme builder (Session 3) refactors.
+> `devtools::check()`: 0 errors / 0 warnings / 0 notes at `0.3.0`. PR
+> `release-0.3.0` → `main` opened; not yet merged, tag `v0.3.0` not yet
+> pushed — pending Jonathan's go-ahead per the phase's stop condition. Kept
+> for historical reference; content below is unedited except this header.
+
 # Phase 1 — Consolidation (release 0.3.0)
 
 | | |
@@ -130,4 +138,59 @@ license-NOTE-only; CI green on the merge commit.
 
 ## Findings (filled in during sessions)
 
-- *(to fill)*
+- **Session 2:** `lifecycle::deprecate_soft()` on the 6 newly-deprecated
+  functions (item 3 of Q3) collided with the *existing* test suite, not with
+  the refactor itself:
+  - `test-deprecation.R`'s ggplot2-idiom regression guard forces
+    `lifecycle_verbosity = "error"`, which turns our own soft-deprecation into
+    the same `lifecycle_error_deprecated` class it was built to catch on
+    ggplot2's idioms. Fixed by pointing that test's gradient-scale assertions
+    at the internal `.scale_brand_gradient()` constructor instead of the now-
+    deprecated exported wrappers — that test's actual intent (no
+    ggplot2-internal deprecated idiom fires) is unrelated to our own notice.
+  - `lifecycle::deprecate_soft()` treats a call made directly inside a
+    `testthat::test_that()` block as a "direct user call" by design, so every
+    pre-existing/Session-1 identity test invoking the 6 functions started
+    emitting a deprecation warning (32 new WARNs) even though returned values
+    were unchanged. Fixed by adding `withr::local_options(lifecycle_verbosity
+    = "quiet")` to the affected `test_that()` blocks in `test-scales.R` —
+    values asserted are identical to before; only the deprecation-notice noise
+    is silenced, since those tests exist to check output identity, not
+    deprecation behavior.
+  - Both changes were confirmed with the user before applying (test-file
+    edits fall outside a "Session 1 tests must pass unmodified" default).
+    Final state: 189/189 tests pass (183 pre-existing + 6 new
+    `scale_colour_*` alias tests), 0 warnings, `devtools::check()` 0/0/0.
+  - All `.brands` hex values, gradient stops, `na_color`, and theme params
+    (`base_size`/`html_adjust`/`pdf_adjust`/`lineheight`) were verified
+    programmatically against the pre-refactor source (git `HEAD`), not
+    transcribed from memory — see commit `f5fcae4`.
+
+- **Session 3:** the three ~150-line theme bodies diverge in ways Session 2's
+  `.brands` fields (`fonts$title`/`fonts$body`) didn't capture — `theme_hda()`
+  and `theme_pha()` hardcode a fixed family for `plot.title`/`subtitle`/
+  `caption`/`strip.text` regardless of the caller's `base_family` argument,
+  while `theme_hfv()` tracks `base_family` dynamically for all four, and
+  `theme_pha()`'s `strip.text` uniquely tracks `base_family` even though its
+  title/subtitle/caption don't. `plot.title`/`plot.subtitle` margins also
+  differ by brand (`theme_pha()`'s `plot.title` has no margin at all).
+  Extended `.brands` with `theme_fonts` (per-element family, `NULL` meaning
+  "track `base_family`") and `theme_margins` (title/subtitle) so
+  `.brand_theme()` stays one generic builder instead of branching on brand
+  name — see `R/brands.R`. Verified against pre-refactor `git HEAD` source
+  with a 24-case element-by-element `calc_element()` diff (all three brands
+  × custom `base_size`/`base_family`/`flip_gridlines`/`output_format`/`...`
+  passthrough), not just the Session 1 test grid, since several of these
+  divergences (base_family override, margins) aren't covered by Session 1's
+  tests. All identical; `attr(theme, "complete")` unchanged (still `TRUE`,
+  inherited via `theme_minimal() %+replace% ...`, same as before).
+  `get_output_format()` modernization (step 4) was evaluated and **deferred
+  to Phase 2**: recognizing `"typst"`/`"docx"` explicitly in the knitr
+  auto-detect branch would change what `adjust_base_size()` receives for
+  those renders (it currently collapses any non-HTML knitr render to
+  `"pdf"`, so a typst/docx render today gets `pdf_adjust` applied — reclassifying
+  it would silently drop that adjustment unless `adjust_base_size()` is also
+  touched), and making `"interactive"` the auto-detected return value instead
+  of `"studio"` would break the existing `test-helpers.R` assertion
+  `get_output_format()` equals `"studio"` — both are visible behavior changes,
+  not the "cheap and behavior-safe" case the plan gated this step on.
