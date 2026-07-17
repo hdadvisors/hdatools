@@ -2,14 +2,24 @@
 % Please edit documentation in R/scales.R
 \name{scale_color_gradient_hda}
 \alias{scale_color_gradient_hda}
+\alias{scale_colour_gradient_hda}
 \title{HDA-branded 4-color continuous color scale}
 \usage{
 scale_color_gradient_hda(
   ...,
-  colors = c("#445ca9", "#8baeaa", "#e9ab3f", "#e76f52"),
+  colors = .brands$hda$gradient,
   values = NULL,
   space = "Lab",
-  na.value = "#cfcfd0",
+  na.value = .brands$hda$na_color,
+  guide = "colorbar"
+)
+
+scale_colour_gradient_hda(
+  ...,
+  colors = .brands$hda$gradient,
+  values = NULL,
+  space = "Lab",
+  na.value = .brands$hda$na_color,
   guide = "colorbar"
 )
 }
@@ -27,5 +37,5 @@ scale_color_gradient_hda(
 \item{guide}{Legend representation for scale}
 }
 \description{
-HDA-branded 4-color continuous color scale
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 }

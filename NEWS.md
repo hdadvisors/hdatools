@@ -1,5 +1,23 @@
 # hdatools (development version)
 
+* New `scale_colour_hda()`, `scale_colour_hfv()`, `scale_colour_pha()`,
+  `scale_colour_gradient_hda()`, and `scale_colour_gradient_pha()` — British-
+  spelling aliases of the existing `scale_color_*()` exports, for parity with
+  ggplot2's own `colour`/`color` aliasing. No change to any existing export.
+* `hda_pal_discrete()`, `hfv_pal_discrete()`, `pha_pal_discrete()`,
+  `scale_color_gradient_hda()`, `scale_color_gradient_pha()`, and
+  `scale_fill_gradient_pha()` are now soft-deprecated (`lifecycle::
+  deprecate_soft()`); they keep working exactly as before, but calling them
+  directly will surface a one-time deprecation notice. `lifecycle` moves to
+  Imports.
+* Internal-only: the three brands' discrete palettes, gradient stops, NA
+  colours, and select theme parameters (`base_size`, `html_adjust`,
+  `pdf_adjust`, `lineheight`) now live in one internal registry
+  (`R/brands.R`), and the 9 exported discrete/gradient scales are now thin
+  wrappers over two shared internal constructors. No behavior change; every
+  pre-refactor identity test asserting exact hex/parameter values passes
+  unmodified.
+
 * pkgdown site rebuilt on Bootstrap 5 (`template: bootstrap: 5`); reference
   index now groups exports into **Themes**, **Palettes & scales**, **Helpers**,
   and **Analysis utils**. Fixed "depreciated" → "deprecated" wording in the

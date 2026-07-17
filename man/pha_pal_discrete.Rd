@@ -15,5 +15,6 @@ pha_pal_discrete(direction = 1, repeat_pal = FALSE)
 n colors (generally passed to ggplot2)
 }
 \description{
-Generate a discrete PHA color palette
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Use \code{scale_color_pha()}/\code{scale_fill_pha()}
+directly instead of calling this palette generator.
 }

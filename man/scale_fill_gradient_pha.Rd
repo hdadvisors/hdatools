@@ -6,10 +6,10 @@
 \usage{
 scale_fill_gradient_pha(
   ...,
-  colors = c("#5bab8e", "#a6cccc", "#f39152", "#be451c"),
+  colors = .brands$pha$gradient,
   values = NULL,
   space = "Lab",
-  na.value = "#e2e4e3",
+  na.value = .brands$pha$na_color,
   guide = "colorbar"
 )
 }
@@ -27,5 +27,5 @@ scale_fill_gradient_pha(
 \item{guide}{Legend representation for scale}
 }
 \description{
-PHA-branded 4-color continuous fill scale
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 }

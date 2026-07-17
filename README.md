@@ -32,11 +32,11 @@ class.
 
 ### Color Scales
 
-- `scale_color_hda()`, `scale_fill_hda()`: HDA-branded discrete color scales
-- `scale_color_hfv()`, `scale_fill_hfv()`: HFV-branded discrete color scales
-- `scale_color_pha()`, `scale_fill_pha()`: PHA-branded discrete color scales
-- `scale_color_gradient_hda()`: HDA-branded continuous color scale
-- `scale_color_gradient_pha()`, `scale_fill_gradient_pha()`: PHA-branded continuous color scales
+- `scale_color_hda()`/`scale_colour_hda()`, `scale_fill_hda()`: HDA-branded discrete color scales
+- `scale_color_hfv()`/`scale_colour_hfv()`, `scale_fill_hfv()`: HFV-branded discrete color scales
+- `scale_color_pha()`/`scale_colour_pha()`, `scale_fill_pha()`: PHA-branded discrete color scales
+- `scale_color_gradient_hda()`/`scale_colour_gradient_hda()`: HDA-branded continuous color scale
+- `scale_color_gradient_pha()`/`scale_colour_gradient_pha()`, `scale_fill_gradient_pha()`: PHA-branded continuous color scales
 
 ### Utility Functions
 
