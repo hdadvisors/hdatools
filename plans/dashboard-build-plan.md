@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | not started |
+| **Status** | Session 1 complete |
 | **Branch** | `dashboard-tooling` (off `main` at v0.3.0; this plan is committed on it) |
 | **Target version** | none — repo tooling only; no R-package-tree changes, no release, no tag |
 | **Entry criteria** | This plan committed on `dashboard-tooling`; design settled in [dashboard-build-prompt.md](dashboard-build-prompt.md) (superseded by this doc — executors need only this file) |
@@ -628,4 +628,18 @@ co-author line), then a small PR `dashboard-tooling` → `main` titled
 
 ## Findings (filled in during sessions)
 
-*(none yet — build not started)*
+### Session 1 — 2026-07-17
+
+**Outcome:** all 27 parser assertions pass; `--check-only` emits exactly the one expected warning (`hdatools-audit.md: no ARCHIVED header`); stub HTML generated successfully.
+
+**Implementation notes:**
+
+- `hdatools-audit.md` backslash-escaped headings (`\#`, `\##`) handled in `parse_archive` via a fallback `^\\#\s+` regex for title extraction; status correctly returns `None` with warning.
+- `parse_phase_plan` header-table parser anchors on the `| | |` empty-header sentinel row then reads bold-first-cell rows; correctly parses both phase-1 (archive, em-dash session titles) and phase-2 (skeleton, colon form) without special-casing.
+- `md_to_html` uses line-by-line state machine; code spans are protected with a sentinel before bold/italic substitution to prevent double-processing.
+- `NEWS.md` currently has no dev-version heading (released state); `parse_news` returns `dev=None`, first release `0.3.0` — both correct.
+- ROADMAP parser correctly identifies all 5 phases; gate and ledger tables parse cleanly.
+- DECISIONS: 8 settled rows, 10 open rows confirmed.
+- Git hook written with LF-only line endings (0 CRLF); confirmed via byte scan.
+
+**No convention mismatches found** relative to the verified repo facts documented above.
