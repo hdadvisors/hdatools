@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Session 2 complete |
+| **Status** | Session 3 complete — ready for PR |
 | **Branch** | `dashboard-tooling` (off `main` at v0.3.0; this plan is committed on it) |
 | **Target version** | none — repo tooling only; no R-package-tree changes, no release, no tag |
 | **Entry criteria** | This plan committed on `dashboard-tooling`; design settled in [dashboard-build-prompt.md](dashboard-build-prompt.md) (superseded by this doc — executors need only this file) |
@@ -718,3 +718,120 @@ plan's own caveat — verified against reality, not treated as a bug):**
 **No convention mismatches found beyond the two noted above** (the
 `origin/HEAD` short-ref quirk and the two-tier done-like definition), both
 resolved as documented.
+
+### Session 3 — 2026-07-17
+
+**Outcome:** full HTML rendering shipped (CSS/JS constants, page chrome, all
+five tabs), `update-dashboard.bat`, `.gitignore` entries, and the CLAUDE.md
+`## Development dashboard` section all landed. Flexoki hexes verified
+byte-for-byte against `kepano/flexoki`'s README (via `gh api
+repos/kepano/flexoki/contents/README.md`) — all 10 constants in the spec
+matched exactly, no adjustment needed. Full verification checklist (8 items)
+passed; two genuine, non-obvious things surfaced along the way, both fixed
+in this session (not deferred):
+
+1. **Real bug, Session 1 layer, first visible now:** `md_inline`'s code-span
+   protection re-escaped its already-html-escaped input
+   (`html.escape(m.group(1))` on text that was, by the function's own
+   contract, already escaped by the caller). Invisible in Session 1/2
+   because nothing was ever rendered in a browser; visible the moment
+   DECISIONS.md's `` `add_zero_line("x"/"y")` `` cell rendered as literal
+   `&quot;` text instead of a quote mark. Fixed by dropping the second
+   `html.escape()` call — `m.group(1)` is wrapped in `<code>` as-is now.
+   Worth a grep for other double-escape sites if the markdown layer is
+   touched again.
+2. **Not a bug — a real git-topology consequence of the squash-merge
+   gotcha the plan already flagged.** The lane layout aligns branch cards
+   to their `git merge-base` row. For `phase-0-groundwork` and
+   `release-0.3.0` (both squash-merged, both deleted locally, both joined
+   via `gh` PR data instead of ancestry), the actual `git merge-base main
+   <ref>` result is **not** one of the 3 first-parent mainline commits —
+   it's a real, in-era commit (verified: descendant of `5963754`) that
+   simply isn't on `main`'s first-parent chain, because squash-merging
+   severed the branch's real ancestry from main's linear history. Only
+   `dashboard-tooling` (never squash-merged, still live) aligns cleanly.
+   Rather than force a misleading alignment, added an honest fallback row
+   ("merge-base not on main's first-parent chain — typically a
+   squash-merged branch...") for branches whose merge-base doesn't match a
+   shown mainline row. This will recur for every future squash-merged,
+   subsequently-deleted branch — expected, not a regression.
+
+**Verification checklist — all 8 items passed:**
+
+1. Generator exits 0; `gh-cache.json` stamped same-day.
+2. All five tabs, the Docs sub-switcher, and the legacy `<details>`
+   footnote walked in a browser; `#decisions` hash-reload correctly
+   restored the Decisions tab on load.
+3. Banner fired exactly the 4 documented doc-lag warnings, no
+   version-vs-NEWS warning, ended with the "fix the docs by hand" line.
+4. `--offline` with cache present → orange cached-data banner with the
+   correct stamp. Cache deleted + `--offline` → clean degrade (no crash,
+   exit 0), and correctly silenced checks 1/3/5 (PR-dependent) while check
+   2 (tag-only) still fired — matching Session 2's documented two-tier
+   behavior. Ran once with a **genuinely gh-less PATH** (`env -i PATH=...`
+   excluding GitHub CLI's directory, no `--offline` flag) — confirmed real
+   failure *detection*: `FileNotFoundError` caught, fell back to cache,
+   correct banner. Not a simulation of the offline flag; gh was actually
+   unreachable.
+5. No-plan-file path: copied ROADMAP.md to the scratchpad, changed Phase
+   0's Plan file cell to `written at phase gate`, drove `parse_roadmap` +
+   `resolve_plan_file` + `render_active_phase_card` against the copy from a
+   scratch script → resolved state `absent`, "No plan file yet" note
+   rendered. Also drove the skeleton path directly (Phase 2 isn't the
+   currently-active phase, so the active-card skeleton branch needed its
+   own scratch exercise): resolved state `skeleton`, chip rendered.
+6. Fed a garbage file to `parse_decisions` and `parse_phase_plan` via
+   `run_section` — both returned warnings, no exception; confirmed the
+   resulting `warn-panel` HTML renders correctly. Archive panel's
+   `hdatools-audit.md: no ARCHIVED header` line confirmed inline in the
+   browser.
+6b. `hda.machine` was already set globally (`jtk-desktop`) from a prior
+   session; `core.hooksPath` was not set for this clone. Set it
+   temporarily, confirmed the hook script directly (invoked against scratch
+   commit-message files, not a real commit — see note below): adds the
+   trailer, no-ops on `merge`/`squash` sources, no-ops when a trailer is
+   already present. Confirmed `render_mainline_row` shows the machine chip
+   only when the trailer is non-empty. **Did not make a scratch commit** —
+   my standing instructions require your go-ahead before any commit, and
+   the plan's own phrasing ("keep or amend that commit as part of the
+   session's real work") means the scratch commit was always meant to
+   become the real one. Unset `core.hooksPath` again afterward per the same
+   instructions (default: don't leave git config changed without being
+   asked to keep it). **Once you approve the Session 3 commit below, if
+   `core.hooksPath` is set at commit time it'll carry the trailer
+   naturally** — recommend re-running
+   `git config core.hooksPath plans/dashboard/githooks` before committing,
+   since `hda.machine` is already in place and this is the last piece of
+   the one-time setup.
+7. `git status --porcelain` hygiene: found `plans/dashboard/dashboard.html`
+   was still git-tracked (committed as the Session 1 stub, before
+   `.gitignore` covered it) — `.gitignore` alone doesn't untrack an
+   already-tracked file. Ran `git rm --cached` to untrack it (working-tree
+   file untouched, now shows `!!`/ignored). `gh-cache.json` was already
+   untracked, now correctly ignored. Final `--porcelain` output: only
+   `.gitignore`, `CLAUDE.md`, `plans/dashboard/generate_dashboard.py`
+   (modified), `plans/dashboard/dashboard.html` (staged deletion from
+   index), and `plans/dashboard/update-dashboard.bat` (new, untracked) —
+   matches the plan's expected file list exactly (`githooks/prepare-commit-msg`
+   needed no changes, already committed in Session 1). No package-tree file
+   touched.
+8. `update-dashboard.bat` run from a real terminal (PowerShell, `cmd /c`):
+   success path regenerated and exited 0. Failure path (`--bogus-flag-xyz`,
+   stdin piped so `pause` didn't hang the session) printed "Dashboard
+   generation FAILED. See message above." and `Press any key to continue`,
+   confirming the errorlevel branch and `pause` both fire correctly, then
+   exited 1.
+
+**Tooling note (not a product bug):** the browser-preview tool used for
+verification cannot actually load `file://` paths outside its own mounted
+root — `navigate` reports success but the tab silently shows a frozen
+snapshot from first load, never picking up regenerated content. Worked
+around by serving `plans/dashboard/` via a throwaway local
+`python -m http.server` on `127.0.0.1` for verification purposes only; the
+shipped product is unaffected and still opens via plain `file://` per spec
+(`update-dashboard.bat` uses `start "" "dashboard.html"`, no server
+involved).
+
+**No package-tree files touched; no pip installs; no network reference in
+the generated HTML** (the only external URLs in the rendered output are gh's
+own PR/CI links, which is expected — not a resource the page loads).

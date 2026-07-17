@@ -149,7 +149,8 @@ def md_inline(text: str) -> str:
     codes: list[str] = []
 
     def protect_code(m: re.Match) -> str:
-        codes.append(f"<code>{html.escape(m.group(1))}</code>")
+        # m.group(1) is already html-escaped (md_inline's input contract) — do not re-escape.
+        codes.append(f"<code>{m.group(1)}</code>")
         return f"{_CODE_SENTINEL}{len(codes) - 1}{_CODE_SENTINEL}"
 
     text = re.sub(r"`([^`]+)`", protect_code, text)
@@ -724,6 +725,23 @@ def parse_news(path: Path) -> tuple[dict, list[str]]:
 
     return {"dev": dev, "releases": releases}, warnings
 
+
+def parse_release_checklist(path: Path) -> tuple[dict, list[str]]:
+    """CLAUDE.md '## Release checklist' numbered list, rendered to HTML."""
+    text = path.read_text(encoding="utf-8", errors="replace")
+    sections = split_h2_sections(text)
+    key = next((k for k in sections if k.startswith("Release checklist")), None)
+    if key is None:
+        return {"html": ""}, ["## Release checklist section not found in CLAUDE.md"]
+    body = "\n".join(sections[key])
+    return {"html": md_to_html(body)}, []
+
+
+def parse_doc_raw(path: Path) -> tuple[dict, list[str]]:
+    """Whole-file markdown render, for the Docs tab (regenerated fresh each run)."""
+    text = path.read_text(encoding="utf-8", errors="replace")
+    return {"html": md_to_html(text)}, []
+
 # ---------------------------------------------------------------------------
 # Git layer
 # ---------------------------------------------------------------------------
@@ -1256,28 +1274,768 @@ def build_model(sections: dict[str, "Section"]) -> dict:
     return model
 
 # ---------------------------------------------------------------------------
-# Stub renderer (Session 1 — replaced in Session 3)
+# CSS / JS constants
 # ---------------------------------------------------------------------------
 
-def render_stub(sections: dict[str, Section]) -> str:
-    lines = [
-        "<!doctype html>",
-        "<html lang='en'><head><meta charset='utf-8'>",
-        "<title>hdatools dashboard (stub)</title></head><body>",
-        "<h1>hdatools dashboard — stub</h1>",
-        "<p>Parse layer complete. Full render in Session 3.</p>",
-        "<ul>",
+CSS_CONSTANT = """
+:root {
+  --paper: #FFFCF0;
+  --black: #100F0F;
+  --base-50: #F2F0E5;
+  --base-100: #E6E4D9;
+  --base-600: #6F6E69;
+  --green-600: #66800B;
+  --orange-600: #BC5215;
+  --red-600: #AF3029;
+  --blue-600: #205EA6;
+  --cyan-600: #24837B;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--black);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.container { max-width: 1100px; margin: 0 auto; padding: 0 20px 60px; }
+a { color: var(--blue-600); }
+code, pre, .commit-sha { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+h1, h2, h3 { line-height: 1.25; }
+h1 { font-size: 1.5rem; margin: 0; }
+h2 { font-size: 1.15rem; margin: 28px 0 10px; border-bottom: 1px solid var(--base-100); padding-bottom: 6px; }
+h3 { font-size: 1rem; margin: 16px 0 6px; }
+
+.page-header { padding: 20px 0 12px; }
+.title-row { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+.version-chip { font-size: 0.9rem; font-weight: normal; color: var(--base-600); margin-left: 8px; }
+.header-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.generated-at { color: var(--base-600); font-size: 0.85rem; }
+
+.chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  background: var(--base-50);
+  color: var(--black);
+  border: 1px solid var(--base-100);
+  white-space: nowrap;
+}
+a.chip { text-decoration: none; }
+.chip-green { background: color-mix(in srgb, var(--green-600) 14%, var(--paper)); border-color: var(--green-600); color: color-mix(in srgb, var(--green-600) 80%, var(--black)); }
+.chip-orange { background: color-mix(in srgb, var(--orange-600) 14%, var(--paper)); border-color: var(--orange-600); color: color-mix(in srgb, var(--orange-600) 80%, var(--black)); }
+.chip-red { background: color-mix(in srgb, var(--red-600) 14%, var(--paper)); border-color: var(--red-600); color: color-mix(in srgb, var(--red-600) 80%, var(--black)); }
+.chip-blue { background: color-mix(in srgb, var(--blue-600) 14%, var(--paper)); border-color: var(--blue-600); color: color-mix(in srgb, var(--blue-600) 80%, var(--black)); }
+.chip-cyan { background: color-mix(in srgb, var(--cyan-600) 14%, var(--paper)); border-color: var(--cyan-600); color: color-mix(in srgb, var(--cyan-600) 80%, var(--black)); }
+.chip-neutral { color: var(--base-600); }
+
+.cache-banner, .doc-lag-banner {
+  margin: 12px 0;
+  padding: 10px 14px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--orange-600) 10%, var(--paper));
+  border-left: 4px solid var(--orange-600);
+}
+.doc-lag-banner ul { margin: 6px 0; padding-left: 20px; }
+.banner-footer { margin: 6px 0 0; font-style: italic; color: var(--base-600); }
+
+.tabbar {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; gap: 4px; flex-wrap: wrap;
+  background: var(--paper);
+  padding: 10px 0; margin-bottom: 16px;
+  border-bottom: 1px solid var(--base-100);
+}
+.tabbar button, .docs-subtabs button {
+  font: inherit; cursor: pointer;
+  padding: 6px 12px;
+  border: 1px solid var(--base-100);
+  background: var(--base-50);
+  color: var(--black);
+  border-radius: 6px 6px 0 0;
+}
+.tabbar button.active, .docs-subtabs button.active {
+  background: var(--paper);
+  border-color: var(--blue-600);
+  border-bottom: 2px solid var(--blue-600);
+  color: var(--blue-600);
+  font-weight: 600;
+}
+.docs-subtabs { display: flex; gap: 4px; margin-bottom: 14px; }
+
+table { width: 100%; border-collapse: collapse; margin: 10px 0 20px; font-size: 0.92rem; }
+th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--base-100); vertical-align: top; }
+th { background: var(--base-50); font-weight: 600; }
+
+.panel { background: var(--base-50); border: 1px solid var(--base-100); border-radius: 8px; padding: 14px 16px; margin: 10px 0; }
+.warn-panel { background: color-mix(in srgb, var(--orange-600) 10%, var(--paper)); border-left: 4px solid var(--orange-600); border-radius: 6px; padding: 8px 12px; margin: 8px 0; font-size: 0.88rem; }
+.warn-panel.hard { background: color-mix(in srgb, var(--red-600) 10%, var(--paper)); border-left-color: var(--red-600); }
+.warn-panel ul { margin: 4px 0 0; padding-left: 20px; }
+
+details { margin: 12px 0; }
+summary { cursor: pointer; padding: 6px 0; font-weight: 600; }
+.archive-details ul, .legacy-details ul { padding-left: 20px; }
+
+.status-note { color: var(--base-600); font-style: italic; }
+
+.active-phase-card .session-list, .active-phase-card .step-list { padding-left: 20px; }
+.active-phase-card .step-list { font-size: 0.88rem; color: var(--base-600); }
+
+.lane-grid { display: grid; grid-template-columns: minmax(200px, 340px) 1fr; gap: 0 20px; }
+.lane-row { display: contents; }
+.lane-main {
+  position: relative;
+  padding: 10px 0 24px 22px;
+  border-left: 2px solid var(--base-100);
+  margin-left: 6px;
+}
+.commit-dot {
+  position: absolute; left: -7px; top: 12px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--black); border: 2px solid var(--paper);
+}
+.commit-info { display: flex; flex-direction: column; gap: 2px; }
+.commit-sha { font-size: 0.85rem; color: var(--base-600); }
+.commit-date { font-size: 0.78rem; color: var(--base-600); }
+.commit-subject { font-size: 0.92rem; }
+.commit-badges { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
+.machine-chip { font-size: 0.72rem; }
+
+.lane-branches { display: flex; flex-direction: column; gap: 8px; padding: 10px 0 24px; }
+.branch-card { background: var(--base-50); border: 1px solid var(--base-100); border-radius: 8px; padding: 10px 12px; }
+.branch-name { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+.branch-detail { font-size: 0.85rem; margin: 3px 0; }
+.branch-annotation { font-size: 0.82rem; color: var(--base-600); margin-top: 6px; font-style: italic; }
+
+.lane-row-unmatched .lane-main { border-left-color: transparent; color: var(--base-600); font-size: 0.85rem; }
+
+.gh-stamp { color: var(--base-600); font-size: 0.85rem; }
+
+.prose img { max-width: 100%; }
+.prose pre { background: var(--base-50); border: 1px solid var(--base-100); padding: 10px; border-radius: 6px; overflow-x: auto; }
+.prose blockquote { border-left: 3px solid var(--base-100); margin: 10px 0; padding: 2px 14px; color: var(--base-600); }
+
+@media (max-width: 720px) {
+  .lane-grid { grid-template-columns: 1fr; }
+  .lane-main { border-left: none; padding-left: 0; }
+  .commit-dot { display: none; }
+}
+"""
+
+JS_CONSTANT = """
+(function () {
+  function activateTab(tabId) {
+    document.querySelectorAll('.tab').forEach(function (el) {
+      el.hidden = el.id !== 'tab-' + tabId;
+    });
+    document.querySelectorAll('.tabbar button').forEach(function (btn) {
+      btn.classList.toggle('active', btn.dataset.tab === tabId);
+    });
+  }
+  function activateDocsSub(sub) {
+    document.querySelectorAll('.docs-tab').forEach(function (el) {
+      el.hidden = el.id !== 'docs-' + sub;
+    });
+    document.querySelectorAll('.docs-subtabs button').forEach(function (btn) {
+      btn.classList.toggle('active', btn.dataset.docsub === sub);
+    });
+  }
+  function restoreFromHash() {
+    var parts = location.hash.replace('#', '').split('/');
+    var tab = parts[0] || 'roadmap';
+    activateTab(tab);
+    if (tab === 'docs') {
+      activateDocsSub(parts[1] || 'readme');
+    }
+  }
+  var tabbar = document.querySelector('.tabbar');
+  if (tabbar) {
+    tabbar.addEventListener('click', function (e) {
+      var btn = e.target.closest('button[data-tab]');
+      if (!btn) return;
+      var tab = btn.dataset.tab;
+      location.hash = tab === 'docs' ? 'docs/readme' : tab;
+    });
+  }
+  var docsSubtabs = document.querySelector('.docs-subtabs');
+  if (docsSubtabs) {
+    docsSubtabs.addEventListener('click', function (e) {
+      var btn = e.target.closest('button[data-docsub]');
+      if (!btn) return;
+      location.hash = 'docs/' + btn.dataset.docsub;
+    });
+  }
+  window.addEventListener('hashchange', restoreFromHash);
+  restoreFromHash();
+})();
+"""
+
+# ---------------------------------------------------------------------------
+# Render helpers
+# ---------------------------------------------------------------------------
+
+def _cls(condition: bool, cls_name: str) -> str:
+    return cls_name if condition else ""
+
+
+def _status_chip(status_raw: str) -> str:
+    prefix = _status_prefix(status_raw)
+    if prefix in ("done", "merged"):
+        cls = "chip-green"
+    elif prefix in ("next up", "in progress", "active"):
+        cls = "chip-blue"
+    elif prefix == "deferred":
+        cls = "chip-neutral"
+    elif prefix.startswith("blocked"):
+        cls = "chip-orange"
+    else:
+        cls = "chip-neutral"
+    return f'<span class="chip {cls}">{md_inline(html.escape(status_raw))}</span>'
+
+
+def render_section_warnings(*secs: Section | None) -> str:
+    """Warn-panel(s) for any section that failed outright or carries soft warnings."""
+    parts: list[str] = []
+    for sec in secs:
+        if sec is None:
+            continue
+        if sec.data is None or sec.warnings:
+            hard = sec.data is None
+            header = f"{sec.name}" + (" failed to parse" if hard else f" — {len(sec.warnings)} warning(s)")
+            items = "".join(f"<li>{html.escape(w)}</li>" for w in sec.warnings)
+            parts.append(
+                f'<div class="warn-panel {_cls(hard, "hard")}">'
+                f'<p>⚠ {html.escape(header)}</p>'
+                f'<ul>{items}</ul></div>'
+            )
+    return "".join(parts)
+
+
+# ---------------------------------------------------------------------------
+# Page chrome
+# ---------------------------------------------------------------------------
+
+_TAB_SECTION_MAP = {
+    "roadmap": ["roadmap", "phase_plan_0", "phase_plan_2", "archive"],
+    "branches": ["git", "gh"],
+    "decisions": ["decisions"],
+    "release": ["gh", "description", "news", "release_checklist"],
+    "docs": ["doc_readme", "doc_claude", "doc_news"],
+}
+
+
+def compute_warn_tab_count(sections: dict[str, Section]) -> int:
+    count = 0
+    for keys in _TAB_SECTION_MAP.values():
+        if any(sections.get(k) and (sections[k].data is None or sections[k].warnings) for k in keys):
+            count += 1
+    return count
+
+
+def render_header(model: dict, sections: dict[str, Section]) -> str:
+    version = (model.get("description") or {}).get("version") or "unknown"
+    git = model.get("git") or {}
+    branch = git.get("current_branch") or "?"
+    dirty_chip = '<span class="chip chip-orange">uncommitted changes</span>' if git.get("dirty") else ""
+    warn_count = compute_warn_tab_count(sections)
+    warn_chip = (
+        f'<span class="chip chip-orange">{warn_count} tab(s) with parse warnings</span>'
+        if warn_count else ""
+    )
+    generated = datetime.now().astimezone().strftime("%Y-%m-%d %H:%M %z")
+    return (
+        '<header class="page-header">'
+        '<div class="title-row">'
+        f'<h1>hdatools <span class="version-chip">v{html.escape(version)}</span></h1>'
+        '<div class="header-meta">'
+        f'<span class="chip chip-neutral"><code>{html.escape(branch)}</code></span>'
+        f'{dirty_chip}{warn_chip}'
+        f'<span class="generated-at">generated {html.escape(generated)}</span>'
+        '</div></div></header>'
+    )
+
+
+def render_tabbar() -> str:
+    tabs = [
+        ("roadmap", "Roadmap"),
+        ("branches", "Branches &amp; PRs"),
+        ("decisions", "Decisions"),
+        ("release", "Release &amp; CI"),
+        ("docs", "Docs"),
     ]
-    for name, sec in sections.items():
-        status = "ok" if sec.data is not None else "FAILED"
-        warn_count = len(sec.warnings)
-        lines.append(
-            f"<li><strong>{html.escape(name)}</strong>: {status}"
-            + (f" — {warn_count} warning(s)" if warn_count else "")
-            + "</li>"
+    buttons = "".join(
+        f'<button data-tab="{tid}" class="{_cls(i == 0, "active")}">{label}</button>'
+        for i, (tid, label) in enumerate(tabs)
+    )
+    return f'<nav class="tabbar">{buttons}</nav>'
+
+
+def render_consistency_banner(model: dict) -> str:
+    warnings_ = [f for f in model.get("consistency", []) if f["level"] == "warning"]
+    if not warnings_:
+        return ""
+    items = "".join(f"<li>{html.escape(f['message'])}</li>" for f in warnings_)
+    return (
+        '<div class="doc-lag-banner">'
+        f'<p><strong>{len(warnings_)} doc-lag warning(s)</strong></p>'
+        f'<ul>{items}</ul>'
+        '<p class="banner-footer">Fix the docs by hand — the dashboard never edits them.</p>'
+        '</div>'
+    )
+
+
+def render_gh_cache_banner(gh: dict) -> str:
+    if gh.get("source") != "cached":
+        return ""
+    age = gh.get("cache_age_days")
+    age_note = f" (cache is {age:.0f} days old)" if age is not None and age > 7 else ""
+    fetched = gh.get("fetched_at") or "unknown time"
+    return (
+        '<div class="cache-banner">'
+        f'⚠ gh unavailable — showing cached data last fetched {html.escape(str(fetched))}{age_note}'
+        '</div>'
+    )
+
+
+# ---------------------------------------------------------------------------
+# Roadmap tab
+# ---------------------------------------------------------------------------
+
+def render_active_phase_card(active: dict) -> str:
+    phase = active.get("phase")
+    label = active.get("label", "none")
+    plan = active.get("plan") or {}
+
+    if phase is None:
+        return '<div class="panel">No active phase found.</div>'
+
+    label_chip = {
+        "active": '<span class="chip chip-blue">active</span>',
+        "blocked": '<span class="chip chip-orange">blocked</span>',
+    }.get(label, "")
+
+    header_html = (
+        f'<h3>Phase {html.escape(phase["phase"])} {label_chip}</h3>'
+        f'<p>{md_inline(html.escape(phase["scope"]))}</p>'
+        f'<p>Release: {md_inline(html.escape(phase["release"]))}'
+        f' &middot; Branch: <code>{html.escape(phase["branch"])}</code>'
+        f' &middot; Status: {_status_chip(phase["status"])}</p>'
+    )
+
+    plan_state = plan.get("state", "absent")
+    if plan_state == "absent":
+        plan_html = (
+            '<p class="plan-note"><em>No plan file yet — drafted just-in-time at the '
+            'phase gate (per ROADMAP convention).</em></p>'
         )
-    lines += ["</ul>", "</body></html>"]
-    return "\n".join(lines)
+    elif plan_state == "archived":
+        plan_html = f'<p class="plan-note">Plan file archived: <code>{html.escape(plan.get("path") or "")}</code></p>'
+    elif plan_state == "skeleton":
+        plan_data = plan.get("data") or {}
+        header = plan_data.get("header", {})
+        entry = header.get("entry_criteria", "")
+        plan_html = (
+            '<p><span class="chip chip-orange">skeleton — gate interview not held</span></p>'
+            + (f'<p>{md_inline(html.escape(entry))}</p>' if entry else "")
+        )
+    else:  # normal
+        plan_data = plan.get("data") or {}
+        header = plan_data.get("header", {})
+        entry = header.get("entry_criteria", "")
+        exit_ = header.get("exit_criteria", "")
+        sessions = plan_data.get("sessions", [])
+        session_items = []
+        for s in sessions:
+            state_cls = "chip-green" if s["done_state"] == "done" else "chip-neutral"
+            steps = "".join(f"<li>{html.escape(st)}</li>" for st in s["steps"])
+            session_items.append(
+                f'<li><span class="chip {state_cls}">{html.escape(s["done_state"])}</span> '
+                f'Session {s["num"]} — {html.escape(s["title"])}'
+                + (f'<ul class="step-list">{steps}</ul>' if steps else "")
+                + "</li>"
+            )
+        plan_html = (
+            (f'<p><strong>Entry:</strong> {md_inline(html.escape(entry))}</p>' if entry else "")
+            + (f'<p><strong>Exit:</strong> {md_inline(html.escape(exit_))}</p>' if exit_ else "")
+            + (f'<ul class="session-list">{"".join(session_items)}</ul>' if session_items else "")
+            + '<p class="plan-note"><em>Session done/not-started is inferred from the '
+              'plan\'s Findings section.</em></p>'
+        )
+
+    return f'<div class="panel active-phase-card">{header_html}{plan_html}</div>'
+
+
+def render_roadmap_tab(model: dict, sections: dict[str, Section]) -> str:
+    roadmap_sec = sections["roadmap"]
+    roadmap = roadmap_sec.data or {}
+    phases = roadmap.get("phases", [])
+    status_note = roadmap.get("status_note", "")
+
+    phase_rows = "".join(
+        "<tr>"
+        f"<td>{md_inline(html.escape(p['phase']))}</td>"
+        f"<td>{md_inline(html.escape(p['release']))}</td>"
+        f"<td>{'<code>' + html.escape(p['branch']) + '</code>' if p['branch'] else ''}</td>"
+        f"<td>{md_inline(html.escape(p['scope']))}</td>"
+        f"<td>{md_inline(html.escape(p['plan_cell_raw']))}</td>"
+        f"<td>{_status_chip(p['status'])}</td>"
+        "</tr>"
+        for p in phases
+    )
+    phase_table = (
+        "<table><thead><tr><th>Phase</th><th>Release</th><th>Branch</th><th>Scope</th>"
+        "<th>Plan file</th><th>Status</th></tr></thead>"
+        f"<tbody>{phase_rows}</tbody></table>"
+    )
+
+    active_card = render_active_phase_card(model.get("active_phase") or {})
+
+    gates = roadmap.get("gates", [])
+    gate_rows = "".join(
+        f"<tr><td>{md_inline(html.escape(g['gate']))}</td><td>{md_inline(html.escape(g['questions']))}</td></tr>"
+        for g in gates
+    )
+    gate_table = (
+        "<h2>Phase-gate questions</h2>"
+        "<table><thead><tr><th>Gate</th><th>Questions</th></tr></thead>"
+        f"<tbody>{gate_rows}</tbody></table>"
+    )
+
+    archive_sec = sections["archive"]
+    archive_list = archive_sec.data or []
+    archive_items = "".join(
+        f"<li><code>{html.escape(a['file'])}</code>"
+        + (f" — {html.escape(a['status'])}" if a["status"] else " — <em>no ARCHIVED header</em>")
+        + "</li>"
+        for a in archive_list
+    )
+    archive_html = (
+        f'<details class="archive-details"><summary>Archived plans ({len(archive_list)})</summary>'
+        f'<ul>{archive_items}</ul></details>'
+    )
+
+    body = (
+        (f'<p class="status-note">{md_inline(html.escape(status_note))}</p>' if status_note else "")
+        + "<h2>Phase table</h2>" + phase_table
+        + "<h2>Active phase</h2>" + active_card
+        + gate_table
+        + archive_html
+    )
+    return render_section_warnings(roadmap_sec, sections["phase_plan_0"], sections["phase_plan_2"], archive_sec) + body
+
+
+# ---------------------------------------------------------------------------
+# Branches & PRs tab
+# ---------------------------------------------------------------------------
+
+def render_mainline_row(row: dict) -> str:
+    badges = [f'<span class="chip chip-blue">{html.escape(t)}</span>' for t in row.get("tags", [])]
+    pr = row.get("pr")
+    if pr:
+        badges.append(
+            f'<span class="chip chip-green">merges PR #{pr["number"]} ← '
+            f'{html.escape(pr.get("headRefName") or "")}</span>'
+        )
+    machine = row.get("machine")
+    machine_chip = f'<span class="chip chip-neutral machine-chip">{html.escape(machine)}</span>' if machine else ""
+    return (
+        '<div class="commit-dot"></div>'
+        '<div class="commit-info">'
+        f'<code class="commit-sha">{html.escape(row["short"])}</code> '
+        f'<span class="commit-date">{html.escape(row["date"])}</span> {machine_chip}'
+        f'<div class="commit-subject">{html.escape(row["subject"])}</div>'
+        f'<div class="commit-badges">{"".join(badges)}</div>'
+        '</div>'
+    )
+
+
+def _branch_annotation(name: str, is_merged: bool, is_local: bool) -> str:
+    if name.startswith("release-"):
+        return "phase branch — one PR per phase, merged only when the release checklist passes"
+    if name == "dashboard-tooling":
+        return "repo tooling branch — small standalone PR"
+    if is_merged and is_local:
+        return "PR merged; this local branch is safe to delete"
+    return ""
+
+
+def render_branch_card(b: dict) -> str:
+    pr = b.get("pr")
+    is_merged = bool(pr and pr.get("state") == "MERGED")
+    if pr:
+        state = pr.get("state", "")
+        state_cls = {"MERGED": "chip-green", "OPEN": "chip-blue", "CLOSED": "chip-red"}.get(state, "chip-neutral")
+        pr_badge = f'<a class="chip {state_cls}" href="{html.escape(pr.get("url") or "")}">{html.escape(state)} #{pr["number"]}</a>'
+        merge_info = ""
+        if is_merged:
+            merged_at = (pr.get("mergedAt") or "")[:10]
+            merge_sha = ((pr.get("mergeCommit") or {}).get("oid") or "")[:7]
+            merge_info = (
+                f'<div class="branch-detail">merged {html.escape(merged_at)}'
+                + (f" ({html.escape(merge_sha)})" if merge_sha else "")
+                + "</div>"
+            )
+    else:
+        pr_badge = '<span class="chip chip-neutral">no PR yet</span>'
+        merge_info = ""
+
+    ci = b.get("ci_latest")
+    ci_html = ""
+    if ci:
+        concl = ci.get("conclusion") or ci.get("status") or "unknown"
+        ci_cls = "chip-green" if concl == "success" else "chip-red" if ci.get("conclusion") else "chip-neutral"
+        ci_html = (
+            '<div class="branch-detail">R-CMD-check: '
+            f'<a class="chip {ci_cls}" href="{html.escape(ci.get("url") or "")}">{html.escape(concl)}</a></div>'
+        )
+
+    machine = b.get("machine")
+    machine_chip = f'<span class="chip chip-neutral machine-chip">{html.escape(machine)}</span>' if machine else ""
+    current_chip = '<span class="chip chip-cyan">current branch</span>' if b.get("current") else ""
+    annotation = _branch_annotation(b["name"], is_merged, b.get("local", False))
+    annotation_html = f'<div class="branch-annotation">{html.escape(annotation)}</div>' if annotation else ""
+
+    return (
+        '<div class="branch-card">'
+        f'<div class="branch-name"><code>{html.escape(b["name"])}</code>{current_chip}{machine_chip}</div>'
+        f'<div class="branch-detail">{b["behind"]} behind, {b["ahead"]} ahead of main</div>'
+        f'<div class="branch-detail">{pr_badge}</div>'
+        f'{merge_info}{ci_html}{annotation_html}'
+        '</div>'
+    )
+
+
+def render_branches_tab(model: dict, sections: dict[str, Section]) -> str:
+    git_sec = sections["git"]
+    gh_sec = sections["gh"]
+    git = git_sec.data or {}
+    mainline = git.get("mainline", [])
+    branches = git.get("branches", [])
+    legacy = git.get("legacy_branches", [])
+
+    mainline_full_shas = {row["full"] for row in mainline}
+    branches_by_base: dict[str, list[dict]] = {}
+    unmatched: list[dict] = []
+    for b in branches:
+        base = b.get("merge_base")
+        if base in mainline_full_shas:
+            branches_by_base.setdefault(base, []).append(b)
+        else:
+            unmatched.append(b)
+
+    grid_rows = []
+    for row in mainline:
+        cards = "".join(render_branch_card(b) for b in branches_by_base.get(row["full"], []))
+        grid_rows.append(
+            '<div class="lane-row">'
+            f'<div class="lane-main">{render_mainline_row(row)}</div>'
+            f'<div class="lane-branches">{cards}</div>'
+            '</div>'
+        )
+
+    if unmatched:
+        cards = "".join(render_branch_card(b) for b in unmatched)
+        grid_rows.append(
+            '<div class="lane-row lane-row-unmatched">'
+            '<div class="lane-main"><em>merge-base not on main’s first-parent chain '
+            '— typically a squash-merged branch whose real ancestry diverged from '
+            'the mainline commits shown at left</em></div>'
+            f'<div class="lane-branches">{cards}</div>'
+            '</div>'
+        )
+
+    legacy_items = "".join(
+        f'<li><code>{html.escape(b["name"])}</code> — last commit {html.escape(b["date"][:10])}</li>'
+        for b in legacy
+    )
+    legacy_html = (
+        f'<details class="legacy-details"><summary>Pre-modernization history ({len(legacy)})</summary>'
+        f'<ul>{legacy_items}</ul></details>'
+        if legacy else ""
+    )
+
+    info_findings = [f for f in model.get("consistency", []) if f.get("level") == "info"]
+    info_html = ""
+    if info_findings:
+        items = "".join(f"<li>{html.escape(f['message'])}</li>" for f in info_findings)
+        info_html = f'<div class="panel"><p><strong>Housekeeping</strong></p><ul>{items}</ul></div>'
+
+    body = f'<div class="lane-grid">{"".join(grid_rows)}</div>{legacy_html}{info_html}'
+    return render_section_warnings(git_sec, gh_sec) + body
+
+
+# ---------------------------------------------------------------------------
+# Decisions tab
+# ---------------------------------------------------------------------------
+
+def render_decisions_tab(sections: dict[str, Section]) -> str:
+    dec_sec = sections["decisions"]
+    dec = dec_sec.data or {}
+    settled = dec.get("settled", [])
+    open_q = dec.get("open", [])
+
+    settled_headers = ["date", "ref", "decision", "rationale", "binds"]
+    settled_rows = "".join(
+        "<tr>" + "".join(f"<td>{md_inline(html.escape(row.get(h, '')))}</td>" for h in settled_headers) + "</tr>"
+        for row in settled
+    )
+    settled_table = (
+        "<table><thead><tr><th>Date</th><th>Ref</th><th>Decision</th><th>Rationale</th><th>Binds</th></tr></thead>"
+        f"<tbody>{settled_rows}</tbody></table>"
+    )
+
+    groups: dict[str, list[dict]] = {}
+    order: list[str] = []
+    for row in open_q:
+        gate = row.get("gate", "") or "(no gate)"
+        if gate not in groups:
+            groups[gate] = []
+            order.append(gate)
+        groups[gate].append(row)
+
+    group_blocks = []
+    for gate in order:
+        rows_html = "".join(
+            "<tr>"
+            f"<td>{md_inline(html.escape(r.get('ref', '')))}</td>"
+            f"<td>{md_inline(html.escape(r.get('question (short)', '')))}</td>"
+            f"<td>{md_inline(html.escape(r.get('recommended default (review §3)', '')))}</td>"
+            "</tr>"
+            for r in groups[gate]
+        )
+        group_blocks.append(
+            f'<h3>{html.escape(gate)}</h3>'
+            "<table><thead><tr><th>Ref</th><th>Question</th><th>Recommended default</th></tr></thead>"
+            f"<tbody>{rows_html}</tbody></table>"
+        )
+
+    body = f"<h2>Settled</h2>{settled_table}<h2>Open — settle at phase gates</h2>{''.join(group_blocks)}"
+    return render_section_warnings(dec_sec) + body
+
+
+# ---------------------------------------------------------------------------
+# Release & CI tab
+# ---------------------------------------------------------------------------
+
+def render_release_tab(model: dict, sections: dict[str, Section]) -> str:
+    description = model.get("description") or {}
+    news_sec = sections["news"]
+    news = news_sec.data or {}
+    version = description.get("version") or "unknown"
+
+    dev = news.get("dev")
+    releases = news.get("releases") or []
+    if dev:
+        news_block = f'<h3>Unreleased changes (development version)</h3>{dev["html"]}'
+    elif releases:
+        latest = releases[0]
+        news_block = f'<h3>Latest release — {html.escape(latest["version"])}</h3>{latest["html"]}'
+    else:
+        news_block = "<p>No NEWS entries found.</p>"
+
+    gh = model.get("gh") or {}
+    git = model.get("git") or {}
+    branches = git.get("branches", [])
+    if gh.get("source") == "live":
+        stamp = f'live, fetched {html.escape(gh.get("fetched_at") or "")}'
+    elif gh.get("source") == "cached":
+        stamp = f'cached, fetched {html.escape(gh.get("fetched_at") or "")}'
+    else:
+        stamp = "no gh data available"
+
+    ci_rows = "".join(
+        "<tr>"
+        f"<td><code>{html.escape(b['name'])}</code></td>"
+        f"<td>{html.escape(((b.get('ci_latest') or {}).get('conclusion') or (b.get('ci_latest') or {}).get('status') or 'no runs'))}</td>"
+        "</tr>"
+        for b in branches
+    )
+    ci_table = (
+        f'<p class="gh-stamp">{stamp}</p>'
+        "<table><thead><tr><th>Branch</th><th>Latest R-CMD-check</th></tr></thead>"
+        f"<tbody>{ci_rows}</tbody></table>"
+    )
+
+    checklist_sec = sections.get("release_checklist")
+    checklist_html = (checklist_sec.data or {}).get("html", "") if checklist_sec else ""
+
+    ledger = (sections["roadmap"].data or {}).get("ledger", []) if sections["roadmap"].data else []
+    if ledger:
+        ledger_rows = "".join(
+            "<tr>" + "".join(f"<td>{md_inline(html.escape(v))}</td>" for v in row.values()) + "</tr>"
+            for row in ledger
+        )
+        ledger_table = (
+            "<table><thead><tr><th>Item</th><th>Owning repo</th><th>When</th></tr></thead>"
+            f"<tbody>{ledger_rows}</tbody></table>"
+        )
+    else:
+        ledger_table = "<p>No cross-repo follow-ups.</p>"
+
+    body = (
+        f'<h2>Version {html.escape(version)}</h2>{news_block}'
+        f'<h2>CI status</h2>{ci_table}'
+        f'<h2>Release checklist</h2>{checklist_html}'
+        f'<h2>Cross-repo follow-ups</h2>{ledger_table}'
+    )
+    return render_section_warnings(sections["description"], news_sec, checklist_sec) + body
+
+
+# ---------------------------------------------------------------------------
+# Docs tab
+# ---------------------------------------------------------------------------
+
+def render_docs_tab(sections: dict[str, Section]) -> str:
+    docs = [("readme", "README", "doc_readme"), ("claude", "CLAUDE.md", "doc_claude"), ("news", "NEWS.md", "doc_news")]
+    subbuttons = "".join(
+        f'<button data-docsub="{sid}" class="{_cls(i == 0, "active")}">{label}</button>'
+        for i, (sid, label, _) in enumerate(docs)
+    )
+    panels = []
+    for i, (sid, _label, key) in enumerate(docs):
+        sec = sections.get(key)
+        content_html = (sec.data or {}).get("html", "") if sec else ""
+        warn_html = render_section_warnings(sec) if sec else ""
+        hidden_attr = "" if i == 0 else " hidden"
+        panels.append(f'<div class="docs-tab prose" id="docs-{sid}"{hidden_attr}>{warn_html}{content_html}</div>')
+    return f'<div class="docs-subtabs">{subbuttons}</div>' + "".join(panels)
+
+
+# ---------------------------------------------------------------------------
+# Full page assembly
+# ---------------------------------------------------------------------------
+
+def render_page(model: dict, sections: dict[str, Section]) -> str:
+    header_html = render_header(model, sections)
+    cache_banner_html = render_gh_cache_banner(model.get("gh") or {})
+    banner_html = render_consistency_banner(model)
+    tabbar_html = render_tabbar()
+
+    roadmap_body = render_roadmap_tab(model, sections)
+    branches_body = render_branches_tab(model, sections)
+    decisions_body = render_decisions_tab(sections)
+    release_body = render_release_tab(model, sections)
+    docs_body = render_docs_tab(sections)
+
+    return (
+        "<!doctype html>\n"
+        '<html lang="en">\n<head>\n<meta charset="utf-8">\n'
+        "<title>hdatools dashboard</title>\n"
+        f"<style>{CSS_CONSTANT}</style>\n</head>\n<body>\n"
+        '<div class="container">\n'
+        f"{header_html}\n{cache_banner_html}\n{banner_html}\n{tabbar_html}\n"
+        "<main>\n"
+        f'<section id="tab-roadmap" class="tab">{roadmap_body}</section>\n'
+        f'<section id="tab-branches" class="tab" hidden>{branches_body}</section>\n'
+        f'<section id="tab-decisions" class="tab" hidden>{decisions_body}</section>\n'
+        f'<section id="tab-release" class="tab" hidden>{release_body}</section>\n'
+        f'<section id="tab-docs" class="tab" hidden>{docs_body}</section>\n'
+        "</main>\n</div>\n"
+        f"<script>{JS_CONSTANT}</script>\n"
+        "</body>\n</html>\n"
+    )
 
 # ---------------------------------------------------------------------------
 # main
@@ -1325,6 +2083,18 @@ def main() -> None:
     sections["news"] = run_section(
         "news", parse_news, ROOT / "NEWS.md"
     )
+    sections["release_checklist"] = run_section(
+        "release_checklist", parse_release_checklist, ROOT / "CLAUDE.md"
+    )
+    sections["doc_readme"] = run_section(
+        "doc_readme", parse_doc_raw, ROOT / "README.md"
+    )
+    sections["doc_claude"] = run_section(
+        "doc_claude", parse_doc_raw, ROOT / "CLAUDE.md"
+    )
+    sections["doc_news"] = run_section(
+        "doc_news", parse_doc_raw, ROOT / "NEWS.md"
+    )
     sections["git"] = run_section(
         "git", parse_git, ROOT
     )
@@ -1351,8 +2121,7 @@ def main() -> None:
             print("No consistency warnings.")
         sys.exit(0)
 
-    # Write stub HTML
-    html_out = render_stub(sections)
+    html_out = render_page(model, sections)
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(html_out, encoding="utf-8", newline="\n")
     print(f"Dashboard written to {OUT}")

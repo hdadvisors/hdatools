@@ -4,3 +4,7 @@
 .Ruserdata
 
 __pycache__/
+
+# development dashboard (generated)
+plans/dashboard/dashboard.html
+plans/dashboard/gh-cache.json
