@@ -130,4 +130,30 @@ license-NOTE-only; CI green on the merge commit.
 
 ## Findings (filled in during sessions)
 
-- *(to fill)*
+- **Session 2:** `lifecycle::deprecate_soft()` on the 6 newly-deprecated
+  functions (item 3 of Q3) collided with the *existing* test suite, not with
+  the refactor itself:
+  - `test-deprecation.R`'s ggplot2-idiom regression guard forces
+    `lifecycle_verbosity = "error"`, which turns our own soft-deprecation into
+    the same `lifecycle_error_deprecated` class it was built to catch on
+    ggplot2's idioms. Fixed by pointing that test's gradient-scale assertions
+    at the internal `.scale_brand_gradient()` constructor instead of the now-
+    deprecated exported wrappers — that test's actual intent (no
+    ggplot2-internal deprecated idiom fires) is unrelated to our own notice.
+  - `lifecycle::deprecate_soft()` treats a call made directly inside a
+    `testthat::test_that()` block as a "direct user call" by design, so every
+    pre-existing/Session-1 identity test invoking the 6 functions started
+    emitting a deprecation warning (32 new WARNs) even though returned values
+    were unchanged. Fixed by adding `withr::local_options(lifecycle_verbosity
+    = "quiet")` to the affected `test_that()` blocks in `test-scales.R` —
+    values asserted are identical to before; only the deprecation-notice noise
+    is silenced, since those tests exist to check output identity, not
+    deprecation behavior.
+  - Both changes were confirmed with the user before applying (test-file
+    edits fall outside a "Session 1 tests must pass unmodified" default).
+    Final state: 189/189 tests pass (183 pre-existing + 6 new
+    `scale_colour_*` alias tests), 0 warnings, `devtools::check()` 0/0/0.
+  - All `.brands` hex values, gradient stops, `na_color`, and theme params
+    (`base_size`/`html_adjust`/`pdf_adjust`/`lineheight`) were verified
+    programmatically against the pre-refactor source (git `HEAD`), not
+    transcribed from memory — see commit `f5fcae4`.
