@@ -15,6 +15,7 @@ import re
 import subprocess
 import sys
 import tempfile
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -724,6 +725,537 @@ def parse_news(path: Path) -> tuple[dict, list[str]]:
     return {"dev": dev, "releases": releases}, warnings
 
 # ---------------------------------------------------------------------------
+# Git layer
+# ---------------------------------------------------------------------------
+
+def _is_ancestor(ancestor: str, descendant: str) -> bool:
+    """git merge-base --is-ancestor: rc 0 = True, rc 1 = False, anything else raises."""
+    result = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", ancestor, descendant],
+        cwd=str(ROOT),
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        timeout=15,
+    )
+    if result.returncode not in (0, 1):
+        raise RuntimeError(
+            f"git merge-base --is-ancestor exited {result.returncode}: {result.stderr.strip()}"
+        )
+    return result.returncode == 0
+
+
+def parse_git(root: Path) -> tuple[dict, list[str]]:
+    warnings: list[str] = []
+
+    current_branch = run(["git", "rev-parse", "--abbrev-ref", "HEAD"]).strip()
+    dirty = bool(run(["git", "status", "--porcelain"]).strip())
+
+    raw_refs = run([
+        "git", "for-each-ref", "refs/heads", "refs/remotes/origin",
+        "--format=%(refname)|%(refname:short)|%(objectname:short)|%(committerdate:iso-strict)|%(subject)",
+    ])
+    ref_rows: list[tuple[str, str, str, str, str]] = []
+    for line in raw_refs.splitlines():
+        if not line.strip():
+            continue
+        parts = line.split("|", 4)
+        if len(parts) != 5:
+            warnings.append(f"for-each-ref: unexpected line, skipped: {line!r}")
+            continue
+        ref_rows.append((parts[0], parts[1], parts[2], parts[3], parts[4]))
+
+    # Dedup local vs origin/<name>; local wins. Skip origin/HEAD (symref) and main (trunk).
+    branch_data: dict[str, dict] = {}
+    for full_refname, refname, sha, date, subject in ref_rows:
+        if full_refname == "refs/remotes/origin/HEAD":
+            continue
+        is_remote = refname.startswith("origin/")
+        name = refname[len("origin/"):] if is_remote else refname
+        if name == "main":
+            continue
+        entry = branch_data.setdefault(name, {"local": False, "remote": False})
+        entry["remote" if is_remote else "local"] = True
+        if "sha" not in entry:
+            entry["sha"] = sha
+            entry["date"] = date
+            entry["subject"] = subject
+
+    branches: list[dict] = []
+    legacy: list[dict] = []
+    for name, entry in sorted(branch_data.items()):
+        ref_arg = name if entry["local"] else f"origin/{name}"
+        try:
+            merge_base = run(["git", "merge-base", "main", ref_arg]).strip()
+            counts = run(["git", "rev-list", "--left-right", "--count", f"main...{ref_arg}"]).strip()
+            behind_s, ahead_s = counts.split()
+            in_era = _is_ancestor(MODERNIZATION_SHA, merge_base)
+            machine = run([
+                "git", "log", "-1", "--format=%(trailers:key=Machine,valueonly)", ref_arg,
+            ]).strip()
+        except Exception as exc:
+            warnings.append(f"branch {name}: {type(exc).__name__}: {exc}")
+            continue
+
+        rec = {
+            "name": name,
+            "sha": entry["sha"],
+            "date": entry["date"],
+            "subject": entry["subject"],
+            "local": entry["local"],
+            "remote": entry["remote"],
+            "current": name == current_branch,
+            "ahead": int(ahead_s),
+            "behind": int(behind_s),
+            "merge_base": merge_base,
+            "machine": machine,
+        }
+
+        if name in LEGACY_BRANCHES or not in_era:
+            legacy.append(rec)
+        else:
+            branches.append(rec)
+
+    # Mainline: first-parent commits from the modernization boundary to main
+    raw_mainline = run([
+        "git", "log", "--first-parent",
+        "--format=%h|%H|%cs|%s|%(trailers:key=Machine,valueonly)",
+        f"{MODERNIZATION_SHA}^..main",
+    ])
+    mainline: list[dict] = []
+    for line in raw_mainline.splitlines():
+        if not line.strip():
+            continue
+        parts = line.split("|", 4)
+        if len(parts) < 4:
+            warnings.append(f"mainline log: unexpected line, skipped: {line!r}")
+            continue
+        short, full, date, subject = parts[0], parts[1], parts[2], parts[3]
+        machine = parts[4] if len(parts) > 4 else ""
+        mainline.append({
+            "short": short, "full": full, "date": date, "subject": subject, "machine": machine,
+        })
+
+    # Tags (dereferenced to the commit they point at)
+    raw_tags = run([
+        "git", "tag", "--list", "v*",
+        "--format=%(refname:short)|%(objectname:short)|%(*objectname:short)|%(creatordate:short)",
+    ])
+    tags: list[dict] = []
+    for line in raw_tags.splitlines():
+        if not line.strip():
+            continue
+        parts = line.split("|")
+        if len(parts) != 4:
+            warnings.append(f"tag line unexpected, skipped: {line!r}")
+            continue
+        tag_name, obj_sha, deref_sha, date = parts
+        tags.append({
+            "name": tag_name,
+            "commit_sha": deref_sha or obj_sha,
+            "date": date,
+        })
+
+    return {
+        "current_branch": current_branch,
+        "dirty": dirty,
+        "mainline": mainline,
+        "branches": branches,
+        "legacy_branches": legacy,
+        "tags": tags,
+    }, warnings
+
+
+def attach_pr_and_ci_to_branches(branches: list[dict], prs: list[dict], runs: list[dict]) -> None:
+    """Mutate each branch dict in place: 'pr' (or None), 'ci_latest' (or None)."""
+    pr_by_branch: dict[str, dict] = {}
+    for pr in prs:
+        head = pr.get("headRefName")
+        if head and head not in pr_by_branch:
+            pr_by_branch[head] = pr
+
+    ci_by_branch: dict[str, list[dict]] = {}
+    for r in runs:
+        if r.get("workflowName") != "R-CMD-check":
+            continue
+        head = r.get("headBranch")
+        if head:
+            ci_by_branch.setdefault(head, []).append(r)
+
+    for b in branches:
+        b["pr"] = pr_by_branch.get(b["name"])
+        ci_list = ci_by_branch.get(b["name"], [])
+        b["ci_latest"] = ci_list[0] if ci_list else None
+
+
+def attach_pr_and_tags_to_mainline(mainline: list[dict], prs: list[dict], tags: list[dict]) -> None:
+    """Mutate each mainline row in place: 'pr' (merge that landed it, or None), 'tags' (list of names)."""
+    pr_by_merge_sha = {
+        pr["mergeCommit"]["oid"]: pr
+        for pr in prs
+        if pr.get("mergeCommit") and pr["mergeCommit"].get("oid")
+    }
+    tags_by_short_sha: dict[str, list[str]] = {}
+    for t in tags:
+        tags_by_short_sha.setdefault(t["commit_sha"], []).append(t["name"])
+
+    for row in mainline:
+        row["pr"] = pr_by_merge_sha.get(row["full"])
+        row["tags"] = tags_by_short_sha.get(row["short"], [])
+
+# ---------------------------------------------------------------------------
+# gh layer (with cache + offline fallback)
+# ---------------------------------------------------------------------------
+
+GH_PR_FIELDS = "number,title,state,headRefName,mergedAt,mergeCommit,url"
+GH_RUN_FIELDS = "workflowName,status,conclusion,headBranch,createdAt,url"
+
+GH_FAILURE_MODES = (subprocess.TimeoutExpired, FileNotFoundError, RuntimeError, json.JSONDecodeError)
+
+
+def _write_cache_atomic(payload: dict) -> None:
+    CACHE.parent.mkdir(parents=True, exist_ok=True)
+    fd, tmp_path = tempfile.mkstemp(dir=str(CACHE.parent), prefix="gh-cache-", suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as f:
+            json.dump(payload, f, indent=2)
+        os.replace(tmp_path, CACHE)
+    except Exception:
+        try:
+            os.unlink(tmp_path)
+        except OSError:
+            pass
+        raise
+
+
+def _cache_age_days(fetched_at: str | None) -> float | None:
+    if not fetched_at:
+        return None
+    try:
+        fetched_dt = datetime.fromisoformat(fetched_at)
+    except ValueError:
+        return None
+    return (datetime.now().astimezone() - fetched_dt).total_seconds() / 86400
+
+
+def parse_gh(offline: bool) -> tuple[dict, list[str]]:
+    warnings: list[str] = []
+    live: tuple[list, list] | None = None
+
+    if not offline:
+        try:
+            prs_raw = run(
+                ["gh", "pr", "list", "--state", "all", "--limit", "50", "--json", GH_PR_FIELDS],
+                timeout=20,
+            )
+            runs_raw = run(
+                ["gh", "run", "list", "--limit", "30", "--json", GH_RUN_FIELDS],
+                timeout=20,
+            )
+            prs = json.loads(prs_raw)
+            runs = json.loads(runs_raw)
+        except GH_FAILURE_MODES as exc:
+            warnings.append(f"gh fetch failed ({type(exc).__name__}: {exc}); falling back to cache")
+        else:
+            live = (prs, runs)
+
+    if live is not None:
+        prs, runs = live
+        fetched_at = datetime.now().astimezone().isoformat()
+        _write_cache_atomic({"fetched_at": fetched_at, "prs": prs, "runs": runs})
+        return {
+            "source": "live",
+            "fetched_at": fetched_at,
+            "cache_age_days": 0.0,
+            "prs": prs,
+            "runs": runs,
+        }, warnings
+
+    if offline:
+        warnings.append("--offline: using cached gh data")
+
+    if CACHE.exists():
+        try:
+            cached = json.loads(CACHE.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            warnings.append(f"gh-cache.json unreadable: {type(exc).__name__}: {exc}")
+            return {
+                "source": "unavailable", "fetched_at": None, "cache_age_days": None,
+                "prs": [], "runs": [],
+            }, warnings
+        fetched_at = cached.get("fetched_at")
+        return {
+            "source": "cached",
+            "fetched_at": fetched_at,
+            "cache_age_days": _cache_age_days(fetched_at),
+            "prs": cached.get("prs", []),
+            "runs": cached.get("runs", []),
+        }, warnings
+
+    warnings.append("no gh data and no cache — run once online")
+    return {
+        "source": "unavailable", "fetched_at": None, "cache_age_days": None,
+        "prs": [], "runs": [],
+    }, warnings
+
+# ---------------------------------------------------------------------------
+# Active-phase detection
+# ---------------------------------------------------------------------------
+
+def _strip_md_bold(text: str) -> str:
+    return re.sub(r"\*\*", "", text)
+
+
+def _status_prefix(status_raw: str) -> str:
+    """Lowercased, markdown-stripped status text before any em/en-dash separator."""
+    text = _strip_md_bold(status_raw).strip().lower()
+    for sep in (" — ", " – "):
+        if sep in text:
+            return text.split(sep, 1)[0].strip()
+    return text
+
+
+def _status_is_cleanly_done(status_raw: str) -> bool:
+    """Strict: the *entire* normalized status is 'done'/'merged' with no trailing
+    qualifier. Used where a lingering qualifier (e.g. '— PR open, pending tag')
+    is itself the signal that the badge is stale, even though the leading word
+    says done."""
+    text = _strip_md_bold(status_raw).strip().lower()
+    return text in ("done", "merged")
+
+
+def detect_active_phase(phases: list[dict]) -> tuple[dict | None, str]:
+    """Returns (phase_dict_or_None, label) where label is 'active', 'blocked', or 'none'."""
+    for phase in phases:
+        if _status_prefix(phase["status"]).startswith(("next up", "in progress", "active")):
+            return phase, "active"
+    for phase in phases:
+        prefix = _status_prefix(phase["status"])
+        if prefix not in ("done", "merged", "deferred"):
+            return phase, "blocked"
+    return None, "none"
+
+
+def resolve_plan_file(phase: dict, phase_plans: dict[str, dict | None]) -> dict:
+    """Classify a phase row's Plan file cell: absent / archived / skeleton / normal."""
+    cell_raw = phase["plan_cell_raw"].strip()
+    low = cell_raw.lower()
+    if not phase["plan_is_link"] or low == "written at phase gate" or low.startswith("none"):
+        return {"state": "absent", "path": None}
+
+    target = phase["plan_file"] or ""
+    normalized = target.replace("\\", "/")
+    if not (PLANS / normalized).exists():
+        return {"state": "absent", "path": target}
+
+    if normalized.startswith("archive/"):
+        return {"state": "archived", "path": target}
+
+    stem = Path(normalized).stem
+    plan_data = phase_plans.get(stem)
+    is_skeleton = "(skeleton)" in low or bool(plan_data and plan_data.get("is_skeleton"))
+    return {
+        "state": "skeleton" if is_skeleton else "normal",
+        "path": target,
+        "data": plan_data,
+    }
+
+# ---------------------------------------------------------------------------
+# Consistency checks (exactly 7)
+# ---------------------------------------------------------------------------
+
+def run_consistency_checks(model: dict) -> list[dict]:
+    findings: list[dict] = []
+
+    roadmap = model.get("roadmap") or {}
+    phases = roadmap.get("phases", [])
+    gh_data = model.get("gh") or {}
+    prs = gh_data.get("prs", [])
+    git_data = model.get("git") or {}
+    tags = git_data.get("tags", [])
+    branches = git_data.get("branches", [])
+    phase_plans = model.get("phase_plans") or {}
+    description = model.get("description") or {}
+    news = model.get("news") or {}
+
+    pr_by_branch: dict[str, dict] = {}
+    for pr in prs:
+        head = pr.get("headRefName")
+        if head and head not in pr_by_branch:
+            pr_by_branch[head] = pr
+
+    def merged_pr(branch_name: str) -> dict | None:
+        pr = pr_by_branch.get(branch_name)
+        return pr if pr and pr.get("state") == "MERGED" else None
+
+    tag_names = {t["name"] for t in tags}
+
+    # 1. Status vs PR
+    for phase in phases:
+        branch = phase.get("branch")
+        if not branch:
+            continue
+        pr = merged_pr(branch)
+        if pr and _status_prefix(phase["status"]) not in ("done", "merged"):
+            findings.append({
+                "check": "status-vs-pr",
+                "level": "warning",
+                "message": (
+                    f"Phase {phase['phase']}: status is \"{phase['status']}\" but branch "
+                    f"`{branch}` PR #{pr['number']} is MERGED"
+                ),
+            })
+
+    # 2. Status vs tag
+    for phase in phases:
+        release = _strip_md_bold(phase.get("release", "")).strip()
+        tag_guess = f"v{release}"
+        if tag_guess in tag_names and not _status_is_cleanly_done(phase["status"]):
+            findings.append({
+                "check": "status-vs-tag",
+                "level": "warning",
+                "message": (
+                    f"Phase {phase['phase']}: status is \"{phase['status']}\" but tag "
+                    f"{tag_guess} exists"
+                ),
+            })
+
+    # 3. Plan not archived
+    for phase in phases:
+        branch = phase.get("branch")
+        if not branch:
+            continue
+        pr = merged_pr(branch)
+        if pr and phase.get("plan_is_link") and phase.get("plan_file"):
+            target = phase["plan_file"].replace("\\", "/")
+            if not target.startswith("archive/"):
+                findings.append({
+                    "check": "plan-not-archived",
+                    "level": "warning",
+                    "message": (
+                        f"Phase {phase['phase']}: PR #{pr['number']} is MERGED but plan file "
+                        f"\"{phase['plan_file']}\" is still under plans/, not plans/archive/"
+                    ),
+                })
+
+    # 5. Stale phase-plan header
+    for stem, plan_data in phase_plans.items():
+        if not plan_data:
+            continue
+        status_text = (plan_data.get("header") or {}).get("status", "")
+        low = status_text.lower()
+        if "not yet merged" in low or "pending" in low:
+            for candidate in re.findall(r"`([^`]+)`", status_text):
+                if candidate == "main":
+                    continue
+                pr = merged_pr(candidate)
+                if pr:
+                    findings.append({
+                        "check": "stale-header",
+                        "level": "warning",
+                        "message": (
+                            f"{stem}.md: header Status says \"{status_text}\" but branch "
+                            f"`{candidate}` PR #{pr['number']} is MERGED"
+                        ),
+                    })
+
+    # 4. Version vs NEWS
+    version = description.get("version")
+    if version:
+        dev = news.get("dev")
+        releases = news.get("releases") or []
+        if ".9000" in version:
+            if not dev:
+                findings.append({
+                    "check": "version-vs-news",
+                    "level": "warning",
+                    "message": (
+                        f"DESCRIPTION version {version} is a dev version but NEWS.md has no "
+                        f"'(development version)' heading"
+                    ),
+                })
+        else:
+            if dev:
+                findings.append({
+                    "check": "version-vs-news",
+                    "level": "warning",
+                    "message": (
+                        f"DESCRIPTION version {version} has no dev suffix but NEWS.md still "
+                        f"has a '(development version)' heading"
+                    ),
+                })
+            else:
+                top_version = releases[0]["version"] if releases else None
+                if top_version != version:
+                    findings.append({
+                        "check": "version-vs-news",
+                        "level": "warning",
+                        "message": (
+                            f"DESCRIPTION version {version} does not match NEWS.md's top "
+                            f"heading \"{top_version}\""
+                        ),
+                    })
+
+    # 6. Merged branch still local (info-level; Branches tab, not the banner)
+    for b in branches:
+        if not b.get("local"):
+            continue
+        pr = merged_pr(b["name"])
+        if pr:
+            findings.append({
+                "check": "merged-branch-still-local",
+                "level": "info",
+                "message": f"Branch `{b['name']}` PR #{pr['number']} is MERGED; safe to delete locally",
+            })
+
+    # 7. CI red (unmerged/live branches only)
+    for b in branches:
+        if merged_pr(b["name"]):
+            continue
+        ci = b.get("ci_latest")
+        if ci and ci.get("conclusion") not in (None, "success"):
+            findings.append({
+                "check": "ci-red",
+                "level": "warning",
+                "message": (
+                    f"Branch `{b['name']}`: latest R-CMD-check concluded "
+                    f"\"{ci.get('conclusion')}\""
+                ),
+            })
+
+    return findings
+
+
+def build_model(sections: dict[str, "Section"]) -> dict:
+    model: dict[str, Any] = {}
+    for key in ("description", "roadmap", "decisions", "archive", "news"):
+        model[key] = sections[key].data
+
+    model["phase_plans"] = {
+        "phase-0-groundwork": sections["phase_plan_0"].data,
+        "phase-2-features-0.4.0": sections["phase_plan_2"].data,
+    }
+
+    model["git"] = sections["git"].data
+    model["gh"] = sections["gh"].data
+
+    if model["git"] and model["gh"]:
+        attach_pr_and_ci_to_branches(model["git"]["branches"], model["gh"]["prs"], model["gh"]["runs"])
+        attach_pr_and_tags_to_mainline(model["git"]["mainline"], model["gh"]["prs"], model["git"]["tags"])
+
+    phases = (model["roadmap"] or {}).get("phases", [])
+    active_phase, active_label = detect_active_phase(phases)
+    active_plan = None
+    if active_phase:
+        active_plan = resolve_plan_file(active_phase, model["phase_plans"])
+    model["active_phase"] = {"phase": active_phase, "label": active_label, "plan": active_plan}
+
+    model["consistency"] = run_consistency_checks(model)
+
+    return model
+
+# ---------------------------------------------------------------------------
 # Stub renderer (Session 1 — replaced in Session 3)
 # ---------------------------------------------------------------------------
 
@@ -777,6 +1309,11 @@ def main() -> None:
     sections["decisions"] = run_section(
         "decisions", parse_decisions, PLANS / "DECISIONS.md"
     )
+    sections["phase_plan_0"] = run_section(
+        "phase_plan_0",
+        parse_phase_plan,
+        PLANS / "phase-0-groundwork.md",
+    )
     sections["phase_plan_2"] = run_section(
         "phase_plan_2",
         parse_phase_plan,
@@ -788,6 +1325,14 @@ def main() -> None:
     sections["news"] = run_section(
         "news", parse_news, ROOT / "NEWS.md"
     )
+    sections["git"] = run_section(
+        "git", parse_git, ROOT
+    )
+    sections["gh"] = run_section(
+        "gh", parse_gh, args.offline
+    )
+
+    model = build_model(sections)
 
     if args.check_only:
         any_warn = False
@@ -797,6 +1342,13 @@ def main() -> None:
                 any_warn = True
         if not any_warn:
             print("No parse warnings.")
+
+        print()
+        if model["consistency"]:
+            for finding in model["consistency"]:
+                print(f"[{finding['check']}] ({finding['level']}) {finding['message']}")
+        else:
+            print("No consistency warnings.")
         sys.exit(0)
 
     # Write stub HTML

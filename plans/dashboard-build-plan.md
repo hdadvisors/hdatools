@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Session 1 complete |
+| **Status** | Session 2 complete |
 | **Branch** | `dashboard-tooling` (off `main` at v0.3.0; this plan is committed on it) |
 | **Target version** | none — repo tooling only; no R-package-tree changes, no release, no tag |
 | **Entry criteria** | This plan committed on `dashboard-tooling`; design settled in [dashboard-build-prompt.md](dashboard-build-prompt.md) (superseded by this doc — executors need only this file) |
@@ -643,3 +643,78 @@ co-author line), then a small PR `dashboard-tooling` → `main` titled
 - Git hook written with LF-only line endings (0 CRLF); confirmed via byte scan.
 
 **No convention mismatches found** relative to the verified repo facts documented above.
+
+### Session 2 — 2026-07-17
+
+**Pre-check on Session 1's commit:** found one genuine oopsie —
+`plans/dashboard/__pycache__/generate_dashboard.cpython-314.pyc` (compiled
+bytecode) had been committed alongside the source. Removed it from tracking
+(`git rm --cached`) and added `__pycache__/` to `.gitignore` so it can't
+recur. Everything else in the commit (the stub `dashboard.html`, the LF-only
+hook) checked out fine; all 27 Session 1 assertions still pass.
+
+**Outcome:** `--check-only` fires exactly the four expected doc-lag
+warnings and no version-vs-NEWS warning; `--offline` with cache present
+loads it and stamps the original `fetched_at`; deleting the cache and
+running `--offline` degrades cleanly (empty `prs`/`runs`, a warning, no
+crash — and correctly makes the PR-dependent checks 1/3/5 go silent, since
+without PR data the script can't claim a branch *isn't* merged). Live `gh`
+fetch round-trips through the atomic cache write correctly.
+
+**Live-state drift from the plan's 2026-07-17 snapshot (expected per the
+plan's own caveat — verified against reality, not treated as a bug):**
+
+- Local branches `phase-0-groundwork` and `release-0.3.0` no longer exist
+  (deleted after their PRs merged) — only `dashboard-tooling`, `main`, and
+  `release-0.2.0` remain local. The era branch model still surfaces both via
+  their `origin/*` refs, joined to MERGED PRs #14 and #15 by `headRefName`,
+  so check 6 ("merged branch still local") correctly finds nothing to flag.
+- `dashboard-tooling` is **3 ahead** of `main`, not 1 — two more commits
+  (the build plan and build prompt) landed after the snapshot was taken.
+- `post-0.2.0-cleanup` and `docs/pathless-claude-md` land in the *legacy*
+  bucket, not the era bucket, despite not being in `LEGACY_BRANCHES` by
+  name: their merge-bases with `main` predate the `5963754` modernization
+  commit chronologically (both PRs were opened and merged against an older
+  `main`, before the modernization plan landed), so the era filter
+  (descendant of `5963754`) correctly excludes them. This is real git
+  topology, not a bug — the plan's era-filter rule already covers it ("branch
+  not in LEGACY_BRANCHES" is an *or*-exclusion, not the only one).
+
+**Implementation notes:**
+
+- `git for-each-ref refs/heads refs/remotes/origin` includes the
+  `refs/remotes/origin/HEAD` symref, whose `%(refname:short)` collapses to
+  the bare string `origin` (not `origin/HEAD`) — a real gotcha that would
+  silently manufacture a fake "origin" branch card. Fixed by also fetching
+  `%(refname)` (the full ref) and filtering on the unambiguous full name
+  `refs/remotes/origin/HEAD`, rather than guessing the short form.
+- **"Done-like" needed two different definitions to reproduce the four
+  expected warnings, not one shared helper.** Check 1 (status vs PR) uses
+  the same prefix-before-em-dash normalization as active-phase detection
+  (`_status_prefix`) — Phase 1's status "**done** — PR open, pending
+  merge/tag" normalizes to prefix `done`, so check 1 correctly stays quiet
+  on it. Check 2 (status vs tag) needs a *stricter* test
+  (`_status_is_cleanly_done`) — the full normalized string must equal
+  exactly `done`/`merged` with no trailing qualifier — because the
+  qualifier itself ("pending merge/tag") is precisely what makes that row
+  stale against the now-existing `v0.3.0` tag. Using either definition for
+  both checks either double-fires check 1 on Phase 1 or silences check 2 on
+  Phase 1 — both wrong. Checks 3, 5, 6, 7 don't use a done-like test at all
+  (their own wording doesn't call for one).
+- Tags are dereferenced via `%(*objectname:short)` (falls back to
+  `%(objectname:short)` for lightweight tags) and matched to mainline rows
+  by short SHA — safe here since this repo's short-hash length is
+  consistently 7 across both `git tag` and `git log`.
+- Mainline rows and branches both get PR/tag data joined in via
+  `attach_pr_and_ci_to_branches` / `attach_pr_and_tags_to_mainline`, kept as
+  separate mutating helpers so Session 3's renderer can use the same
+  `model["git"]` dict without re-deriving joins.
+- `core.autocrlf=true` is set globally on this machine, so git prints an "LF
+  will be replaced by CRLF" warning when `dashboard.html`/`generate_dashboard.py`
+  are staged — harmless (it only affects the working-tree checkout view, not
+  the committed blob or the script's own `newline="\n"` writes), and not
+  something to fix here (pre-existing machine config, out of scope).
+
+**No convention mismatches found beyond the two noted above** (the
+`origin/HEAD` short-ref quirk and the two-tier done-like definition), both
+resolved as documented.
