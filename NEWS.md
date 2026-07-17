@@ -1,4 +1,4 @@
-# hdatools (development version)
+# hdatools 0.3.0
 
 * New `scale_colour_hda()`, `scale_colour_hfv()`, `scale_colour_pha()`,
   `scale_colour_gradient_hda()`, and `scale_colour_gradient_pha()` — British-
@@ -17,6 +17,12 @@
   wrappers over two shared internal constructors. No behavior change; every
   pre-refactor identity test asserting exact hex/parameter values passes
   unmodified.
+* Internal-only: `theme_hda()`, `theme_hfv()`, and `theme_pha()` are now thin
+  wrappers over one shared internal builder (`.brand_theme()` in
+  `R/themes.R`), reading the font/margin/size parameters that differ per
+  brand from the `R/brands.R` registry. No behavior change; signatures and
+  `...` passthrough are unchanged, and every pre-refactor theme-identity
+  test passes unmodified.
 
 * pkgdown site rebuilt on Bootstrap 5 (`template: bootstrap: 5`); reference
   index now groups exports into **Themes**, **Palettes & scales**, **Helpers**,

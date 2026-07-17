@@ -4,6 +4,12 @@
 #
 # Discrete `palette` vectors carry colour-label names; gradient/theme fields
 # do not need them since nothing consumes the labels yet.
+#
+# `theme_fonts` gives the family used for plot.title/subtitle/caption/strip.text
+# in .brand_theme(); a NULL entry means that element tracks the caller's
+# base_family instead of a brand-fixed family. `theme_margins` gives the
+# plot.title/subtitle margins (which vary by brand); caption and strip margins
+# are identical across brands and live directly in .brand_theme().
 
 .brands <- list(
 
@@ -22,7 +28,15 @@
     base_size = 14,
     html_adjust = 4,
     pdf_adjust = 7,
-    lineheight = 0.9
+    lineheight = 0.9,
+    # NULL means "track the caller's base_family" rather than a fixed family.
+    theme_fonts = list(
+      title = "Roboto Slab", subtitle = "Roboto Slab", caption = "Lato", strip = "Lato"
+    ),
+    theme_margins = list(
+      title = ggplot2::margin(b = 10, unit = "pt"),
+      subtitle = ggplot2::margin(t = -5, b = 10, unit = "pt")
+    )
   ),
 
   hfv = list(
@@ -40,7 +54,12 @@
     base_size = 14,
     html_adjust = 4,
     pdf_adjust = 7,
-    lineheight = 0.9
+    lineheight = 0.9,
+    theme_fonts = list(title = NULL, subtitle = NULL, caption = NULL, strip = NULL),
+    theme_margins = list(
+      title = ggplot2::margin(b = 10, unit = "pt"),
+      subtitle = ggplot2::margin(t = -5, b = 10, unit = "pt")
+    )
   ),
 
   pha = list(
@@ -58,7 +77,14 @@
     base_size = 10,
     html_adjust = 0,
     pdf_adjust = 0,
-    lineheight = 1
+    lineheight = 1,
+    theme_fonts = list(
+      title = "Noto Sans", subtitle = "Noto Sans", caption = "Noto Sans", strip = NULL
+    ),
+    theme_margins = list(
+      title = NULL,
+      subtitle = ggplot2::margin(t = 5, b = 20, unit = "pt")
+    )
   )
 
 )
