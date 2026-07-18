@@ -33,4 +33,12 @@ if ! command -v Rscript >/dev/null 2>&1 || ! command -v pandoc >/dev/null 2>&1; 
     libgit2-dev
 fi
 
+# R CMD check calls Sys.setlocale("LC_CTYPE", "en_US.UTF-8"); this container's
+# base image ships the `locales` package but hasn't generated that locale,
+# which turns "checking R files for syntax errors" into a false-positive
+# WARNING.
+if ! locale -a 2>/dev/null | grep -qi '^en_US\.utf8$'; then
+  locale-gen en_US.UTF-8
+fi
+
 Rscript "$CLAUDE_PROJECT_DIR/.claude/hooks/install-r-deps.R"
