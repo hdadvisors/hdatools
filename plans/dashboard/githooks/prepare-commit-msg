@@ -1,0 +1,10 @@
+#!/bin/sh
+# Adds a "Machine: <name>" trailer from `git config hda.machine`.
+# No-op if hda.machine is unset, on merge/squash commits, or if a
+# Machine: trailer is already present.
+machine=$(git config hda.machine)
+[ -n "$machine" ] || exit 0
+case "$2" in merge|squash) exit 0 ;; esac
+if ! grep -qi "^Machine:" "$1"; then
+    git interpret-trailers --in-place --trailer "Machine: $machine" "$1"
+fi
