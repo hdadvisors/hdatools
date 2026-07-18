@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Session 4 complete (visual refinement) — ready for PR |
+| **Status** | complete — merged to `main` via PR #16 (squash) on 2026-07-17 |
 | **Branch** | `dashboard-tooling` (off `main` at v0.3.0; this plan is committed on it) |
 | **Target version** | none — repo tooling only; no R-package-tree changes, no release, no tag |
 | **Entry criteria** | This plan committed on `dashboard-tooling`; design settled in [dashboard-build-prompt.md](dashboard-build-prompt.md) (superseded by this doc — executors need only this file) |

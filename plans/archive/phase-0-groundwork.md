@@ -1,3 +1,7 @@
+> **ARCHIVED — complete.** All Phase 0 items landed; merged to `main` via
+> PR #14 (squash) on 2026-07-16. Kept for historical reference; content
+> below is unedited.
+
 # Phase 0 — Groundwork
 
 | | |

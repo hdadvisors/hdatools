@@ -1280,8 +1280,9 @@ def build_model(sections: dict[str, "Section"]) -> dict:
         model[key] = sections[key].data
 
     model["phase_plans"] = {
-        "phase-0-groundwork": sections["phase_plan_0"].data,
-        "phase-2-features-0.4.0": sections["phase_plan_2"].data,
+        key.split(":", 1)[1]: sec.data
+        for key, sec in sections.items()
+        if key.startswith("phase_plan:")
     }
 
     model["repo_url"] = (model["description"] or {}).get("repo_url")
@@ -1648,7 +1649,7 @@ def render_section_warnings(*secs: Section | None) -> str:
 # ---------------------------------------------------------------------------
 
 _TAB_SECTION_MAP = {
-    "roadmap": ["roadmap", "phase_plan_0", "phase_plan_2", "archive"],
+    "roadmap": ["roadmap", "archive"],
     "branches": ["git", "gh"],
     "decisions": ["decisions"],
     "release": ["gh", "description", "news", "release_checklist"],
@@ -1656,9 +1657,17 @@ _TAB_SECTION_MAP = {
 }
 
 
+def _tab_section_keys(tab: str, sections: dict[str, Section]) -> list[str]:
+    keys = list(_TAB_SECTION_MAP.get(tab, []))
+    if tab == "roadmap":
+        keys += sorted(k for k in sections if k.startswith("phase_plan:"))
+    return keys
+
+
 def compute_warn_tab_count(sections: dict[str, Section]) -> int:
     count = 0
-    for keys in _TAB_SECTION_MAP.values():
+    for tab in _TAB_SECTION_MAP:
+        keys = _tab_section_keys(tab, sections)
         if any(sections.get(k) and (sections[k].data is None or sections[k].warnings) for k in keys):
             count += 1
     return count
@@ -1860,7 +1869,8 @@ def render_roadmap_tab(model: dict, sections: dict[str, Section]) -> str:
         + gate_table
         + archive_html
     )
-    return render_section_warnings(roadmap_sec, sections["phase_plan_0"], sections["phase_plan_2"], archive_sec) + body
+    plan_secs = [sections[k] for k in sorted(sections) if k.startswith("phase_plan:")]
+    return render_section_warnings(roadmap_sec, *plan_secs, archive_sec) + body
 
 
 # ---------------------------------------------------------------------------
@@ -2482,16 +2492,11 @@ def main() -> None:
     sections["decisions"] = run_section(
         "decisions", parse_decisions, PLANS / "DECISIONS.md"
     )
-    sections["phase_plan_0"] = run_section(
-        "phase_plan_0",
-        parse_phase_plan,
-        PLANS / "phase-0-groundwork.md",
-    )
-    sections["phase_plan_2"] = run_section(
-        "phase_plan_2",
-        parse_phase_plan,
-        PLANS / "phase-2-features-0.4.0.md",
-    )
+    # Live phase plans: every plans/phase-*.md (archived ones live under
+    # plans/archive/ and are handled by the archive parser instead).
+    for plan_path in sorted(PLANS.glob("phase-*.md")):
+        key = f"phase_plan:{plan_path.stem}"
+        sections[key] = run_section(key, parse_phase_plan, plan_path)
     sections["archive"] = run_section(
         "archive", parse_archive, PLANS
     )

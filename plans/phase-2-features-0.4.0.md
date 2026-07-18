@@ -7,8 +7,8 @@
 
 | | |
 |---|---|
-| **Status** | blocked — Phase 1 (`release-0.3.0`) not yet merged to `main` |
-| **Branch** | `release-0.4.0` (off `main`, after Phase 1 merges) |
+| **Status** | blocked — phase-gate interview not held (Q2, Q4, Q6–Q9) |
+| **Branch** | `release-0.4.0` (off `main`) |
 | **Target version** | `0.4.0` |
 | **Entry criteria** | Phase 1 merged and tagged `v0.3.0`; floating consumers (vhtf, fed-workforce) pinned per the cross-repo ledger in ROADMAP.md |
 | **Exit criteria** | All Tier 2 items landed (or explicitly deferred with reason); release checklist done; PR merged; tag `v0.4.0` pushed |
