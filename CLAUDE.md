@@ -12,6 +12,22 @@ across machines and change on every R upgrade. If `Rscript` isn't on `PATH`,
 don't guess where R lives — stop and tell the user, and point them to add R's
 `bin` directory to `PATH` (or to supply the path to their `Rscript`).
 
+**Claude Code on the web / cloud sessions provision R automatically.** A
+`SessionStart` hook (`.claude/hooks/session-start.sh` + `install-r-deps.R`,
+registered in `.claude/settings.json`) installs r-base, pandoc, the
+compiled-package system libs, and the full R dev toolchain (devtools,
+roxygen2, testthat, pkgdown, urlchecker, spelling, plus DESCRIPTION's own
+Imports/Suggests) the first time a cloud session touches this repo. It needs
+`cloud.r-project.org` allowlisted in the environment's network policy (Custom
+network access → Allowed domains) — without it, the hook installs R itself
+fine but every package install fails. If `Rscript` still isn't on `PATH` in a
+cloud session, check the hook's output before concluding R is unavailable;
+the "stop and tell the user" rule above is for local sessions. Installs build
+from source (no binary mirror is reachable through the network policy), so
+the first cold container takes a while — expect the result to be cached in
+later sessions. None of this applies locally — Jonathan's machine manages its
+own R install per the rules above.
+
 **Never run R inline** (`Rscript -e "..."`) — Windows shell quoting mangles it.
 Always write the R code to a temp file and execute that file:
 
@@ -34,14 +50,20 @@ Run these in order after changing R source or roxygen comments:
 3. `devtools::check()` — `R CMD check`. Target: **0 errors, 0 warnings**. The
    **only** accepted NOTE is the proprietary-license one
    (`Non-standard license specification: file LICENSE`). Any other NOTE is a
-   regression — investigate it.
+   regression — investigate it. In a cloud session, expect two additional
+   NOTEs that aren't regressions: installed package size (the bundled fonts
+   are 4.8Mb) and "unable to verify current time" (the future-timestamp check
+   needs a network host this environment's policy blocks). Anything beyond
+   those three is worth investigating same as locally.
 4. `pkgdown::build_site()` — rebuilds the site into `docs/`. Two gotchas when
    running via standalone Rscript (no RStudio):
    - pkgdown/rmarkdown need Pandoc, which a bare `Rscript` may not find. If a build
      fails with "Pandoc not available," point R at a bundled copy via
      `Sys.setenv(RSTUDIO_PANDOC = <dir>)` — Quarto and RStudio each ship one in a
      `tools` directory. Locate the copy on the current machine rather than
-     assuming a path.
+     assuming a path. (Cloud sessions get a system `pandoc` from the
+     SessionStart hook, already on `PATH` — this workaround is for local
+     sessions without RStudio/Quarto installed.)
    - `build_site()` re-knits `vignettes/articles/branded-themes.Rmd`, which needs
      tidycensus + a Census API key + network and will fail offline. For doc/theme
      changes, rebuild only what changed instead:
