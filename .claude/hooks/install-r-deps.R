@@ -2,11 +2,12 @@
 # Called from session-start.sh after system packages (r-base, pandoc, and
 # the compiled-package system libs) are in place.
 
-repos <- c(
-  P3M = "https://packagemanager.posit.co/cran/__linux__/noble/latest",
-  CRAN = "https://cloud.r-project.org"
-)
-options(repos = repos)
+# Posit Package Manager's index is reachable but its package downloads
+# redirect to a separate backend host, and R doesn't retry a failed
+# per-package download against the next listed repo — so a second repo here
+# doesn't add resilience, only a different single point of failure. Plain
+# CRAN alone is proven to work end to end (source builds, no redirects).
+options(repos = c(CRAN = "https://cloud.r-project.org"))
 
 if (!requireNamespace("devtools", quietly = TRUE)) {
   install.packages("devtools")
