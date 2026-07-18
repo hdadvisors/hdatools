@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Session 3 complete — ready for PR |
+| **Status** | Session 4 complete (visual refinement) — ready for PR |
 | **Branch** | `dashboard-tooling` (off `main` at v0.3.0; this plan is committed on it) |
 | **Target version** | none — repo tooling only; no R-package-tree changes, no release, no tag |
 | **Entry criteria** | This plan committed on `dashboard-tooling`; design settled in [dashboard-build-prompt.md](dashboard-build-prompt.md) (superseded by this doc — executors need only this file) |
@@ -835,3 +835,35 @@ involved).
 **No package-tree files touched; no pip installs; no network reference in
 the generated HTML** (the only external URLs in the rendered output are gh's
 own PR/CI links, which is expected — not a resource the page loads).
+
+### Session 4 — visual refinement (2026-07-17)
+
+Interview-driven polish pass over the rendered dashboard; generator
+architecture unchanged (still one stdlib-only script, no network at view
+time). What changed:
+
+- **GitHub links throughout.** `repo_url` parsed from DESCRIPTION `URL:`;
+  mainline SHAs → `/commit/<full>`, remote branches → `/tree/<name>`, tags →
+  `/releases/tag/<name>`, ledger repos → org URL; PR/CI links now
+  `target="_blank" rel="noopener"`. Quiet-link style (`a.qlink`) keeps tables
+  from turning blue.
+- **Status column** renders a discrete badge (Done / Next / Active / Blocked /
+  Deferred) via `normalize_status()`, with the free-text qualifier as muted
+  text under the badge. Consistency checks still read the raw status strings
+  (`--check-only` output verified byte-identical before/after).
+- **Branches & PRs** replaced the lane grid with an SVG git graph: gray main
+  rail + fixed-height HTML commit rows + branch rails colored by PR state
+  (GitHub convention: green open, purple merged, red closed, gray no-PR).
+  Fork points come from a new `fork_point` field in `parse_git` — the newest
+  first-parent mainline commit that is an ancestor of the branch tip —
+  because `merge-base main <ref>` lands on second-parent history once a
+  branch is merged. Merge points come from `pr.mergeCommit.oid`, which also
+  fixed the old "unmatched squash-merge" bucket. `baseRefName` added to
+  `GH_PR_FIELDS` (old caches: treated as `main`).
+- **Decisions tab**: categorical Ref chips (Qn / process / review), colored
+  gate chips on group headers, Binds scope chips, and settled-elsewhere
+  flags — open rows whose Q-ref already appears in Settled render muted with
+  a green "settled <date>" chip.
+- **Icons**: ~10 GitHub Octicons vendored as inline SVG constants (MIT) —
+  used on PR/tag/CI/branch chips and warning banners; replaced the bare `⚠`.
+- **Flexoki purple** (`--purple-600: #5E409D`) added for merged-PR state.

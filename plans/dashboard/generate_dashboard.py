@@ -18,6 +18,7 @@ import tempfile
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 # ---------------------------------------------------------------------------
 # Top-level constants
@@ -367,10 +368,23 @@ def md_to_html(text: str) -> str:
 
 def parse_description(path: Path) -> tuple[dict, list[str]]:
     text = path.read_text(encoding="utf-8", errors="replace")
+    warnings: list[str] = []
     m = re.search(r"^Version:\s*(\S+)", text, re.MULTILINE)
+    version = m.group(1) if m else None
     if not m:
-        return {"version": None}, ["Version: line not found in DESCRIPTION"]
-    return {"version": m.group(1)}, []
+        warnings.append("Version: line not found in DESCRIPTION")
+
+    repo_url = None
+    url_m = re.search(r"^URL:\s*(.+)", text, re.MULTILINE)
+    if url_m:
+        for token in re.split(r"[,\s]+", url_m.group(1)):
+            if re.match(r"https://github\.com/\S+", token):
+                repo_url = token.rstrip("/")
+                break
+    if repo_url is None:
+        warnings.append("no github.com URL in DESCRIPTION — GitHub links disabled")
+
+    return {"version": version, "repo_url": repo_url}, warnings
 
 
 def _extract_md_link(cell: str) -> tuple[str | None, bool]:
@@ -772,21 +786,21 @@ def parse_git(root: Path) -> tuple[dict, list[str]]:
 
     raw_refs = run([
         "git", "for-each-ref", "refs/heads", "refs/remotes/origin",
-        "--format=%(refname)|%(refname:short)|%(objectname:short)|%(committerdate:iso-strict)|%(subject)",
+        "--format=%(refname)|%(refname:short)|%(objectname:short)|%(objectname)|%(committerdate:iso-strict)|%(subject)",
     ])
-    ref_rows: list[tuple[str, str, str, str, str]] = []
+    ref_rows: list[tuple[str, str, str, str, str, str]] = []
     for line in raw_refs.splitlines():
         if not line.strip():
             continue
-        parts = line.split("|", 4)
-        if len(parts) != 5:
+        parts = line.split("|", 5)
+        if len(parts) != 6:
             warnings.append(f"for-each-ref: unexpected line, skipped: {line!r}")
             continue
-        ref_rows.append((parts[0], parts[1], parts[2], parts[3], parts[4]))
+        ref_rows.append((parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]))
 
     # Dedup local vs origin/<name>; local wins. Skip origin/HEAD (symref) and main (trunk).
     branch_data: dict[str, dict] = {}
-    for full_refname, refname, sha, date, subject in ref_rows:
+    for full_refname, refname, sha, sha_full, date, subject in ref_rows:
         if full_refname == "refs/remotes/origin/HEAD":
             continue
         is_remote = refname.startswith("origin/")
@@ -797,45 +811,12 @@ def parse_git(root: Path) -> tuple[dict, list[str]]:
         entry["remote" if is_remote else "local"] = True
         if "sha" not in entry:
             entry["sha"] = sha
+            entry["sha_full"] = sha_full
             entry["date"] = date
             entry["subject"] = subject
 
-    branches: list[dict] = []
-    legacy: list[dict] = []
-    for name, entry in sorted(branch_data.items()):
-        ref_arg = name if entry["local"] else f"origin/{name}"
-        try:
-            merge_base = run(["git", "merge-base", "main", ref_arg]).strip()
-            counts = run(["git", "rev-list", "--left-right", "--count", f"main...{ref_arg}"]).strip()
-            behind_s, ahead_s = counts.split()
-            in_era = _is_ancestor(MODERNIZATION_SHA, merge_base)
-            machine = run([
-                "git", "log", "-1", "--format=%(trailers:key=Machine,valueonly)", ref_arg,
-            ]).strip()
-        except Exception as exc:
-            warnings.append(f"branch {name}: {type(exc).__name__}: {exc}")
-            continue
-
-        rec = {
-            "name": name,
-            "sha": entry["sha"],
-            "date": entry["date"],
-            "subject": entry["subject"],
-            "local": entry["local"],
-            "remote": entry["remote"],
-            "current": name == current_branch,
-            "ahead": int(ahead_s),
-            "behind": int(behind_s),
-            "merge_base": merge_base,
-            "machine": machine,
-        }
-
-        if name in LEGACY_BRANCHES or not in_era:
-            legacy.append(rec)
-        else:
-            branches.append(rec)
-
-    # Mainline: first-parent commits from the modernization boundary to main
+    # Mainline: first-parent commits from the modernization boundary to main.
+    # Computed before the branch loop so fork points can be resolved against it.
     raw_mainline = run([
         "git", "log", "--first-parent",
         "--format=%h|%H|%cs|%s|%(trailers:key=Machine,valueonly)",
@@ -854,6 +835,52 @@ def parse_git(root: Path) -> tuple[dict, list[str]]:
         mainline.append({
             "short": short, "full": full, "date": date, "subject": subject, "machine": machine,
         })
+
+    branches: list[dict] = []
+    legacy: list[dict] = []
+    for name, entry in sorted(branch_data.items()):
+        ref_arg = name if entry["local"] else f"origin/{name}"
+        try:
+            merge_base = run(["git", "merge-base", "main", ref_arg]).strip()
+            counts = run(["git", "rev-list", "--left-right", "--count", f"main...{ref_arg}"]).strip()
+            behind_s, ahead_s = counts.split()
+            in_era = _is_ancestor(MODERNIZATION_SHA, merge_base)
+            machine = run([
+                "git", "log", "-1", "--format=%(trailers:key=Machine,valueonly)", ref_arg,
+            ]).strip()
+            # Fork point for the graph: the newest first-parent mainline commit
+            # that is an ancestor of the branch tip. merge_base is wrong for
+            # merged branches (it lands on second-parent history post-merge).
+            fork_point = None
+            if in_era:
+                for row in mainline:
+                    if _is_ancestor(row["full"], ref_arg):
+                        fork_point = row["full"]
+                        break
+        except Exception as exc:
+            warnings.append(f"branch {name}: {type(exc).__name__}: {exc}")
+            continue
+
+        rec = {
+            "name": name,
+            "sha": entry["sha"],
+            "sha_full": entry["sha_full"],
+            "date": entry["date"],
+            "subject": entry["subject"],
+            "local": entry["local"],
+            "remote": entry["remote"],
+            "current": name == current_branch,
+            "ahead": int(ahead_s),
+            "behind": int(behind_s),
+            "merge_base": merge_base,
+            "fork_point": fork_point,
+            "machine": machine,
+        }
+
+        if name in LEGACY_BRANCHES or not in_era:
+            legacy.append(rec)
+        else:
+            branches.append(rec)
 
     # Tags (dereferenced to the commit they point at)
     raw_tags = run([
@@ -926,7 +953,9 @@ def attach_pr_and_tags_to_mainline(mainline: list[dict], prs: list[dict], tags: 
 # gh layer (with cache + offline fallback)
 # ---------------------------------------------------------------------------
 
-GH_PR_FIELDS = "number,title,state,headRefName,mergedAt,mergeCommit,url"
+# baseRefName was added 2026-07-17; an older gh-cache.json won't have it, so
+# consumers must use pr.get("baseRefName") and treat None as "assume main".
+GH_PR_FIELDS = "number,title,state,headRefName,baseRefName,mergedAt,mergeCommit,url"
 GH_RUN_FIELDS = "workflowName,status,conclusion,headBranch,createdAt,url"
 
 GH_FAILURE_MODES = (subprocess.TimeoutExpired, FileNotFoundError, RuntimeError, json.JSONDecodeError)
@@ -1255,6 +1284,9 @@ def build_model(sections: dict[str, "Section"]) -> dict:
         "phase-2-features-0.4.0": sections["phase_plan_2"].data,
     }
 
+    model["repo_url"] = (model["description"] or {}).get("repo_url")
+    model["org_url"] = model["repo_url"].rsplit("/", 1)[0] if model["repo_url"] else None
+
     model["git"] = sections["git"].data
     model["gh"] = sections["gh"].data
 
@@ -1274,6 +1306,34 @@ def build_model(sections: dict[str, "Section"]) -> dict:
     return model
 
 # ---------------------------------------------------------------------------
+# Icons — GitHub Octicons (MIT), https://github.com/primer/octicons
+# 16px viewBox path data; rendered inline so the HTML stays self-contained.
+# Trusted constants: never pass icon() output through html.escape/md_inline.
+# ---------------------------------------------------------------------------
+
+OCTICONS: dict[str, str] = {
+    "git-branch": '<path d="M9.5 3.25a2.25 2.25 0 1 1 3 2.122V6A2.5 2.5 0 0 1 10 8.5H6a1 1 0 0 0-1 1v1.128a2.251 2.251 0 1 1-1.5 0V5.372a2.25 2.25 0 1 1 1.5 0v1.836A2.493 2.493 0 0 1 6 7h4a1 1 0 0 0 1-1v-.628A2.25 2.25 0 0 1 9.5 3.25Zm-6 0a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0Zm8.25-.75a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5ZM4.25 12a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Z"/>',
+    "git-merge": '<path d="M5.45 5.154A4.25 4.25 0 0 0 9.25 7.5h1.378a2.251 2.251 0 1 1 0 1.5H9.25A5.734 5.734 0 0 1 5 7.123v3.505a2.25 2.25 0 1 1-1.5 0V5.372a2.25 2.25 0 1 1 1.95-.218ZM4.25 13.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm8.5-4.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"/>',
+    "git-pull-request": '<path d="M1.5 3.25a2.25 2.25 0 1 1 3 2.122v5.256a2.251 2.251 0 1 1-1.5 0V5.372A2.25 2.25 0 0 1 1.5 3.25Zm5.677-.177L9.573.677A.25.25 0 0 1 10 .854V2.5h1A2.5 2.5 0 0 1 13.5 5v5.628a2.251 2.251 0 1 1-1.5 0V5a1 1 0 0 0-1-1h-1v1.646a.25.25 0 0 1-.427.177L7.177 3.427a.25.25 0 0 1 0-.354ZM3.75 2.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm0 9.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm8.25.75a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0Z"/>',
+    "git-pull-request-closed": '<path d="M3.25 1A2.25 2.25 0 0 1 4 5.372v5.256a2.251 2.251 0 1 1-1.5 0V5.372A2.251 2.251 0 0 1 3.25 1Zm9.5 5.5a.75.75 0 0 1 .75.75v3.378a2.251 2.251 0 1 1-1.5 0V7.25a.75.75 0 0 1 .75-.75Zm-2.03-5.273a.75.75 0 0 1 1.06 0l.97.97.97-.97a.748.748 0 0 1 1.265.332.75.75 0 0 1-.205.729l-.97.97.97.97a.751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018l-.97-.97-.97.97a.749.749 0 0 1-1.275-.326.749.749 0 0 1 .215-.734l.97-.97-.97-.97a.75.75 0 0 1 0-1.06ZM2.5 3.25a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0ZM3.25 12a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm9.5 0a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Z"/>',
+    "git-commit": '<path d="M11.93 8.5a4.002 4.002 0 0 1-7.86 0H.75a.75.75 0 0 1 0-1.5h3.32a4.002 4.002 0 0 1 7.86 0h3.32a.75.75 0 0 1 0 1.5Zm-1.43-.75a2.5 2.5 0 1 0-5 0 2.5 2.5 0 0 0 5 0Z"/>',
+    "tag": '<path d="M1 7.775V2.75C1 1.784 1.784 1 2.75 1h5.025c.464 0 .91.184 1.238.513l6.25 6.25a1.75 1.75 0 0 1 0 2.474l-5.026 5.026a1.75 1.75 0 0 1-2.474 0l-6.25-6.25A1.752 1.752 0 0 1 1 7.775Zm1.5 0c0 .066.026.13.073.177l6.25 6.25a.25.25 0 0 0 .354 0l5.025-5.025a.25.25 0 0 0 0-.354l-6.25-6.25a.25.25 0 0 0-.177-.073H2.75a.25.25 0 0 0-.25.25ZM6 5a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"/>',
+    "check-circle-fill": '<path d="M8 16A8 8 0 1 1 8 0a8 8 0 0 1 0 16Zm3.78-9.72a.751.751 0 0 0-.018-1.042.751.751 0 0 0-1.042-.018L6.75 9.19 5.28 7.72a.751.751 0 0 0-1.042.018.751.751 0 0 0-.018 1.042l2 2a.75.75 0 0 0 1.06 0Z"/>',
+    "x-circle-fill": '<path d="M2.343 13.657A8 8 0 1 1 13.658 2.343 8 8 0 0 1 2.343 13.657ZM6.03 4.97a.751.751 0 0 0-1.042.018.751.751 0 0 0-.018 1.042L6.94 8 4.97 9.97a.749.749 0 0 0 .326 1.275.749.749 0 0 0 .734-.215L8 9.06l1.97 1.97a.749.749 0 0 0 1.275-.326.749.749 0 0 0-.215-.734L9.06 8l1.97-1.97a.749.749 0 0 0-.326-1.275.749.749 0 0 0-.734.215L8 6.94Z"/>',
+    "alert": '<path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/>',
+    "repo": '<path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"/>',
+}
+
+
+def icon(name: str, cls: str = "") -> str:
+    """Inline octicon SVG; inherits currentColor. Trusted markup — do not escape."""
+    extra = f" {cls}" if cls else ""
+    return (
+        f'<svg class="octicon{extra}" viewBox="0 0 16 16" width="14" height="14" '
+        f'aria-hidden="true" fill="currentColor">{OCTICONS[name]}</svg>'
+    )
+
+# ---------------------------------------------------------------------------
 # CSS / JS constants
 # ---------------------------------------------------------------------------
 
@@ -1289,6 +1349,7 @@ CSS_CONSTANT = """
   --red-600: #AF3029;
   --blue-600: #205EA6;
   --cyan-600: #24837B;
+  --purple-600: #5E409D;
 }
 * { box-sizing: border-box; }
 html, body {
@@ -1301,6 +1362,12 @@ html, body {
 }
 .container { max-width: 1100px; margin: 0 auto; padding: 0 20px 60px; }
 a { color: var(--blue-600); }
+a.qlink {
+  color: inherit; text-decoration: none;
+  border-bottom: 1px dotted color-mix(in srgb, var(--base-600) 45%, transparent);
+}
+a.qlink:hover { color: var(--blue-600); border-bottom-color: var(--blue-600); }
+.octicon { display: inline-block; vertical-align: text-bottom; flex-shrink: 0; }
 code, pre, .commit-sha { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
 h1, h2, h3 { line-height: 1.25; }
 h1 { font-size: 1.5rem; margin: 0; }
@@ -1309,12 +1376,14 @@ h3 { font-size: 1rem; margin: 16px 0 6px; }
 
 .page-header { padding: 20px 0 12px; }
 .title-row { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
-.version-chip { font-size: 0.9rem; font-weight: normal; color: var(--base-600); margin-left: 8px; }
+.version-chip { font-size: 0.9rem; font-weight: normal; color: var(--base-600); margin-left: 8px; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
 .header-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.generated-at { color: var(--base-600); font-size: 0.85rem; }
+.generated-at { color: var(--base-600); font-size: 0.8rem; }
 
 .chip {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   padding: 2px 8px;
   border-radius: 999px;
   font-size: 0.8rem;
@@ -1322,13 +1391,16 @@ h3 { font-size: 1rem; margin: 16px 0 6px; }
   color: var(--black);
   border: 1px solid var(--base-100);
   white-space: nowrap;
+  vertical-align: middle;
 }
 a.chip { text-decoration: none; }
+.chip .octicon { width: 12px; height: 12px; }
 .chip-green { background: color-mix(in srgb, var(--green-600) 14%, var(--paper)); border-color: var(--green-600); color: color-mix(in srgb, var(--green-600) 80%, var(--black)); }
 .chip-orange { background: color-mix(in srgb, var(--orange-600) 14%, var(--paper)); border-color: var(--orange-600); color: color-mix(in srgb, var(--orange-600) 80%, var(--black)); }
 .chip-red { background: color-mix(in srgb, var(--red-600) 14%, var(--paper)); border-color: var(--red-600); color: color-mix(in srgb, var(--red-600) 80%, var(--black)); }
 .chip-blue { background: color-mix(in srgb, var(--blue-600) 14%, var(--paper)); border-color: var(--blue-600); color: color-mix(in srgb, var(--blue-600) 80%, var(--black)); }
 .chip-cyan { background: color-mix(in srgb, var(--cyan-600) 14%, var(--paper)); border-color: var(--cyan-600); color: color-mix(in srgb, var(--cyan-600) 80%, var(--black)); }
+.chip-purple { background: color-mix(in srgb, var(--purple-600) 14%, var(--paper)); border-color: var(--purple-600); color: color-mix(in srgb, var(--purple-600) 80%, var(--black)); }
 .chip-neutral { color: var(--base-600); }
 
 .cache-banner, .doc-lag-banner {
@@ -1367,7 +1439,8 @@ a.chip { text-decoration: none; }
 
 table { width: 100%; border-collapse: collapse; margin: 10px 0 20px; font-size: 0.92rem; }
 th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--base-100); vertical-align: top; }
-th { background: var(--base-50); font-weight: 600; }
+th { background: var(--base-50); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--base-600); }
+tbody tr:hover td { background: color-mix(in srgb, var(--base-50) 60%, var(--paper)); }
 
 .panel { background: var(--base-50); border: 1px solid var(--base-100); border-radius: 8px; padding: 14px 16px; margin: 10px 0; }
 .warn-panel { background: color-mix(in srgb, var(--orange-600) 10%, var(--paper)); border-left: 4px solid var(--orange-600); border-radius: 6px; padding: 8px 12px; margin: 8px 0; font-size: 0.88rem; }
@@ -1379,48 +1452,62 @@ summary { cursor: pointer; padding: 6px 0; font-weight: 600; }
 .archive-details ul, .legacy-details ul { padding-left: 20px; }
 
 .status-note { color: var(--base-600); font-style: italic; }
+.status-cell { display: inline-block; vertical-align: top; }
+.status-qualifier { font-size: 0.76rem; color: var(--base-600); white-space: normal; }
+td .status-qualifier { display: block; margin-top: 3px; max-width: 220px; }
+p .status-qualifier { margin-left: 6px; }
 
 .active-phase-card .session-list, .active-phase-card .step-list { padding-left: 20px; }
 .active-phase-card .step-list { font-size: 0.88rem; color: var(--base-600); }
 
-.lane-grid { display: grid; grid-template-columns: minmax(200px, 340px) 1fr; gap: 0 20px; }
-.lane-row { display: contents; }
-.lane-main {
-  position: relative;
-  padding: 10px 0 24px 22px;
-  border-left: 2px solid var(--base-100);
-  margin-left: 6px;
+.graph-legend { display: flex; gap: 16px; align-items: center; font-size: 0.8rem; color: var(--base-600); margin: 10px 0 4px; }
+.legend-swatch { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; }
+.legend-ring { background: var(--paper); border: 2.5px solid var(--blue-600); width: 7px; height: 7px; }
+
+.graph-wrap {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) minmax(260px, 340px);
+  gap: 0 18px;
+  align-items: start;
+  margin: 6px 0 16px;
 }
-.commit-dot {
-  position: absolute; left: -7px; top: 12px;
-  width: 12px; height: 12px; border-radius: 50%;
-  background: var(--black); border: 2px solid var(--paper);
-}
-.commit-info { display: flex; flex-direction: column; gap: 2px; }
+svg.gitgraph { display: block; }
+.gg-rows { min-width: 0; padding-top: 28px; }
+.gg-row { height: 56px; overflow: hidden; padding-top: 7px; }
+.gg-line1 { display: flex; align-items: center; gap: 8px; white-space: nowrap; overflow: hidden; }
+.gg-line1 .chip { flex-shrink: 0; }
 .commit-sha { font-size: 0.85rem; color: var(--base-600); }
 .commit-date { font-size: 0.78rem; color: var(--base-600); }
-.commit-subject { font-size: 0.92rem; }
-.commit-badges { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
+.commit-subject { font-size: 0.9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .machine-chip { font-size: 0.72rem; }
 
-.lane-branches { display: flex; flex-direction: column; gap: 8px; padding: 10px 0 24px; }
+.gg-cards { display: flex; flex-direction: column; gap: 10px; padding-top: 28px; }
 .branch-card { background: var(--base-50); border: 1px solid var(--base-100); border-radius: 8px; padding: 10px 12px; }
+.branch-card.pr-open { border-left: 3px solid var(--green-600); }
+.branch-card.pr-merged { border-left: 3px solid var(--purple-600); }
+.branch-card.pr-closed { border-left: 3px solid var(--red-600); }
+.branch-card.pr-none { border-left: 3px solid var(--base-600); }
 .branch-name { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+.branch-name .octicon { color: var(--base-600); }
 .branch-detail { font-size: 0.85rem; margin: 3px 0; }
 .branch-annotation { font-size: 0.82rem; color: var(--base-600); margin-top: 6px; font-style: italic; }
+.gg-note { color: var(--base-600); font-style: italic; }
 
-.lane-row-unmatched .lane-main { border-left-color: transparent; color: var(--base-600); font-size: 0.85rem; }
+.row-settled td { color: var(--base-600); }
 
-.gh-stamp { color: var(--base-600); font-size: 0.85rem; }
+.gh-stamp { color: var(--base-600); font-size: 0.8rem; }
+.warn-panel .octicon, .cache-banner .octicon { color: var(--orange-600); }
 
 .prose img { max-width: 100%; }
 .prose pre { background: var(--base-50); border: 1px solid var(--base-100); padding: 10px; border-radius: 6px; overflow-x: auto; }
 .prose blockquote { border-left: 3px solid var(--base-100); margin: 10px 0; padding: 2px 14px; color: var(--base-600); }
 
 @media (max-width: 720px) {
-  .lane-grid { grid-template-columns: 1fr; }
-  .lane-main { border-left: none; padding-left: 0; }
-  .commit-dot { display: none; }
+  .graph-wrap { grid-template-columns: 1fr; }
+  svg.gitgraph { display: none; }
+  .gg-rows, .gg-cards { padding-top: 0; }
+  .gg-row { height: auto; }
+  .gg-line1, .commit-subject { white-space: normal; }
 }
 """
 
@@ -1480,19 +1567,62 @@ def _cls(condition: bool, cls_name: str) -> str:
     return cls_name if condition else ""
 
 
-def _status_chip(status_raw: str) -> str:
-    prefix = _status_prefix(status_raw)
-    if prefix in ("done", "merged"):
-        cls = "chip-green"
-    elif prefix in ("next up", "in progress", "active"):
-        cls = "chip-blue"
-    elif prefix == "deferred":
-        cls = "chip-neutral"
-    elif prefix.startswith("blocked"):
-        cls = "chip-orange"
-    else:
-        cls = "chip-neutral"
-    return f'<span class="chip {cls}">{md_inline(html.escape(status_raw))}</span>'
+def gh_link(href: str | None, inner_html: str, title: str = "", cls: str = "qlink") -> str:
+    """Wrap already-safe inner HTML in a quiet external link; plain text if no href."""
+    if not href:
+        return inner_html
+    t = f' title="{html.escape(title)}"' if title else ""
+    return (
+        f'<a class="{cls}" href="{html.escape(href)}" target="_blank" '
+        f'rel="noopener"{t}>{inner_html}</a>'
+    )
+
+
+def chip(inner_html: str, chip_cls: str, href: str | None = None, title: str = "") -> str:
+    """A chip, linked when href is given. inner_html must already be safe."""
+    if href:
+        return gh_link(href, inner_html, title=title, cls=f"chip {chip_cls}")
+    return f'<span class="chip {chip_cls}">{inner_html}</span>'
+
+
+_STATUS_BADGE_MAP = {
+    "done": ("Done", "chip-green", "check-circle-fill"),
+    "merged": ("Done", "chip-green", "git-merge"),
+    "next up": ("Next", "chip-blue", None),
+    "in progress": ("Active", "chip-blue", None),
+    "active": ("Active", "chip-blue", None),
+    "deferred": ("Deferred", "chip-neutral", None),
+}
+
+
+def normalize_status(status_raw: str) -> tuple[str, str, str | None, str]:
+    """Map a free-text ROADMAP status to (label, chip_cls, icon_name, qualifier).
+
+    Display-only companion to _status_prefix — the consistency checks keep
+    reading the raw status text, never this.
+    """
+    text = _strip_md_bold(status_raw).strip()
+    prefix, qualifier = text, ""
+    for sep in (" — ", " – "):
+        if sep in text:
+            prefix, qualifier = (s.strip() for s in text.split(sep, 1))
+            break
+    low = prefix.lower()
+    if low in _STATUS_BADGE_MAP:
+        label, cls, ic = _STATUS_BADGE_MAP[low]
+        return label, cls, ic, qualifier
+    if low.startswith("blocked"):
+        remainder = prefix[len("blocked"):].strip(" ,")
+        qualifier = remainder if not qualifier else f"{remainder} — {qualifier}" if remainder else qualifier
+        return "Blocked", "chip-orange", "alert", qualifier
+    return (prefix or "unknown"), "chip-neutral", None, qualifier
+
+
+def render_status_badge(status_raw: str) -> str:
+    label, cls, ic, qualifier = normalize_status(status_raw)
+    badge = f'<span class="chip {cls}">{icon(ic) if ic else ""}{html.escape(label)}</span>'
+    qualifier_html = f'<span class="status-qualifier">{md_inline(html.escape(qualifier))}</span>' if qualifier else ""
+    return f'<span class="status-cell">{badge}{qualifier_html}</span>'
 
 
 def render_section_warnings(*secs: Section | None) -> str:
@@ -1507,7 +1637,7 @@ def render_section_warnings(*secs: Section | None) -> str:
             items = "".join(f"<li>{html.escape(w)}</li>" for w in sec.warnings)
             parts.append(
                 f'<div class="warn-panel {_cls(hard, "hard")}">'
-                f'<p>⚠ {html.escape(header)}</p>'
+                f'<p>{icon("alert")} {html.escape(header)}</p>'
                 f'<ul>{items}</ul></div>'
             )
     return "".join(parts)
@@ -1538,10 +1668,15 @@ def render_header(model: dict, sections: dict[str, Section]) -> str:
     version = (model.get("description") or {}).get("version") or "unknown"
     git = model.get("git") or {}
     branch = git.get("current_branch") or "?"
+    repo_url = model.get("repo_url")
+    repo_chip = ""
+    if repo_url:
+        slug = repo_url.split("github.com/", 1)[-1]
+        repo_chip = chip(f'{icon("repo")}{html.escape(slug)}', "chip-neutral", href=repo_url)
     dirty_chip = '<span class="chip chip-orange">uncommitted changes</span>' if git.get("dirty") else ""
     warn_count = compute_warn_tab_count(sections)
     warn_chip = (
-        f'<span class="chip chip-orange">{warn_count} tab(s) with parse warnings</span>'
+        f'<span class="chip chip-orange">{icon("alert")}{warn_count} tab(s) with parse warnings</span>'
         if warn_count else ""
     )
     generated = datetime.now().astimezone().strftime("%Y-%m-%d %H:%M %z")
@@ -1550,7 +1685,8 @@ def render_header(model: dict, sections: dict[str, Section]) -> str:
         '<div class="title-row">'
         f'<h1>hdatools <span class="version-chip">v{html.escape(version)}</span></h1>'
         '<div class="header-meta">'
-        f'<span class="chip chip-neutral"><code>{html.escape(branch)}</code></span>'
+        f'{repo_chip}'
+        f'<span class="chip chip-neutral">{icon("git-branch")}<code>{html.escape(branch)}</code></span>'
         f'{dirty_chip}{warn_chip}'
         f'<span class="generated-at">generated {html.escape(generated)}</span>'
         '</div></div></header>'
@@ -1594,7 +1730,7 @@ def render_gh_cache_banner(gh: dict) -> str:
     fetched = gh.get("fetched_at") or "unknown time"
     return (
         '<div class="cache-banner">'
-        f'⚠ gh unavailable — showing cached data last fetched {html.escape(str(fetched))}{age_note}'
+        f'{icon("alert")} gh unavailable — showing cached data last fetched {html.escape(str(fetched))}{age_note}'
         '</div>'
     )
 
@@ -1621,7 +1757,7 @@ def render_active_phase_card(active: dict) -> str:
         f'<p>{md_inline(html.escape(phase["scope"]))}</p>'
         f'<p>Release: {md_inline(html.escape(phase["release"]))}'
         f' &middot; Branch: <code>{html.escape(phase["branch"])}</code>'
-        f' &middot; Status: {_status_chip(phase["status"])}</p>'
+        f' &middot; Status: {render_status_badge(phase["status"])}</p>'
     )
 
     plan_state = plan.get("state", "absent")
@@ -1680,7 +1816,7 @@ def render_roadmap_tab(model: dict, sections: dict[str, Section]) -> str:
         f"<td>{'<code>' + html.escape(p['branch']) + '</code>' if p['branch'] else ''}</td>"
         f"<td>{md_inline(html.escape(p['scope']))}</td>"
         f"<td>{md_inline(html.escape(p['plan_cell_raw']))}</td>"
-        f"<td>{_status_chip(p['status'])}</td>"
+        f"<td>{render_status_badge(p['status'])}</td>"
         "</tr>"
         for p in phases
     )
@@ -1712,7 +1848,8 @@ def render_roadmap_tab(model: dict, sections: dict[str, Section]) -> str:
         for a in archive_list
     )
     archive_html = (
-        f'<details class="archive-details"><summary>Archived plans ({len(archive_list)})</summary>'
+        f'<details class="archive-details"><summary>Archived plans '
+        f'<span class="chip chip-neutral">{len(archive_list)}</span></summary>'
         f'<ul>{archive_items}</ul></details>'
     )
 
@@ -1730,24 +1867,31 @@ def render_roadmap_tab(model: dict, sections: dict[str, Section]) -> str:
 # Branches & PRs tab
 # ---------------------------------------------------------------------------
 
-def render_mainline_row(row: dict) -> str:
-    badges = [f'<span class="chip chip-blue">{html.escape(t)}</span>' for t in row.get("tags", [])]
+def render_mainline_row(row: dict, repo_url: str | None) -> str:
+    badges = [
+        chip(
+            f'{icon("tag")}{html.escape(t)}', "chip-blue",
+            href=f"{repo_url}/releases/tag/{quote(t, safe='')}" if repo_url else None,
+        )
+        for t in row.get("tags", [])
+    ]
     pr = row.get("pr")
     if pr:
-        badges.append(
-            f'<span class="chip chip-green">merges PR #{pr["number"]} ← '
-            f'{html.escape(pr.get("headRefName") or "")}</span>'
+        merge_inner = (
+            f'{icon("git-merge")}merges PR #{pr["number"]} ← '
+            f'{html.escape(pr.get("headRefName") or "")}'
         )
+        badges.append(chip(merge_inner, "chip-purple", href=pr.get("url")))
     machine = row.get("machine")
-    machine_chip = f'<span class="chip chip-neutral machine-chip">{html.escape(machine)}</span>' if machine else ""
+    if machine:
+        badges.append(f'<span class="chip chip-neutral machine-chip">{html.escape(machine)}</span>')
+    sha_html = f'<code class="commit-sha">{html.escape(row["short"])}</code>'
+    if repo_url:
+        sha_html = gh_link(f"{repo_url}/commit/{row['full']}", sha_html, title="view commit on GitHub")
     return (
-        '<div class="commit-dot"></div>'
-        '<div class="commit-info">'
-        f'<code class="commit-sha">{html.escape(row["short"])}</code> '
-        f'<span class="commit-date">{html.escape(row["date"])}</span> {machine_chip}'
-        f'<div class="commit-subject">{html.escape(row["subject"])}</div>'
-        f'<div class="commit-badges">{"".join(badges)}</div>'
-        '</div>'
+        f'<div class="gg-line1">{sha_html}'
+        f'<span class="commit-date">{html.escape(row["date"])}</span>{"".join(badges)}</div>'
+        f'<div class="commit-subject" title="{html.escape(row["subject"])}">{html.escape(row["subject"])}</div>'
     )
 
 
@@ -1761,34 +1905,55 @@ def _branch_annotation(name: str, is_merged: bool, is_local: bool) -> str:
     return ""
 
 
-def render_branch_card(b: dict) -> str:
+_PR_STATE_STYLE = {
+    "MERGED": ("chip-purple", "git-merge"),
+    "OPEN": ("chip-green", "git-pull-request"),
+    "CLOSED": ("chip-red", "git-pull-request-closed"),
+}
+
+
+def render_branch_card(b: dict, repo_url: str | None, state_key: str = "", extra_note: str = "") -> str:
     pr = b.get("pr")
     is_merged = bool(pr and pr.get("state") == "MERGED")
     if pr:
         state = pr.get("state", "")
-        state_cls = {"MERGED": "chip-green", "OPEN": "chip-blue", "CLOSED": "chip-red"}.get(state, "chip-neutral")
-        pr_badge = f'<a class="chip {state_cls}" href="{html.escape(pr.get("url") or "")}">{html.escape(state)} #{pr["number"]}</a>'
+        state_cls, state_icon = _PR_STATE_STYLE.get(state, ("chip-neutral", "git-pull-request"))
+        pr_badge = chip(
+            f'{icon(state_icon)}{html.escape(state)} #{pr["number"]}',
+            state_cls, href=pr.get("url"),
+        )
         merge_info = ""
         if is_merged:
             merged_at = (pr.get("mergedAt") or "")[:10]
-            merge_sha = ((pr.get("mergeCommit") or {}).get("oid") or "")[:7]
+            merge_oid = (pr.get("mergeCommit") or {}).get("oid") or ""
+            merge_sha_html = ""
+            if merge_oid:
+                merge_sha_html = f'<code>{html.escape(merge_oid[:7])}</code>'
+                if repo_url:
+                    merge_sha_html = gh_link(f"{repo_url}/commit/{merge_oid}", merge_sha_html)
             merge_info = (
                 f'<div class="branch-detail">merged {html.escape(merged_at)}'
-                + (f" ({html.escape(merge_sha)})" if merge_sha else "")
+                + (f" ({merge_sha_html})" if merge_sha_html else "")
                 + "</div>"
             )
     else:
-        pr_badge = '<span class="chip chip-neutral">no PR yet</span>'
+        pr_badge = chip(f'{icon("git-branch")}no PR yet', "chip-neutral")
         merge_info = ""
 
     ci = b.get("ci_latest")
     ci_html = ""
     if ci:
         concl = ci.get("conclusion") or ci.get("status") or "unknown"
-        ci_cls = "chip-green" if concl == "success" else "chip-red" if ci.get("conclusion") else "chip-neutral"
+        if concl == "success":
+            ci_cls, ci_icon = "chip-green", "check-circle-fill"
+        elif ci.get("conclusion"):
+            ci_cls, ci_icon = "chip-red", "x-circle-fill"
+        else:
+            ci_cls, ci_icon = "chip-neutral", ""
+        ci_inner = (icon(ci_icon) if ci_icon else "") + html.escape(concl)
         ci_html = (
             '<div class="branch-detail">R-CMD-check: '
-            f'<a class="chip {ci_cls}" href="{html.escape(ci.get("url") or "")}">{html.escape(concl)}</a></div>'
+            f'{chip(ci_inner, ci_cls, href=ci.get("url"))}</div>'
         )
 
     machine = b.get("machine")
@@ -1796,14 +1961,191 @@ def render_branch_card(b: dict) -> str:
     current_chip = '<span class="chip chip-cyan">current branch</span>' if b.get("current") else ""
     annotation = _branch_annotation(b["name"], is_merged, b.get("local", False))
     annotation_html = f'<div class="branch-annotation">{html.escape(annotation)}</div>' if annotation else ""
+    extra_html = f'<div class="branch-detail gg-note">{html.escape(extra_note)}</div>' if extra_note else ""
+
+    name_html = f'<code>{html.escape(b["name"])}</code>'
+    if repo_url and b.get("remote"):
+        name_html = gh_link(
+            f"{repo_url}/tree/{quote(b['name'], safe='/')}", name_html,
+            title="view branch on GitHub",
+        )
+    state_cls_attr = f" pr-{state_key}" if state_key else ""
 
     return (
-        '<div class="branch-card">'
-        f'<div class="branch-name"><code>{html.escape(b["name"])}</code>{current_chip}{machine_chip}</div>'
+        f'<div class="branch-card{state_cls_attr}">'
+        f'<div class="branch-name">{icon("git-branch")}{name_html}{current_chip}{machine_chip}</div>'
         f'<div class="branch-detail">{b["behind"]} behind, {b["ahead"]} ahead of main</div>'
         f'<div class="branch-detail">{pr_badge}</div>'
-        f'{merge_info}{ci_html}{annotation_html}'
+        f'{merge_info}{ci_html}{extra_html}{annotation_html}'
         '</div>'
+    )
+
+
+# Git-graph geometry. Rails are drawn in an SVG whose y-coordinates line up
+# with fixed-height HTML commit rows next to it (no JS involved) — so ROW_H
+# must equal the .gg-row CSS height and TOP_PAD the .gg-rows/.gg-cards padding.
+GG_ROW_H = 56
+GG_TOP_PAD = 28
+GG_BOT_PAD = 24
+GG_MAIN_X = 16
+GG_LANE_W = 24
+
+_GG_STATE_COLOR = {
+    "open": "--green-600",
+    "merged": "--purple-600",
+    "closed": "--red-600",
+    "none": "--base-600",
+}
+
+
+def _gg_y(k: int) -> int:
+    return GG_TOP_PAD + k * GG_ROW_H + GG_ROW_H // 2
+
+
+def _graph_layout(git: dict) -> dict:
+    """Pure geometry: place each branch as a lane interval against mainline rows."""
+    mainline = git.get("mainline", [])
+    branches = git.get("branches", [])
+    n = len(mainline)
+    row_of = {row["full"]: i for i, row in enumerate(mainline)}
+
+    entries: list[dict] = []
+    for b in branches:
+        pr = b.get("pr")
+        state = "none"
+        if pr:
+            state = {"OPEN": "open", "MERGED": "merged", "CLOSED": "closed"}.get(pr.get("state", ""), "none")
+
+        fork_idx = row_of.get(b.get("fork_point"))
+        fork_off = fork_idx is None
+        if fork_off:
+            fork_idx = n - 1
+
+        merge_idx = None
+        merge_off = False
+        if state == "merged":
+            oid = (pr.get("mergeCommit") or {}).get("oid") or ""
+            base = pr.get("baseRefName")  # absent in pre-2026-07-17 caches -> assume main
+            if base in (None, "main") and oid in row_of:
+                merge_idx = row_of[oid]
+                if merge_idx >= fork_idx:
+                    merge_idx = None
+                    merge_off = True
+            else:
+                merge_off = True
+
+        entries.append({
+            "b": b,
+            "state": state,
+            "color_var": _GG_STATE_COLOR[state],
+            "fork_idx": fork_idx,
+            "merge_idx": merge_idx,
+            "fork_off": fork_off,
+            "merge_off": merge_off,
+            "top": merge_idx if merge_idx is not None else -1,
+            "bottom": fork_idx,
+        })
+
+    # Greedy first-fit lanes; intervals sharing even an endpoint row get
+    # separate lanes so their curves never overlap.
+    entries.sort(key=lambda e: (e["top"], e["bottom"], e["b"]["name"]))
+    lanes: list[list[tuple[int, int]]] = []
+    for e in entries:
+        for j, intervals in enumerate(lanes):
+            if all(e["top"] > bot or e["bottom"] < top for top, bot in intervals):
+                intervals.append((e["top"], e["bottom"]))
+                e["lane"] = j
+                break
+        else:
+            lanes.append([(e["top"], e["bottom"])])
+            e["lane"] = len(lanes) - 1
+
+    return {"n": n, "entries": entries, "n_lanes": len(lanes)}
+
+
+def render_git_graph_svg(layout: dict, mainline: list[dict]) -> str:
+    n = layout["n"]
+    if n == 0:
+        return ""
+    r = GG_ROW_H // 2
+    width = GG_MAIN_X + GG_LANE_W * (layout["n_lanes"] + 1) + 8
+    height = GG_TOP_PAD + n * GG_ROW_H + GG_BOT_PAD
+    top_y = GG_TOP_PAD - 10
+
+    parts = [
+        f'<svg class="gitgraph" width="{width}" height="{height}" '
+        f'viewBox="0 0 {width} {height}" role="img" '
+        'aria-label="Commit graph: main rail with branch rails colored by PR state">'
+    ]
+    parts.append(
+        f'<line x1="{GG_MAIN_X}" y1="{_gg_y(0) - 14}" x2="{GG_MAIN_X}" y2="{_gg_y(n - 1) + 14}" '
+        'stroke="var(--base-100)" stroke-width="3"/>'
+    )
+
+    for e in layout["entries"]:
+        x = GG_MAIN_X + GG_LANE_W * (e["lane"] + 1)
+        color = f'var({e["color_var"]})'
+        y_fork = _gg_y(e["fork_idx"])
+        d: list[str] = []
+        if e["fork_off"]:
+            d.append(f"M {x} {height - 10}")
+        else:
+            d.append(f"M {GG_MAIN_X} {y_fork}")
+            d.append(f"C {x} {y_fork}, {x} {y_fork}, {x} {y_fork - r}")
+        if e["merge_idx"] is not None:
+            y_merge = _gg_y(e["merge_idx"])
+            d.append(f"L {x} {y_merge + r}")
+            d.append(f"C {x} {y_merge}, {x} {y_merge}, {GG_MAIN_X} {y_merge}")
+        else:
+            d.append(f"L {x} {top_y}")
+        dash = ' stroke-dasharray="4 4"' if e["fork_off"] else ""
+        parts.append(
+            f'<path d="{" ".join(d)}" fill="none" stroke="{color}" '
+            f'stroke-width="2" stroke-linecap="round"{dash}/>'
+        )
+        if e["merge_idx"] is None:
+            if e["merge_off"]:
+                # merged, but the merge commit is outside the graph window
+                parts.append(
+                    f'<rect x="{x - 3.5}" y="{top_y - 3.5}" width="7" height="7" '
+                    f'fill="{color}"/>'
+                )
+            else:
+                # open-ended rail (open PR, closed PR, or no PR yet)
+                parts.append(
+                    f'<circle cx="{x}" cy="{top_y}" r="4" fill="var(--paper)" '
+                    f'stroke="{color}" stroke-width="2"/>'
+                )
+
+    for i, row in enumerate(mainline):
+        if row.get("tags"):
+            parts.append(
+                f'<circle cx="{GG_MAIN_X}" cy="{_gg_y(i)}" r="6" fill="var(--paper)" '
+                'stroke="var(--blue-600)" stroke-width="2.5"/>'
+            )
+        else:
+            parts.append(
+                f'<circle cx="{GG_MAIN_X}" cy="{_gg_y(i)}" r="5" fill="var(--black)" '
+                'stroke="var(--paper)" stroke-width="2"/>'
+            )
+
+    parts.append("</svg>")
+    return "".join(parts)
+
+
+def _graph_legend() -> str:
+    swatch = '<span class="legend-swatch" style="background: var({v});"></span>'
+    items = [
+        ('<span class="legend-swatch legend-ring"></span>', "release tag"),
+        (swatch.format(v="--green-600"), "open PR"),
+        (swatch.format(v="--purple-600"), "merged"),
+        (swatch.format(v="--red-600"), "closed"),
+        (swatch.format(v="--base-600"), "no PR"),
+    ]
+    return (
+        '<div class="graph-legend">'
+        + "".join(f"<span>{sw}{label}</span>" for sw, label in items)
+        + "</div>"
     )
 
 
@@ -1812,46 +2154,47 @@ def render_branches_tab(model: dict, sections: dict[str, Section]) -> str:
     gh_sec = sections["gh"]
     git = git_sec.data or {}
     mainline = git.get("mainline", [])
-    branches = git.get("branches", [])
     legacy = git.get("legacy_branches", [])
+    repo_url = model.get("repo_url")
 
-    mainline_full_shas = {row["full"] for row in mainline}
-    branches_by_base: dict[str, list[dict]] = {}
-    unmatched: list[dict] = []
-    for b in branches:
-        base = b.get("merge_base")
-        if base in mainline_full_shas:
-            branches_by_base.setdefault(base, []).append(b)
-        else:
-            unmatched.append(b)
+    layout = _graph_layout(git)
+    svg = render_git_graph_svg(layout, mainline)
 
-    grid_rows = []
-    for row in mainline:
-        cards = "".join(render_branch_card(b) for b in branches_by_base.get(row["full"], []))
-        grid_rows.append(
-            '<div class="lane-row">'
-            f'<div class="lane-main">{render_mainline_row(row)}</div>'
-            f'<div class="lane-branches">{cards}</div>'
-            '</div>'
+    rows_html = "".join(
+        f'<div class="gg-row">{render_mainline_row(row, repo_url)}</div>'
+        for row in mainline
+    )
+
+    cards: list[str] = []
+    for e in layout["entries"]:
+        notes = []
+        if e["fork_off"]:
+            notes.append("forked before the graph window (dashed rail)")
+        if e["merge_off"]:
+            notes.append("merged outside the graph window")
+        cards.append(
+            render_branch_card(e["b"], repo_url, state_key=e["state"], extra_note="; ".join(notes))
         )
 
-    if unmatched:
-        cards = "".join(render_branch_card(b) for b in unmatched)
-        grid_rows.append(
-            '<div class="lane-row lane-row-unmatched">'
-            '<div class="lane-main"><em>merge-base not on main’s first-parent chain '
-            '— typically a squash-merged branch whose real ancestry diverged from '
-            'the mainline commits shown at left</em></div>'
-            f'<div class="lane-branches">{cards}</div>'
-            '</div>'
+    if svg:
+        body_graph = (
+            _graph_legend()
+            + '<div class="graph-wrap">'
+            + svg
+            + f'<div class="gg-rows">{rows_html}</div>'
+            + f'<div class="gg-cards">{"".join(cards)}</div>'
+            + "</div>"
         )
+    else:
+        body_graph = f'<div class="gg-cards">{"".join(cards)}</div>'
 
     legacy_items = "".join(
         f'<li><code>{html.escape(b["name"])}</code> — last commit {html.escape(b["date"][:10])}</li>'
         for b in legacy
     )
     legacy_html = (
-        f'<details class="legacy-details"><summary>Pre-modernization history ({len(legacy)})</summary>'
+        f'<details class="legacy-details"><summary>Pre-modernization history '
+        f'<span class="chip chip-neutral">{len(legacy)}</span></summary>'
         f'<ul>{legacy_items}</ul></details>'
         if legacy else ""
     )
@@ -1862,29 +2205,50 @@ def render_branches_tab(model: dict, sections: dict[str, Section]) -> str:
         items = "".join(f"<li>{html.escape(f['message'])}</li>" for f in info_findings)
         info_html = f'<div class="panel"><p><strong>Housekeeping</strong></p><ul>{items}</ul></div>'
 
-    body = f'<div class="lane-grid">{"".join(grid_rows)}</div>{legacy_html}{info_html}'
-    return render_section_warnings(git_sec, gh_sec) + body
+    return render_section_warnings(git_sec, gh_sec) + body_graph + legacy_html + info_html
 
 
 # ---------------------------------------------------------------------------
 # Decisions tab
 # ---------------------------------------------------------------------------
 
+def _ref_token(ref_raw: str) -> str:
+    return _strip_md_bold(ref_raw).strip().strip("`")
+
+
+def _ref_chip(ref_raw: str) -> str:
+    """Categorical chip for the Ref column: Qn / process / review."""
+    token = _ref_token(ref_raw)
+    if re.fullmatch(r"Q\d+", token):
+        return chip(html.escape(token), "chip-blue")
+    if token.lower() == "process":
+        return chip(html.escape(token), "chip-cyan")
+    if token.lower() == "review":
+        return chip(html.escape(token), "chip-purple")
+    return md_inline(html.escape(ref_raw))
+
+
+_GATE_COLOR_CYCLE = ["chip-blue", "chip-cyan", "chip-purple", "chip-orange"]
+
+
+def _binds_chips(binds_raw: str, phase_color: dict[str, str]) -> str:
+    """Split a Binds cell into scope chips; 'Phase N' tokens reuse gate colors."""
+    tokens = [t.strip() for t in re.split(r"[,;]", _strip_md_bold(binds_raw)) if t.strip()]
+    if not tokens:
+        return ""
+    out = []
+    for t in tokens:
+        m = re.search(r"[Pp]hase\s*(\d+)", t)
+        cls = phase_color.get(m.group(1), "chip-neutral") if m else "chip-neutral"
+        out.append(chip(html.escape(t.strip("`")), cls))
+    return " ".join(out)
+
+
 def render_decisions_tab(sections: dict[str, Section]) -> str:
     dec_sec = sections["decisions"]
     dec = dec_sec.data or {}
     settled = dec.get("settled", [])
     open_q = dec.get("open", [])
-
-    settled_headers = ["date", "ref", "decision", "rationale", "binds"]
-    settled_rows = "".join(
-        "<tr>" + "".join(f"<td>{md_inline(html.escape(row.get(h, '')))}</td>" for h in settled_headers) + "</tr>"
-        for row in settled
-    )
-    settled_table = (
-        "<table><thead><tr><th>Date</th><th>Ref</th><th>Decision</th><th>Rationale</th><th>Binds</th></tr></thead>"
-        f"<tbody>{settled_rows}</tbody></table>"
-    )
 
     groups: dict[str, list[dict]] = {}
     order: list[str] = []
@@ -1895,20 +2259,63 @@ def render_decisions_tab(sections: dict[str, Section]) -> str:
             order.append(gate)
         groups[gate].append(row)
 
+    # Gate colors: first-encounter order; "n/a" gates stay neutral.
+    gate_color: dict[str, str] = {}
+    phase_color: dict[str, str] = {}
+    cycle = iter(_GATE_COLOR_CYCLE * 4)
+    for gate in order:
+        if "n/a" in gate.lower():
+            gate_color[gate] = "chip-neutral"
+            continue
+        gate_color[gate] = next(cycle)
+        m = re.search(r"[Pp]hase\s*(\d+)", gate)
+        if m:
+            phase_color[m.group(1)] = gate_color[gate]
+
+    # Refs that already have a settled entry (surfaces Q1/Q3-style duplication).
+    settled_dates: dict[str, str] = {}
+    for row in settled:
+        token = _ref_token(row.get("ref", ""))
+        if re.fullmatch(r"Q\d+", token):
+            settled_dates[token] = _strip_md_bold(row.get("date", "")).strip()
+
+    settled_rows = "".join(
+        "<tr>"
+        f"<td>{md_inline(html.escape(row.get('date', '')))}</td>"
+        f"<td>{_ref_chip(row.get('ref', ''))}</td>"
+        f"<td>{md_inline(html.escape(row.get('decision', '')))}</td>"
+        f"<td>{md_inline(html.escape(row.get('rationale', '')))}</td>"
+        f"<td>{_binds_chips(row.get('binds', ''), phase_color)}</td>"
+        "</tr>"
+        for row in settled
+    )
+    settled_table = (
+        "<table><thead><tr><th>Date</th><th>Ref</th><th>Decision</th><th>Rationale</th><th>Binds</th></tr></thead>"
+        f"<tbody>{settled_rows}</tbody></table>"
+    )
+
     group_blocks = []
     for gate in order:
-        rows_html = "".join(
-            "<tr>"
-            f"<td>{md_inline(html.escape(r.get('ref', '')))}</td>"
-            f"<td>{md_inline(html.escape(r.get('question (short)', '')))}</td>"
-            f"<td>{md_inline(html.escape(r.get('recommended default (review §3)', '')))}</td>"
-            "</tr>"
-            for r in groups[gate]
-        )
+        rows_html = []
+        for r in groups[gate]:
+            token = _ref_token(r.get("ref", ""))
+            settled_date = settled_dates.get(token)
+            row_cls = ' class="row-settled"' if settled_date else ""
+            settled_chip = (
+                " " + chip(f'{icon("check-circle-fill")}settled {html.escape(settled_date)}', "chip-green")
+                if settled_date else ""
+            )
+            rows_html.append(
+                f"<tr{row_cls}>"
+                f"<td>{_ref_chip(r.get('ref', ''))}{settled_chip}</td>"
+                f"<td>{md_inline(html.escape(r.get('question (short)', '')))}</td>"
+                f"<td>{md_inline(html.escape(r.get('recommended default (review §3)', '')))}</td>"
+                "</tr>"
+            )
         group_blocks.append(
-            f'<h3>{html.escape(gate)}</h3>'
+            f'<h3>{chip(html.escape(gate), gate_color.get(gate, "chip-neutral"))}</h3>'
             "<table><thead><tr><th>Ref</th><th>Question</th><th>Recommended default</th></tr></thead>"
-            f"<tbody>{rows_html}</tbody></table>"
+            f"<tbody>{''.join(rows_html)}</tbody></table>"
         )
 
     body = f"<h2>Settled</h2>{settled_table}<h2>Open — settle at phase gates</h2>{''.join(group_blocks)}"
@@ -1962,9 +2369,17 @@ def render_release_tab(model: dict, sections: dict[str, Section]) -> str:
     checklist_html = (checklist_sec.data or {}).get("html", "") if checklist_sec else ""
 
     ledger = (sections["roadmap"].data or {}).get("ledger", []) if sections["roadmap"].data else []
+    org_url = model.get("org_url")
     if ledger:
+        def ledger_cell(key: str, value: str) -> str:
+            rendered = md_inline(html.escape(value))
+            token = _strip_md_bold(value).strip().strip("`")
+            if key.lower() == "owning repo" and org_url and re.fullmatch(r"[A-Za-z0-9_.-]+", token):
+                return gh_link(f"{org_url}/{token}", rendered, title="view repo on GitHub")
+            return rendered
+
         ledger_rows = "".join(
-            "<tr>" + "".join(f"<td>{md_inline(html.escape(v))}</td>" for v in row.values()) + "</tr>"
+            "<tr>" + "".join(f"<td>{ledger_cell(k, v)}</td>" for k, v in row.items()) + "</tr>"
             for row in ledger
         )
         ledger_table = (
