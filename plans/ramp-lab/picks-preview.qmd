@@ -1,0 +1,407 @@
+---
+title: "Ramp Lab picks — in practice"
+subtitle: "The six winning ramps from the 2026-07-18 review, applied to dummy housing data"
+date: 2026-07-18
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    embed-resources: true
+    code-fold: true
+    code-summary: "Show code"
+    fig-width: 7
+    fig-height: 4
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+Companion to [REVIEW.md](REVIEW.md). Each ramp below is built with the exact
+`colorspace` call from its dashboard "Copy R snippet" (verified against real
+colorspace output during the review) and applied to simple dummy housing
+data. Charts use `theme_minimal()` on purpose — the point is to judge the
+**color ramps** in realistic chart shapes, before the branded hdatools themes
+enter the picture.
+
+```{r}
+#| label: setup
+#| code-summary: "Setup: ramp constructors (the verified snippets) + dummy data"
+library(ggplot2)
+library(colorspace)
+
+# Sequential picks: one sequential_hcl() call each.
+seq_ramp <- function(n, h1, c1, l1, power) {
+  sequential_hcl(n, h = c(h1, 80), c = c(c1, 10), l = c(l1, 95), power = power)
+}
+
+# Diverging picks: two sequential_hcl() arms stitched (diverging_hcl() can't
+# express the shared cream center) — same construction as generate_candidates.R.
+div_ramp <- function(n, h1, h2, c1, l1, power) {
+  n2 <- ceiling(n / 2)
+  arm <- function(h) sequential_hcl(n2, h = c(h, 80), c = c(c1, 10), l = c(l1, 95), power = power)
+  out <- c(arm(h1), rev(arm(h2)))
+  if (floor(n / 2) < n2) out <- out[-n2]
+  out
+}
+
+pal <- list(
+  hda_seq = function(n) seq_ramp(n, h1 = 259.2, c1 = 64, l1 = 26, power = 0.85),
+  hda_div = function(n) div_ramp(n, h1 = 259.2, h2 = 20.4, c1 = 76, l1 = 26, power = 0.90),
+  hfv_seq = function(n) seq_ramp(n, h1 = 118.5, c1 = 65, l1 = 28, power = 1.00),
+  hfv_div = function(n) div_ramp(n, h1 = 118.5, h2 = 344.0, c1 = 68, l1 = 26, power = 0.95),
+  pha_seq = function(n) seq_ramp(n, h1 = 19.7, c1 = 84, l1 = 28, power = 0.95),
+  pha_div = function(n) div_ramp(n, h1 = 243.4, h2 = 19.7, c1 = 72, l1 = 26, power = 0.90)
+)
+
+# ---- Dummy data (seeded, shared by all brands so only the palette varies) ----
+set.seed(20260718)
+
+# Fake tract grid with a smooth-ish spatial field: share of cost-burdened renters.
+tracts <- expand.grid(col = 1:12, row = 1:8)
+tracts$burden <- with(tracts, plogis(
+  0.35 * sin(col / 2.2) + 0.45 * cos(row / 1.8) + 0.12 * col / 6 + rnorm(nrow(tracts), 0, 0.35)
+))
+# Rescale to span all 7 classes so every legend key is populated.
+tracts$burden <- with(tracts, (burden - min(burden)) / diff(range(burden)) * 0.96 + 0.02)
+
+# Households by income band (ordinal -> legitimate one-hue ramp use).
+bands <- data.frame(
+  band  = factor(c("<15k", "15-30k", "30-50k", "50-75k", "75-100k", "100-150k", "150k+"),
+                 levels = c("<15k", "15-30k", "30-50k", "50-75k", "75-100k", "100-150k", "150k+")),
+  share = c(0.08, 0.12, 0.17, 0.20, 0.16, 0.15, 0.12)
+)
+
+# Homeownership rate by age cohort over time (lines use the ramp's darker half).
+years   <- 2015:2025
+cohorts <- c("Under 35", "35-54", "55-74", "75+")
+own <- expand.grid(year = years, cohort = factor(cohorts, levels = cohorts))
+own$rate <- with(own, c(0.36, 0.62, 0.75, 0.79)[as.integer(cohort)] +
+                   0.004 * (year - 2015) * c(-1, 0.4, 0.6, 0.2)[as.integer(cohort)] +
+                   rnorm(nrow(own), 0, 0.006))
+
+# Change in median rent, 2020 -> 2025, by locality (diverging).
+localities <- paste0("Locality ", LETTERS[1:12])
+rent_chg <- data.frame(
+  locality = localities,
+  change   = round(sort(runif(12, -0.18, 0.24)), 3)
+)
+
+# The same tract grid re-expressed as change vs regional baseline (diverging map).
+tracts$rent_change <- (tracts$burden - mean(tracts$burden)) * 0.55 +
+  rnorm(nrow(tracts), 0, 0.02)
+
+# ---- Small plotting helpers reused for every brand ----
+theme_demo <- theme_minimal(base_size = 12) +
+  theme(panel.grid.minor = element_blank(), plot.title.position = "plot")
+
+swatch_plot <- function(hex, title) {
+  d <- data.frame(x = seq_along(hex), hex = hex)
+  ggplot(d, aes(x, 1, fill = hex)) +
+    geom_tile(color = "white", linewidth = 1) +
+    geom_text(aes(label = hex), y = 0.35, size = 3, family = "mono") +
+    scale_fill_identity() +
+    coord_cartesian(ylim = c(0.2, 1.6), expand = FALSE) +
+    labs(title = title) +
+    theme_void(base_size = 12) + theme(plot.title = element_text(size = 11))
+}
+
+map_seq <- function(hex7) {
+  # sequential_hcl() returns dark -> light; on a value-labeled map, HIGH
+  # values wear the DARK end, so the fill scale takes the reversed ramp.
+  brks <- seq(0, 1, length.out = 8)
+  labs7 <- paste0(head(round(brks * 100), 7), "-", round(brks[-1] * 100), "%")
+  d <- tracts
+  d$class <- cut(d$burden, brks, labels = labs7, include.lowest = TRUE)
+  ggplot(d, aes(col, row, fill = class)) +
+    geom_tile(color = "white", linewidth = 0.8) +
+    scale_fill_manual(values = rev(hex7), name = "Cost-burdened\nrenters", drop = FALSE) +
+    coord_equal() +
+    labs(title = "Choropleth-style: share of renters cost-burdened, by tract") +
+    theme_void(base_size = 11) + theme(plot.title = element_text(size = 11))
+}
+
+bars_seq <- function(hex7) {
+  ggplot(bands, aes(band, share, fill = band)) +
+    geom_col(width = 0.75) +
+    scale_fill_manual(values = rev(hex7), guide = "none") +
+    scale_y_continuous(labels = scales::percent) +
+    labs(title = "Ordinal bars: households by income band",
+         x = NULL, y = NULL) +
+    theme_demo
+}
+
+lines_seq <- function(hex7) {
+  # Lines take the ramp's darker half - the two palest classes are for fills,
+  # not strokes (they'd vanish against white).
+  cols <- hex7[c(1, 2, 3, 4)]
+  ggplot(own, aes(year, rate, color = cohort)) +
+    geom_line(linewidth = 1) +
+    scale_color_manual(values = cols, name = NULL) +
+    scale_y_continuous(labels = scales::percent) +
+    scale_x_continuous(breaks = seq(2015, 2025, 2)) +
+    labs(title = "Lines: homeownership rate by age cohort (darker half of ramp)",
+         x = NULL, y = NULL) +
+    theme_demo
+}
+
+divbars <- function(hex7) {
+  d <- rent_chg
+  brks <- seq(-0.25, 0.25, length.out = 8)
+  d$class <- cut(d$change, brks, include.lowest = TRUE)
+  ggplot(d, aes(reorder(locality, change), change, fill = class)) +
+    geom_col(width = 0.75) +
+    geom_hline(yintercept = 0, color = "grey40") +
+    scale_fill_manual(values = hex7, guide = "none", drop = FALSE) +
+    scale_y_continuous(labels = scales::percent) +
+    coord_flip() +
+    labs(title = "Diverging bars: change in median rent, 2020-2025",
+         x = NULL, y = NULL) +
+    theme_demo
+}
+
+map_div <- function(hex7) {
+  brks <- seq(-0.15, 0.15, length.out = 8)
+  labs7 <- paste0(head(round(brks * 100), 7), " to ", round(brks[-1] * 100), "%")
+  d <- tracts
+  d$class <- cut(pmin(pmax(d$rent_change, -0.149), 0.149), brks, labels = labs7)
+  ggplot(d, aes(col, row, fill = class)) +
+    geom_tile(color = "white", linewidth = 0.8) +
+    scale_fill_manual(values = hex7, name = "Rent change\nvs region", drop = FALSE) +
+    coord_equal() +
+    labs(title = "Choropleth-style: rent change vs regional baseline, by tract") +
+    theme_void(base_size = 11) + theme(plot.title = element_text(size = 11))
+}
+```
+
+# HDA
+
+## Sequential — Blue → cream (tuned: chroma 64, power 0.85)
+
+Navy → teal → sage → cream. The power-0.85 tune moves class boundaries
+darker, so midtones keep conviction and the pale classes stay legible against
+white instead of going chalky. Mid-ramp deliberately reads teal — that hue
+passage is the shared-cream system's signature across all three brands.
+
+```{r}
+#| label: fig-hda-seq-swatch
+#| fig-height: 1.1
+#| fig-alt: "Seven color swatches from dark navy through teal and sage to cream, with hex codes."
+swatch_plot(pal$hda_seq(7), "HDA sequential, 7-class")
+```
+
+```{r}
+#| label: fig-hda-seq-map
+#| fig-height: 3.4
+#| fig-alt: "Grid choropleth of dummy cost-burden shares in navy-to-cream classes."
+map_seq(pal$hda_seq(7))
+```
+
+```{r}
+#| label: fig-hda-seq-bars
+#| fig-height: 3
+#| fig-alt: "Bar chart of household shares by income band, filled with the HDA blue ramp."
+bars_seq(pal$hda_seq(7))
+```
+
+```{r}
+#| label: fig-hda-seq-lines
+#| fig-height: 3
+#| fig-alt: "Line chart of homeownership rates by age cohort using the four darkest ramp colors."
+lines_seq(pal$hda_seq(7))
+```
+
+## Diverging — Blue vs Coral (tuned: chroma 76, lum 26, power 0.9)
+
+The flagship brand pairing: navy/teal against sienna/brick over the shared
+cream center. Deeper tips and richer inner classes than the generated
+default. Usage note from the review: on 7-class diverging *maps*, keep a
+legend — the innermost pale pair loses sign distinction under protanopia.
+
+```{r}
+#| label: fig-hda-div-swatch
+#| fig-height: 1.1
+#| fig-alt: "Seven diverging swatches from navy through cream to brick red, with hex codes."
+swatch_plot(pal$hda_div(7), "HDA diverging, 7-class")
+```
+
+```{r}
+#| label: fig-hda-div-bars
+#| fig-height: 3.4
+#| fig-alt: "Horizontal diverging bar chart of rent changes by locality, blue for declines and warm brick for increases."
+divbars(pal$hda_div(7))
+```
+
+```{r}
+#| label: fig-hda-div-map
+#| fig-height: 3.4
+#| fig-alt: "Grid choropleth of rent change relative to the regional baseline in blue-to-brick classes."
+map_div(pal$hda_div(7))
+```
+
+# HFV
+
+## Sequential — Leaf → cream (generated defaults, kept deliberately)
+
+A true green ramp built on the experimental Leaf secondary — it gives HFV
+its own identity next to HDA's navy-teal. Twelve slider variants were tested
+during the review; every one traded away a color-vision-deficiency floor
+(dark greens are gamut-limited), so the generated parameters stand.
+
+```{r}
+#| label: fig-hfv-seq-swatch
+#| fig-height: 1.1
+#| fig-alt: "Seven swatches from deep forest green through olive and sage to cream, with hex codes."
+swatch_plot(pal$hfv_seq(7), "HFV sequential, 7-class")
+```
+
+```{r}
+#| label: fig-hfv-seq-map
+#| fig-height: 3.4
+#| fig-alt: "Grid choropleth of dummy cost-burden shares in forest-green-to-cream classes."
+map_seq(pal$hfv_seq(7))
+```
+
+```{r}
+#| label: fig-hfv-seq-bars
+#| fig-height: 3
+#| fig-alt: "Bar chart of household shares by income band, filled with the HFV green ramp."
+bars_seq(pal$hfv_seq(7))
+```
+
+```{r}
+#| label: fig-hfv-seq-lines
+#| fig-height: 3
+#| fig-alt: "Line chart of homeownership rates by age cohort using the four darkest green ramp colors."
+lines_seq(pal$hfv_seq(7))
+```
+
+## Diverging — Leaf vs Berry (tuned: chroma 68, lum 26, power 0.95)
+
+Green vs berry-wine, PiYG-family — HFV's own diverging axis rather than a
+second navy-vs-tan. It was the most CVD-robust diverging candidate in its
+slot by a wide margin (worst cross-arm ΔE anywhere ≈ 16 after tuning; the
+Desert pairings collapse to 2–4 on the protan inner pair). The berry arm
+passes through periwinkle/seafoam near center — luminance order and the
+legend carry that, same as ColorBrewer's PiYG.
+
+```{r}
+#| label: fig-hfv-div-swatch
+#| fig-height: 1.1
+#| fig-alt: "Seven diverging swatches from forest green through cream to berry wine, with hex codes."
+swatch_plot(pal$hfv_div(7), "HFV diverging, 7-class")
+```
+
+```{r}
+#| label: fig-hfv-div-bars
+#| fig-height: 3.4
+#| fig-alt: "Horizontal diverging bar chart of rent changes by locality, green for declines and berry for increases."
+divbars(pal$hfv_div(7))
+```
+
+```{r}
+#| label: fig-hfv-div-map
+#| fig-height: 3.4
+#| fig-alt: "Grid choropleth of rent change relative to the regional baseline in green-to-berry classes."
+map_div(pal$hfv_div(7))
+```
+
+# PHA
+
+## Sequential — Red → cream (tuned: chroma 84, power 0.95)
+
+Oxide-red / terracotta, completing a blue–green–red system across the three
+brands. The tune (chroma 90 → 84, power 0.95) was the rare move that improved
+every color-vision floor at once — less dark-end saturation gives
+deuteranopia more luminance to work with, and the eased curve feeds the
+light classes.
+
+```{r}
+#| label: fig-pha-seq-swatch
+#| fig-height: 1.1
+#| fig-alt: "Seven swatches from deep oxide red through terracotta and tan to cream, with hex codes."
+swatch_plot(pal$pha_seq(7), "PHA sequential, 7-class")
+```
+
+```{r}
+#| label: fig-pha-seq-map
+#| fig-height: 3.4
+#| fig-alt: "Grid choropleth of dummy cost-burden shares in red-to-cream classes."
+map_seq(pal$pha_seq(7))
+```
+
+```{r}
+#| label: fig-pha-seq-bars
+#| fig-height: 3
+#| fig-alt: "Bar chart of household shares by income band, filled with the PHA red ramp."
+bars_seq(pal$pha_seq(7))
+```
+
+```{r}
+#| label: fig-pha-seq-lines
+#| fig-height: 3
+#| fig-alt: "Line chart of homeownership rates by age cohort using the four darkest red ramp colors."
+lines_seq(pal$pha_seq(7))
+```
+
+## Diverging — Dark Blue vs Red (tuned: chroma 72, lum 26, power 0.9)
+
+PHA's two flagship civic colors, tuned with the same treatment as HDA's
+diverging so the two cool-warm divergings stay system-coherent. Same usage
+note as HDA: legend/labels on 7-class diverging maps (protan inner pair).
+
+```{r}
+#| label: fig-pha-div-swatch
+#| fig-height: 1.1
+#| fig-alt: "Seven diverging swatches from dark blue through cream to brick red, with hex codes."
+swatch_plot(pal$pha_div(7), "PHA diverging, 7-class")
+```
+
+```{r}
+#| label: fig-pha-div-bars
+#| fig-height: 3.4
+#| fig-alt: "Horizontal diverging bar chart of rent changes by locality, blue for declines and red for increases."
+divbars(pal$pha_div(7))
+```
+
+```{r}
+#| label: fig-pha-div-map
+#| fig-height: 3.4
+#| fig-alt: "Grid choropleth of rent change relative to the regional baseline in blue-to-red classes."
+map_div(pal$pha_div(7))
+```
+
+# The family together
+
+All six picks share the same cream light-end/center (H≈80, C≈10, L≈95), the
+same class rhythm, and similar dark-end weight — one design system, three
+distinct brand identities. The two cool-warm divergings (HDA, PHA) are
+deliberate siblings; see REVIEW.md for the cross-brand discussion.
+
+```{r}
+#| label: fig-family
+#| fig-height: 3.2
+#| fig-alt: "Six rows of seven swatches each, showing all six final ramps stacked for comparison."
+fam <- do.call(rbind, lapply(names(pal), function(nm) {
+  data.frame(ramp = nm, x = 1:7, hex = pal[[nm]](7))
+}))
+fam$ramp <- factor(fam$ramp, levels = rev(c("hda_seq", "hda_div", "hfv_seq",
+                                            "hfv_div", "pha_seq", "pha_div")),
+                   labels = rev(c("HDA sequential", "HDA diverging", "HFV sequential",
+                                  "HFV diverging", "PHA sequential", "PHA diverging")))
+ggplot(fam, aes(x, ramp, fill = hex)) +
+  geom_tile(color = "white", linewidth = 1) +
+  scale_fill_identity() +
+  labs(title = "The six picks, 7-class", x = NULL, y = NULL) +
+  theme_minimal(base_size = 12) +
+  theme(panel.grid = element_blank(), axis.text.x = element_blank())
+```
+
+::: {.callout-note}
+## What happens next
+
+Nothing here touches `R/` yet. Adoption into hdatools (scale functions,
+n-class defaults, documentation) is a separate step once these picks are
+signed off. The exact construction calls live in REVIEW.md and in the
+`setup` chunk above.
+:::
