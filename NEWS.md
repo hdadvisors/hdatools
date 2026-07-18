@@ -1,3 +1,14 @@
+# hdatools (development version)
+
+* New `hda_colors`, `hfv_colors`, `pha_colors` — exported named character
+  vectors of each brand's palette hex values, sourced directly from the
+  internal `.brands` registry. Downstream consumers can now reference brand
+  hexes by name (e.g. `hda_colors["Blue"]`) or pass the full vector to
+  `scale_fill_manual(values = hda_colors)` without hardcoding hex strings.
+* New `hda_color()`, `hfv_color()`, `pha_color()` — per-brand accessors that
+  return the hex for a named color and error with the list of valid names on
+  an unknown input.
+
 # hdatools 0.3.0
 
 * New `scale_colour_hda()`, `scale_colour_hfv()`, `scale_colour_pha()`,
