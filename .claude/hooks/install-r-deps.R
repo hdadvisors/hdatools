@@ -13,6 +13,12 @@ if (!requireNamespace("devtools", quietly = TRUE)) {
   install.packages("devtools")
 }
 
+# install_dev_deps() shells out to remotes, which isn't a hard dependency
+# of devtools itself.
+if (!requireNamespace("remotes", quietly = TRUE)) {
+  install.packages("remotes")
+}
+
 # Installs DESCRIPTION's Imports/Depends/Suggests plus devtools' own
 # recommended tooling (roxygen2, testthat, etc.).
 devtools::install_dev_deps(dependencies = TRUE, upgrade = "never")
