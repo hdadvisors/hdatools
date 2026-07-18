@@ -28,7 +28,9 @@ if ! command -v Rscript >/dev/null 2>&1 || ! command -v pandoc >/dev/null 2>&1; 
     libpng-dev \
     libtiff5-dev \
     libjpeg-dev \
-    zlib1g-dev
+    zlib1g-dev \
+    libuv1-dev \
+    libgit2-dev
 fi
 
 Rscript "$CLAUDE_PROJECT_DIR/.claude/hooks/install-r-deps.R"
