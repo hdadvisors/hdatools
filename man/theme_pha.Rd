@@ -37,4 +37,13 @@ When overriding strip text under ggplot2 >= 4.0, use
 \code{ggtext::element_markdown()}, never a raw \code{ggplot2::element_text()}: the
 branded strip element is a ggtext markdown element, and ggplot2 4.0 only
 merges theme elements of the same class.
+
+The theme alone carries PHA's brand identity into an otherwise
+unbranded plot: bar/column fills, point colors, and line colors default
+to \code{pha_colors["Green"]} (via \code{ggplot2::element_geom()}), a discrete
+\code{aes(colour =)}/\code{aes(fill =)} mapping cycles through the full PHA
+palette, and a continuous mapping uses the PHA sequential ramp
+(see \code{\link[=scale_color_pha_c]{scale_color_pha_c()}}) — all with no \verb{scale_*()} call required.
+An explicit \verb{scale_*()} (or a manual \code{aes()} value) always overrides
+these theme-carried defaults.
 }

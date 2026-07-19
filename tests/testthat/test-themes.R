@@ -159,3 +159,73 @@ test_that("plot.subtitle size is base_size * 1.125 for all themes", {
   expect_equal(ggplot2::calc_element("plot.subtitle", theme_hfv())$size, 14 * 1.125)
   expect_equal(ggplot2::calc_element("plot.subtitle", theme_pha())$size, 10 * 1.125)
 })
+
+# --- Theme-carried palette (ggplot2 >= 4.0, item 2.3): theme_*() alone must
+# brand a plot with no scale_*() call, without disturbing an explicit one ---
+
+brand_themes <- list(hda = theme_hda(), hfv = theme_hfv(), pha = theme_pha())
+
+test_that("theme_*() carry the brand's discrete palette as palette.*.discrete", {
+  for (brand in names(brand_themes)) {
+    pal <- unname(.brands[[brand]]$palette)
+    th <- brand_themes[[brand]]
+    expect_identical(ggplot2::calc_element("palette.colour.discrete", th), pal)
+    expect_identical(ggplot2::calc_element("palette.fill.discrete", th), pal)
+  }
+})
+
+test_that("theme_*() carry the brand's sequential ramp as palette.*.continuous", {
+  for (brand in names(brand_themes)) {
+    ramp <- .ramp_hex_for_scale(brand, "sequential", direction = 1, .RAMP_N_DENSE)
+    th <- brand_themes[[brand]]
+    expect_identical(ggplot2::calc_element("palette.colour.continuous", th), ramp)
+    expect_identical(ggplot2::calc_element("palette.fill.continuous", th), ramp)
+  }
+})
+
+test_that("theme_*() default geom fill/colour to the brand's first palette color", {
+  for (brand in names(brand_themes)) {
+    first <- unname(.brands[[brand]]$palette)[1]
+    geom_el <- ggplot2::calc_element("geom", brand_themes[[brand]])
+    expect_identical(geom_el$fill, first)
+    expect_identical(geom_el$colour, first)
+  }
+})
+
+test_that("a bare geom_bar() with no fill aes defaults to the brand's first palette color", {
+  for (brand in names(brand_themes)) {
+    first <- unname(.brands[[brand]]$palette)[1]
+    bd <- ggplot2::ggplot_build(
+      ggplot2::ggplot(data.frame(g = factor(1:3)), ggplot2::aes(g)) +
+        ggplot2::geom_bar() + brand_themes[[brand]]
+    )
+    expect_identical(unique(bd$data[[1]]$fill), first)
+  }
+})
+
+test_that("a no-scale-call plot renders the brand's discrete palette in order", {
+  d <- data.frame(g = factor(1:3), y = c(1, 2, 3))
+  for (brand in names(brand_themes)) {
+    pal <- unname(.brands[[brand]]$palette)
+    bd <- ggplot2::ggplot_build(
+      ggplot2::ggplot(d, ggplot2::aes(g, y, fill = g)) +
+        ggplot2::geom_col() + brand_themes[[brand]]
+    )
+    expect_identical(unique(bd$data[[1]]$fill), pal[1:3])
+  }
+})
+
+test_that("an explicit scale_*() still overrides the theme-carried palette", {
+  # ~65 existing call sites already pass an explicit scale_*(); this guards
+  # that the new theme-carried defaults never take priority over one.
+  d <- data.frame(g = factor(1:3), y = c(1, 2, 3))
+  manual <- c("red", "green", "blue")
+  for (brand in names(brand_themes)) {
+    bd <- ggplot2::ggplot_build(
+      ggplot2::ggplot(d, ggplot2::aes(g, y, fill = g)) +
+        ggplot2::geom_col() + brand_themes[[brand]] +
+        ggplot2::scale_fill_manual(values = manual)
+    )
+    expect_identical(unique(bd$data[[1]]$fill), manual)
+  }
+})

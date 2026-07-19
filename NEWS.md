@@ -1,5 +1,20 @@
 # hdatools (development version)
 
+* `theme_hda()`/`theme_hfv()`/`theme_pha()` alone now brand a plot with no
+  `scale_*()` call required, via ggplot2 4.0's theme-carried palettes: each
+  theme sets `palette.colour.discrete`/`palette.fill.discrete` to the brand's
+  full discrete palette and `palette.colour.continuous`/
+  `palette.fill.continuous` to the brand's sequential ramp (the same ramps
+  behind `scale_color_hda_c()` and friends). An explicit `scale_*()` call (or
+  a manual `aes()` value) always overrides these theme-carried defaults, so
+  every existing plot that already sets its own scale is unaffected.
+* The same three themes now set a default `geom` fill/colour (via
+  `ggplot2::element_geom()`), so a bare `geom_bar()`/`geom_col()`/
+  `geom_point()`/`geom_line()` with no `fill`/`colour` mapping at all renders
+  in the brand's first palette color instead of ggplot2's stock grey/black.
+* Raised the `ggplot2` dependency floor to `>= 4.0.0` (from `>= 3.5.0`), the
+  version required for the theme-carried palette/`element_geom()` features
+  above.
 * New `scale_color_hda_c()`/`scale_colour_hda_c()`/`scale_fill_hda_c()` (and
   the matching `hfv`/`pha` versions) — a full continuous color/fill scale
   matrix (9 exports) built from six `colorspace` HCL sequential/diverging

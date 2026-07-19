@@ -3,6 +3,7 @@
 # see R/brands.R for the per-brand font/margin/size fields it reads.
 .brand_theme <- function(
     spec,
+    brand,
     base_size,
     base_family,
     flip_gridlines = FALSE,
@@ -14,6 +15,13 @@
 
   actual_format <- get_output_format(output_format)
   adjusted_base_size <- adjust_base_size(base_size, html_adjust, pdf_adjust, actual_format)
+
+  # Theme-carried palette (ggplot2 >= 4.0): lets theme_*() alone brand a plot
+  # with no scale_*() call. An explicit scale_*()/aes() always overrides these
+  # (ggplot2's normal scale-resolution order), so the ~65 existing call sites
+  # that already pass an explicit scale are unaffected.
+  discrete_pal <- unname(spec$palette)
+  continuous_ramp <- .ramp_hex_for_scale(brand, "sequential", direction = 1, .RAMP_N_DENSE)
 
   # NULL in spec$theme_fonts means "track the caller's base_family" rather
   # than a brand-fixed family (see R/brands.R).
@@ -121,7 +129,24 @@
 
       axis.title = ggplot2::element_blank(),
 
-      axis.ticks = ggplot2::element_blank()
+      axis.ticks = ggplot2::element_blank(),
+
+      palette.colour.discrete = discrete_pal,
+      palette.fill.discrete = discrete_pal,
+      palette.colour.continuous = continuous_ramp,
+      palette.fill.continuous = continuous_ramp,
+
+      # %+replace% (below) fully swaps the `geom` element rather than merging
+      # its sub-fields, so ink/paper/accent must be set here explicitly —
+      # they will NOT be inherited from theme_minimal()'s own ink/paper/accent
+      # args if those were passed there instead.
+      geom = ggplot2::element_geom(
+        ink = "#383c3d",
+        paper = "white",
+        accent = discrete_pal[1],
+        colour = discrete_pal[1],
+        fill = discrete_pal[1]
+      )
 
     ),
     grid_elements
@@ -148,6 +173,15 @@
 #'   branded strip element is a ggtext markdown element, and ggplot2 4.0 only
 #'   merges theme elements of the same class.
 #'
+#'   The theme alone carries HDA's brand identity into an otherwise
+#'   unbranded plot: bar/column fills, point colors, and line colors default
+#'   to `hda_colors["Blue"]` (via `ggplot2::element_geom()`), a discrete
+#'   `aes(colour =)`/`aes(fill =)` mapping cycles through the full HDA
+#'   palette, and a continuous mapping uses the HDA sequential ramp
+#'   (see [scale_color_hda_c()]) — all with no `scale_*()` call required.
+#'   An explicit `scale_*()` (or a manual `aes()` value) always overrides
+#'   these theme-carried defaults.
+#'
 #' @export
 theme_hda <- function(
     base_size = 14,
@@ -160,6 +194,7 @@ theme_hda <- function(
 ) {
   .brand_theme(
     .brands$hda,
+    brand = "hda",
     base_size = base_size,
     base_family = base_family,
     flip_gridlines = flip_gridlines,
@@ -186,6 +221,15 @@ theme_hda <- function(
 #'   branded strip element is a ggtext markdown element, and ggplot2 4.0 only
 #'   merges theme elements of the same class.
 #'
+#'   The theme alone carries HFV's brand identity into an otherwise
+#'   unbranded plot: bar/column fills, point colors, and line colors default
+#'   to `hfv_colors["Shadow"]` (via `ggplot2::element_geom()`), a discrete
+#'   `aes(colour =)`/`aes(fill =)` mapping cycles through the full HFV
+#'   palette, and a continuous mapping uses the HFV sequential ramp
+#'   (see [scale_color_hfv_c()]) — all with no `scale_*()` call required.
+#'   An explicit `scale_*()` (or a manual `aes()` value) always overrides
+#'   these theme-carried defaults.
+#'
 #' @export
 theme_hfv <- function(
     base_size = 14,
@@ -198,6 +242,7 @@ theme_hfv <- function(
 ) {
   .brand_theme(
     .brands$hfv,
+    brand = "hfv",
     base_size = base_size,
     base_family = base_family,
     flip_gridlines = flip_gridlines,
@@ -223,6 +268,15 @@ theme_hfv <- function(
 #'   branded strip element is a ggtext markdown element, and ggplot2 4.0 only
 #'   merges theme elements of the same class.
 #'
+#'   The theme alone carries PHA's brand identity into an otherwise
+#'   unbranded plot: bar/column fills, point colors, and line colors default
+#'   to `pha_colors["Green"]` (via `ggplot2::element_geom()`), a discrete
+#'   `aes(colour =)`/`aes(fill =)` mapping cycles through the full PHA
+#'   palette, and a continuous mapping uses the PHA sequential ramp
+#'   (see [scale_color_pha_c()]) — all with no `scale_*()` call required.
+#'   An explicit `scale_*()` (or a manual `aes()` value) always overrides
+#'   these theme-carried defaults.
+#'
 #' @export
 theme_pha <- function(
     base_size = 10,
@@ -235,6 +289,7 @@ theme_pha <- function(
 ) {
   .brand_theme(
     .brands$pha,
+    brand = "pha",
     base_size = base_size,
     base_family = base_family,
     flip_gridlines = flip_gridlines,
