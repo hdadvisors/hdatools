@@ -12,7 +12,7 @@
 #' hda_colors["Blue"]
 #' hda_colors[c("Blue", "Yellow")]
 #'
-#' @seealso [hda_color()], [hfv_colors], [pha_colors]
+#' @seealso [hda_color()], [hfv_colors], [pha_colors], [vha_colors]
 #' @export
 hda_colors <- .brands$hda$palette
 
@@ -26,7 +26,7 @@ hda_colors <- .brands$hda$palette
 #' hfv_colors
 #' hfv_colors["Sky"]
 #'
-#' @seealso [hfv_color()], [hda_colors], [pha_colors]
+#' @seealso [hfv_color()], [hda_colors], [pha_colors], [vha_colors]
 #' @export
 hfv_colors <- .brands$hfv$palette
 
@@ -40,9 +40,23 @@ hfv_colors <- .brands$hfv$palette
 #' pha_colors
 #' pha_colors["Green"]
 #'
-#' @seealso [pha_color()], [hda_colors], [hfv_colors]
+#' @seealso [pha_color()], [hda_colors], [hfv_colors], [vha_colors]
 #' @export
 pha_colors <- .brands$pha$palette
+
+#' Named VHA color vector
+#'
+#' A named character vector of the six VHA brand colors, taken directly from
+#' the internal `.brands` registry. Names are the canonical color labels
+#' (e.g. `"Dark Turq"`, `"Yellow"`).
+#'
+#' @examples
+#' vha_colors
+#' vha_colors["Dark Turq"]
+#'
+#' @seealso [vha_color()], [hda_colors], [hfv_colors], [pha_colors]
+#' @export
+vha_colors <- .brands$vha$palette
 
 # Internal accessor factory used by the three per-brand exports below.
 .brand_color <- function(palette, brand_name) {
@@ -111,3 +125,20 @@ hfv_color <- .brand_color(.brands$hfv$palette, "HFV")
 #' @seealso [pha_colors]
 #' @export
 pha_color <- .brand_color(.brands$pha$palette, "PHA")
+
+#' Look up a single VHA color by name
+#'
+#' Returns the hex value for the named VHA brand color. Errors with the list
+#' of valid names when the name is not found.
+#'
+#' @param name A single color name, e.g. `"Dark Turq"` or `"Yellow"`.
+#'
+#' @return A named character scalar (hex color).
+#'
+#' @examples
+#' vha_color("Dark Turq")
+#' vha_color("Yellow")
+#'
+#' @seealso [vha_colors]
+#' @export
+vha_color <- .brand_color(.brands$vha$palette, "VHA")

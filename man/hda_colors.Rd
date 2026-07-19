@@ -22,5 +22,5 @@ hda_colors[c("Blue", "Yellow")]
 
 }
 \seealso{
-\code{\link[=hda_color]{hda_color()}}, \link{hfv_colors}, \link{pha_colors}
+\code{\link[=hda_color]{hda_color()}}, \link{hfv_colors}, \link{pha_colors}, \link{vha_colors}
 }

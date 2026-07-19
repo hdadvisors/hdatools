@@ -206,6 +206,30 @@ scale_fill_pha <- function(direction = 1, repeat_pal = FALSE, ...) {
   .scale_brand_discrete("fill", "pha", direction, repeat_pal, ...)
 }
 
+#' VHA-branded discrete color scale
+#'
+#' @param direction If -1, reverse the scale (defaults to 1)
+#' @param repeat_pal If TRUE, repeat the palette enough times to account for all discrete values
+#' @param ... Additional arguments passed to ggplot2::discrete_scale()
+#' @export
+scale_color_vha <- function(direction = 1, repeat_pal = FALSE, ...) {
+  .scale_brand_discrete("colour", "vha", direction, repeat_pal, ...)
+}
+
+#' @rdname scale_color_vha
+#' @export
+scale_colour_vha <- scale_color_vha
+
+#' VHA-branded discrete fill scale
+#'
+#' @param direction If -1, reverse the scale (defaults to 1)
+#' @param repeat_pal If TRUE, repeat the palette enough times to account for all discrete values
+#' @param ... Additional arguments passed to ggplot2::discrete_scale()
+#' @export
+scale_fill_vha <- function(direction = 1, repeat_pal = FALSE, ...) {
+  .scale_brand_discrete("fill", "vha", direction, repeat_pal, ...)
+}
+
 #' HDA-branded 4-color continuous color scale
 #'
 #' `r lifecycle::badge("deprecated")`
@@ -722,4 +746,134 @@ scale_fill_pha_b <- function(palette = c("sequential", "diverging"),
                               ...) {
   palette <- match.arg(palette)
   .scale_brand_binned("fill", "pha", palette, direction, na.value, guide, n.breaks, ...)
+}
+
+#' VHA-branded continuous color scale
+#'
+#' A sequential or diverging `colorspace` HCL ramp.
+#'
+#' @section Diverging ramp is provisional: `r lifecycle::badge("experimental")`
+#'   VHA's diverging ramp pairs Dark Turq against Yellow, the palette's only
+#'   warm hue. Yellow's natural HCL lightness is too high to survive as a
+#'   dark, saturated anchor, so that arm renders golden/olive rather than
+#'   bright yellow — a sRGB gamut limit, not a tuning slip. Still monotonic
+#'   and distinguishable under protanopia/deuteranopia/tritanopia simulation,
+#'   but — like HDA's diverging ramp — a candidate for a follow-up Ramp Lab
+#'   pass (`plans/DECISIONS.md`).
+#'
+#' @param palette One of `"sequential"` (default) or `"diverging"`
+#' @param direction For `palette = "sequential"`, `1` (default) maps higher
+#'   values to darker colors; `-1` reverses so higher values are lighter. For
+#'   `palette = "diverging"`, `1` (default) maps low values toward the first
+#'   arm and high values toward the second; `-1` swaps which arm represents
+#'   low vs. high.
+#' @param na.value Default color for NA values (#d6dbdb, VHA Light Gray)
+#' @param guide Legend representation for scale
+#' @param ... Other arguments passed on to `ggplot2::continuous_scale()`
+#' @export
+scale_color_vha_c <- function(palette = c("sequential", "diverging"),
+                               direction = 1,
+                               na.value = .brands$vha$na_color,
+                               guide = "colorbar",
+                               ...) {
+  palette <- match.arg(palette)
+  .scale_brand_continuous("colour", "vha", palette, direction, na.value, guide, ...)
+}
+
+#' @rdname scale_color_vha_c
+#' @export
+scale_colour_vha_c <- scale_color_vha_c
+
+#' VHA-branded continuous fill scale
+#'
+#' A sequential or diverging `colorspace` HCL ramp.
+#'
+#' @section Diverging ramp is provisional: `r lifecycle::badge("experimental")`
+#'   VHA's diverging ramp pairs Dark Turq against Yellow, the palette's only
+#'   warm hue. Yellow's natural HCL lightness is too high to survive as a
+#'   dark, saturated anchor, so that arm renders golden/olive rather than
+#'   bright yellow — a sRGB gamut limit, not a tuning slip. Still monotonic
+#'   and distinguishable under protanopia/deuteranopia/tritanopia simulation,
+#'   but — like HDA's diverging ramp — a candidate for a follow-up Ramp Lab
+#'   pass (`plans/DECISIONS.md`).
+#'
+#' @param palette One of `"sequential"` (default) or `"diverging"`
+#' @param direction For `palette = "sequential"`, `1` (default) maps higher
+#'   values to darker colors; `-1` reverses so higher values are lighter. For
+#'   `palette = "diverging"`, `1` (default) maps low values toward the first
+#'   arm and high values toward the second; `-1` swaps which arm represents
+#'   low vs. high.
+#' @param na.value Default color for NA values (#d6dbdb, VHA Light Gray)
+#' @param guide Legend representation for scale
+#' @param ... Other arguments passed on to `ggplot2::continuous_scale()`
+#' @export
+scale_fill_vha_c <- function(palette = c("sequential", "diverging"),
+                              direction = 1,
+                              na.value = .brands$vha$na_color,
+                              guide = "colorbar",
+                              ...) {
+  palette <- match.arg(palette)
+  .scale_brand_continuous("fill", "vha", palette, direction, na.value, guide, ...)
+}
+
+#' VHA-branded binned color scale
+#'
+#' The same sequential/diverging `colorspace` HCL ramps as
+#' [scale_color_vha_c()], discretized into classes. Defaults to 7 classes.
+#'
+#' @section Diverging ramp is provisional: `r lifecycle::badge("experimental")`
+#'   See [scale_color_vha_c()] for the Yellow-arm gamut caveat.
+#'
+#' @param palette One of `"sequential"` (default) or `"diverging"`
+#' @param direction For `palette = "sequential"`, `1` (default) maps higher
+#'   values to darker colors; `-1` reverses so higher values are lighter. For
+#'   `palette = "diverging"`, `1` (default) maps low values toward the first
+#'   arm and high values toward the second; `-1` swaps which arm represents
+#'   low vs. high.
+#' @param na.value Default color for NA values (#d6dbdb, VHA Light Gray)
+#' @param guide Legend representation for scale
+#' @param n.breaks Number of classes; defaults to 7
+#' @param ... Other arguments passed on to `ggplot2::binned_scale()`
+#' @export
+scale_color_vha_b <- function(palette = c("sequential", "diverging"),
+                               direction = 1,
+                               na.value = .brands$vha$na_color,
+                               guide = "coloursteps",
+                               n.breaks = 7,
+                               ...) {
+  palette <- match.arg(palette)
+  .scale_brand_binned("colour", "vha", palette, direction, na.value, guide, n.breaks, ...)
+}
+
+#' @rdname scale_color_vha_b
+#' @export
+scale_colour_vha_b <- scale_color_vha_b
+
+#' VHA-branded binned fill scale
+#'
+#' The same sequential/diverging `colorspace` HCL ramps as
+#' [scale_fill_vha_c()], discretized into classes. Defaults to 7 classes.
+#'
+#' @section Diverging ramp is provisional: `r lifecycle::badge("experimental")`
+#'   See [scale_color_vha_c()] for the Yellow-arm gamut caveat.
+#'
+#' @param palette One of `"sequential"` (default) or `"diverging"`
+#' @param direction For `palette = "sequential"`, `1` (default) maps higher
+#'   values to darker colors; `-1` reverses so higher values are lighter. For
+#'   `palette = "diverging"`, `1` (default) maps low values toward the first
+#'   arm and high values toward the second; `-1` swaps which arm represents
+#'   low vs. high.
+#' @param na.value Default color for NA values (#d6dbdb, VHA Light Gray)
+#' @param guide Legend representation for scale
+#' @param n.breaks Number of classes; defaults to 7
+#' @param ... Other arguments passed on to `ggplot2::binned_scale()`
+#' @export
+scale_fill_vha_b <- function(palette = c("sequential", "diverging"),
+                              direction = 1,
+                              na.value = .brands$vha$na_color,
+                              guide = "coloursteps",
+                              n.breaks = 7,
+                              ...) {
+  palette <- match.arg(palette)
+  .scale_brand_binned("fill", "vha", palette, direction, na.value, guide, n.breaks, ...)
 }

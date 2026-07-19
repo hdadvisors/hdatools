@@ -17,5 +17,5 @@ hfv_colors["Sky"]
 
 }
 \seealso{
-\code{\link[=hfv_color]{hfv_color()}}, \link{hda_colors}, \link{pha_colors}
+\code{\link[=hfv_color]{hfv_color()}}, \link{hda_colors}, \link{pha_colors}, \link{vha_colors}
 }

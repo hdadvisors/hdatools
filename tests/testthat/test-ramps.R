@@ -46,6 +46,23 @@ test_that("PHA diverging ramp pins to the verified 7-class hex", {
   )
 })
 
+test_that("VHA sequential ramp pins to the verified 7-class hex", {
+  expect_identical(
+    toupper(.ramp_hex_sequential("vha", 7)),
+    c("#00484A", "#316059", "#56796B", "#7B9381", "#A0AE9C", "#C7CDBC", "#F3F1E4")
+  )
+})
+
+test_that("VHA diverging ramp pins to the verified 7-class hex (provisional)", {
+  # Yellow arm reads golden/olive rather than bright yellow — a sRGB gamut
+  # limit at this lightness, not a tuning slip. See roxygen @section on
+  # scale_color_vha_c() and plans/DECISIONS.md.
+  expect_identical(
+    toupper(.ramp_hex_diverging("vha", 7)),
+    c("#00767B", "#009B76", "#A1C096", "#F3F1E4", "#C1B88E", "#9A8839", "#775C00")
+  )
+})
+
 test_that(".ramp_hex() dispatches on palette type", {
   expect_identical(.ramp_hex("hda", "sequential", 7), .ramp_hex_sequential("hda", 7))
   expect_identical(.ramp_hex("hda", "diverging", 7), .ramp_hex_diverging("hda", 7))

@@ -17,5 +17,5 @@ pha_colors["Green"]
 
 }
 \seealso{
-\code{\link[=pha_color]{pha_color()}}, \link{hda_colors}, \link{hfv_colors}
+\code{\link[=pha_color]{pha_color()}}, \link{hda_colors}, \link{hfv_colors}, \link{vha_colors}
 }

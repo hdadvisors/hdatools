@@ -2,15 +2,18 @@ test_that("exported color vectors equal .brands palette exactly", {
   expect_identical(hda_colors, hdatools:::.brands$hda$palette)
   expect_identical(hfv_colors, hdatools:::.brands$hfv$palette)
   expect_identical(pha_colors, hdatools:::.brands$pha$palette)
+  expect_identical(vha_colors, hdatools:::.brands$vha$palette)
 })
 
 test_that("color vectors are named character vectors", {
   expect_type(hda_colors, "character")
   expect_type(hfv_colors, "character")
   expect_type(pha_colors, "character")
+  expect_type(vha_colors, "character")
   expect_named(hda_colors)
   expect_named(hfv_colors)
   expect_named(pha_colors)
+  expect_named(vha_colors)
 })
 
 test_that("hda_color() returns the correct hex for known names", {
@@ -31,6 +34,12 @@ test_that("pha_color() returns the correct hex for known names", {
   expect_identical(pha_color("Dark Blue"),  c(`Dark Blue`  = "#2b6b9c"))
 })
 
+test_that("vha_color() returns the correct hex for known names", {
+  expect_identical(vha_color("Dark Turq"),  c(`Dark Turq` = "#0C4D4F"))
+  expect_identical(vha_color("Yellow"),     c(Yellow      = "#ECC51E"))
+  expect_identical(vha_color("Light Turq"), c(`Light Turq` = "#19787B"))
+})
+
 test_that("accessor errors on unknown name with valid names listed", {
   expect_error(hda_color("Magenta"), "valid HDA color name", fixed = FALSE)
   expect_error(hda_color("Magenta"), "Blue",                 fixed = FALSE)
@@ -40,6 +49,9 @@ test_that("accessor errors on unknown name with valid names listed", {
 
   expect_error(pha_color("Gold"),    "valid PHA color name", fixed = FALSE)
   expect_error(pha_color("Gold"),    "Green",                fixed = FALSE)
+
+  expect_error(vha_color("Magenta"), "valid VHA color name", fixed = FALSE)
+  expect_error(vha_color("Magenta"), "Dark Turq",            fixed = FALSE)
 })
 
 test_that("accessor returns a named scalar", {

@@ -18,7 +18,8 @@ the opt-out or if registration failed.
 \description{
 Registers the font faces bundled in \verb{inst/fonts/} (Lato and Roboto Slab for
 \code{theme_hda()}, Open Sans and Poppins for \code{theme_hfv()}, Noto Sans for
-\code{theme_pha()}) with \pkg{sysfonts}, then enables \pkg{showtext} rendering.
+\code{theme_pha()}, Montserrat for \code{theme_vha()}) with \pkg{sysfonts}, then
+enables \pkg{showtext} rendering.
 Everything is read from files installed with the package, so this never
 makes a network request.
 }
