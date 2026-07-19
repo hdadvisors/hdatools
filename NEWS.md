@@ -1,4 +1,16 @@
-# hdatools (development version)
+# hdatools 0.4.0
+
+* New `hda_focus_pal()`/`hfv_focus_pal()`/`pha_focus_pal()`/`vha_focus_pal()`
+  return a focus/emphasis palette for "highlight one series, mute the rest"
+  charts: element 1 is the named brand color hex, elements 2–`n` are the
+  brand's neutral gray. Pass directly to `scale_fill_manual(values = …)` or
+  `scale_colour_manual(values = …)`.
+
+* New `hda_span()`/`hfv_span()`/`pha_span()`/`vha_span()` wrap a text string
+  in `<span style='color:#…'>…</span>` using a named brand color, for use with
+  `ggtext::element_markdown()` and `ggtext::element_textbox()`. Color is
+  resolved through the per-brand `.*_color()` accessor, so invalid names error
+  with the valid list.
 
 * New pkgdown article "CVD accessibility audit" (`vignettes/articles/cvd-audit.Rmd`)
   documents pairwise perceptual-distance (delta-E, CIE76) results for all four brand
