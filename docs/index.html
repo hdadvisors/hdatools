@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">hdatools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,6 +37,8 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="articles/branded-themes.html">Using branded ggplot2 themes</a></li>
+    <li><a class="dropdown-item" href="articles/cvd-audit.html">CVD accessibility audit</a></li>
+    <li><a class="dropdown-item" href="articles/adding-a-brand.html">Adding a new client brand</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
@@ -89,10 +91,30 @@
 <li>
 <code><a href="reference/scale_color_pha.html">scale_color_pha()</a></code>/<code><a href="reference/scale_color_pha.html">scale_colour_pha()</a></code>, <code><a href="reference/scale_fill_pha.html">scale_fill_pha()</a></code>: PHA-branded discrete color scales</li>
 <li>
-<code><a href="reference/scale_color_gradient_hda.html">scale_color_gradient_hda()</a></code>/<code><a href="reference/scale_color_gradient_hda.html">scale_colour_gradient_hda()</a></code>: HDA-branded continuous color scale</li>
+<code><a href="reference/scale_color_gradient_hda.html">scale_color_gradient_hda()</a></code>/<code><a href="reference/scale_color_gradient_hda.html">scale_colour_gradient_hda()</a></code>: HDA-branded continuous color scale (deprecated, use <code><a href="reference/scale_color_hda_c.html">scale_color_hda_c()</a></code>)</li>
 <li>
-<code><a href="reference/scale_color_gradient_pha.html">scale_color_gradient_pha()</a></code>/<code><a href="reference/scale_color_gradient_pha.html">scale_colour_gradient_pha()</a></code>, <code><a href="reference/scale_fill_gradient_pha.html">scale_fill_gradient_pha()</a></code>: PHA-branded continuous color scales</li>
+<code><a href="reference/scale_color_gradient_pha.html">scale_color_gradient_pha()</a></code>/<code><a href="reference/scale_color_gradient_pha.html">scale_colour_gradient_pha()</a></code>, <code><a href="reference/scale_fill_gradient_pha.html">scale_fill_gradient_pha()</a></code>: PHA-branded continuous color scales (deprecated, use <code><a href="reference/scale_color_pha_c.html">scale_color_pha_c()</a></code>/<code><a href="reference/scale_fill_pha_c.html">scale_fill_pha_c()</a></code>)</li>
 </ul>
+</div>
+<div class="section level3">
+<h3 id="continuous-ramp-scales">Continuous ramp scales<a class="anchor" aria-label="anchor" href="#continuous-ramp-scales"></a>
+</h3>
+<p>Six <code>colorspace</code> HCL sequential/diverging ramps (one pair per brand), tuned and CVD-checked in the Ramp Lab review. HDA’s diverging ramp is provisional (see <code>NEWS.md</code>).</p>
+<ul>
+<li>
+<code><a href="reference/scale_color_hda_c.html">scale_color_hda_c()</a></code>/<code><a href="reference/scale_color_hda_c.html">scale_colour_hda_c()</a></code>, <code><a href="reference/scale_fill_hda_c.html">scale_fill_hda_c()</a></code>: HDA-branded continuous color/fill scales</li>
+<li>
+<code><a href="reference/scale_color_hfv_c.html">scale_color_hfv_c()</a></code>/<code><a href="reference/scale_color_hfv_c.html">scale_colour_hfv_c()</a></code>, <code><a href="reference/scale_fill_hfv_c.html">scale_fill_hfv_c()</a></code>: HFV-branded continuous color/fill scales</li>
+<li>
+<code><a href="reference/scale_color_pha_c.html">scale_color_pha_c()</a></code>/<code><a href="reference/scale_color_pha_c.html">scale_colour_pha_c()</a></code>, <code><a href="reference/scale_fill_pha_c.html">scale_fill_pha_c()</a></code>: PHA-branded continuous color/fill scales</li>
+<li>
+<code><a href="reference/scale_color_hda_b.html">scale_color_hda_b()</a></code>/<code><a href="reference/scale_color_hda_b.html">scale_colour_hda_b()</a></code>, <code><a href="reference/scale_fill_hda_b.html">scale_fill_hda_b()</a></code>: HDA-branded binned color/fill scales (7 classes by default)</li>
+<li>
+<code><a href="reference/scale_color_hfv_b.html">scale_color_hfv_b()</a></code>/<code><a href="reference/scale_color_hfv_b.html">scale_colour_hfv_b()</a></code>, <code><a href="reference/scale_fill_hfv_b.html">scale_fill_hfv_b()</a></code>: HFV-branded binned color/fill scales (7 classes by default)</li>
+<li>
+<code><a href="reference/scale_color_pha_b.html">scale_color_pha_b()</a></code>/<code><a href="reference/scale_color_pha_b.html">scale_colour_pha_b()</a></code>, <code><a href="reference/scale_fill_pha_b.html">scale_fill_pha_b()</a></code>: PHA-branded binned color/fill scales (7 classes by default)</li>
+</ul>
+<p>Each takes <code>palette = c("sequential", "diverging")</code> to choose the ramp.</p>
 </div>
 <div class="section level3">
 <h3 id="utility-functions">Utility Functions<a class="anchor" aria-label="anchor" href="#utility-functions"></a>

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">hdatools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +20,8 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="articles/branded-themes.html">Using branded ggplot2 themes</a></li>
+    <li><a class="dropdown-item" href="articles/cvd-audit.html">CVD accessibility audit</a></li>
+    <li><a class="dropdown-item" href="articles/adding-a-brand.html">Adding a new client brand</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><a class="external-link nav-link" href="https://github.com/hdadvisors/hdatools"><span class="fa fa-github fa-lg"></span></a></li>
@@ -41,6 +43,7 @@
 <div class="section level2">
 <h2 id="running-r-read-this-first">Running R (read this first)<a class="anchor" aria-label="anchor" href="#running-r-read-this-first"></a></h2>
 <p>Run R via the <code>Rscript</code> on the caller’s <code>PATH</code> — assume it resolves to a working R install. <strong>Don’t hard-code an install path or version anywhere</strong>; those differ across machines and change on every R upgrade. If <code>Rscript</code> isn’t on <code>PATH</code>, don’t guess where R lives — stop and tell the user, and point them to add R’s <code>bin</code> directory to <code>PATH</code> (or to supply the path to their <code>Rscript</code>).</p>
+<p><strong>Claude Code on the web / cloud sessions provision R automatically.</strong> A <code>SessionStart</code> hook (<code>.claude/hooks/session-start.sh</code> + <code>install-r-deps.R</code>, registered in <code>.claude/settings.json</code>) installs r-base, pandoc, the compiled-package system libs, and the full R dev toolchain (devtools, roxygen2, testthat, pkgdown, urlchecker, spelling, plus DESCRIPTION’s own Imports/Suggests) the first time a cloud session touches this repo. It needs <code>cloud.r-project.org</code> allowlisted in the environment’s network policy (Custom network access → Allowed domains) — without it, the hook installs R itself fine but every package install fails. If <code>Rscript</code> still isn’t on <code>PATH</code> in a cloud session, check the hook’s output before concluding R is unavailable; the “stop and tell the user” rule above is for local sessions. Installs build from source (no binary mirror is reachable through the network policy), so the first cold container takes a while — expect the result to be cached in later sessions. None of this applies locally — Jonathan’s machine manages its own R install per the rules above.</p>
 <p><strong>Never run R inline</strong> (<code>Rscript -e "..."</code>) — Windows shell quoting mangles it. Always write the R code to a temp file and execute that file:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="ex">Rscript</span> /path/to/script.R <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span></span></code></pre></div>
 <p>Start each script with <code><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd()</a></code> pointing at this repo’s root (the folder that contains <code>DESCRIPTION</code>) so <code>devtools</code>/<code>pkgdown</code> find the package.</p>
@@ -54,10 +57,10 @@
 <li>
 <code><a href="https://devtools.r-lib.org/reference/test.html" class="external-link">devtools::test()</a></code> — full testthat suite (edition 3).</li>
 <li>
-<code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code> — <code>R CMD check</code>. Target: <strong>0 errors, 0 warnings</strong>. The <strong>only</strong> accepted NOTE is the proprietary-license one (<code>Non-standard license specification: file LICENSE</code>). Any other NOTE is a regression — investigate it.</li>
+<code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code> — <code>R CMD check</code>. Target: <strong>0 errors, 0 warnings</strong>. The <strong>only</strong> accepted NOTE is the proprietary-license one (<code>Non-standard license specification: file LICENSE</code>). Any other NOTE is a regression — investigate it. In a cloud session, expect two additional NOTEs that aren’t regressions: installed package size (the bundled fonts are 4.8Mb) and “unable to verify current time” (the future-timestamp check needs a network host this environment’s policy blocks). Anything beyond those three is worth investigating same as locally.</li>
 <li>
 <code><a href="https://pkgdown.r-lib.org/reference/build_site.html" class="external-link">pkgdown::build_site()</a></code> — rebuilds the site into <code>docs/</code>. Two gotchas when running via standalone Rscript (no RStudio):
-<ul><li>pkgdown/rmarkdown need Pandoc, which a bare <code>Rscript</code> may not find. If a build fails with “Pandoc not available,” point R at a bundled copy via <code>Sys.setenv(RSTUDIO_PANDOC = &lt;dir&gt;)</code> — Quarto and RStudio each ship one in a <code>tools</code> directory. Locate the copy on the current machine rather than assuming a path.</li>
+<ul><li>pkgdown/rmarkdown need Pandoc, which a bare <code>Rscript</code> may not find. If a build fails with “Pandoc not available,” point R at a bundled copy via <code>Sys.setenv(RSTUDIO_PANDOC = &lt;dir&gt;)</code> — Quarto and RStudio each ship one in a <code>tools</code> directory. Locate the copy on the current machine rather than assuming a path. (Cloud sessions get a system <code>pandoc</code> from the SessionStart hook, already on <code>PATH</code> — this workaround is for local sessions without RStudio/Quarto installed.)</li>
 <li>
 <code>build_site()</code> re-knits <code>vignettes/articles/branded-themes.Rmd</code>, which needs tidycensus + a Census API key + network and will fail offline. For doc/theme changes, rebuild only what changed instead: <code>init_site()</code> + <code>build_home()</code> + <code>build_reference()</code> + <code>build_news()</code>.</li>
 </ul></li>
@@ -107,6 +110,10 @@
 <li>
 <code>testing-r-packages</code> — testthat 3e conventions, fixtures, mocking, snapshots.</li>
 </ul><p>They assume R is on PATH with inline <code>Rscript -e</code>; use the temp-file convention above instead.</p>
+</div>
+<div class="section level2">
+<h2 id="development-dashboard">Development dashboard<a class="anchor" aria-label="anchor" href="#development-dashboard"></a></h2>
+<p>A local HTML dashboard at <code>plans/dashboard/</code> tracks phases, branches/PRs, decisions, and release state, generated from ROADMAP.md, DECISIONS.md, the phase plans, NEWS.md, DESCRIPTION, and live git/gh data. <strong>Re-run the generator after any commit that changes project state</strong> (phase status, NEWS, DESCRIPTION, branch/PR changes): <code>python plans/dashboard/generate_dashboard.py</code>, or double-click <code>plans\dashboard\update-dashboard.bat</code> to regenerate and open it. <code>dashboard.html</code> and <code>gh-cache.json</code> are gitignored (generated, not committed). The plan docs are the source of truth — when the dashboard shows consistency warnings, fix the docs by hand; never treat the dashboard itself as authoritative.</p>
 </div>
 <div class="section level2">
 <h2 id="planning-docs">Planning docs<a class="anchor" aria-label="anchor" href="#planning-docs"></a></h2>
