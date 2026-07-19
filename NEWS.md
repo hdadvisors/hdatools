@@ -1,5 +1,30 @@
 # hdatools (development version)
 
+* New pkgdown article "CVD accessibility audit" (`vignettes/articles/cvd-audit.Rmd`)
+  documents pairwise perceptual-distance (delta-E, CIE76) results for all four brand
+  palettes under full-severity protanopia, deuteranopia, and tritanopia. Key findings:
+  HDA Green vs Sea Green collapses to delta-E ≈ 6 under tritanopia (positions 2 and 6;
+  use a secondary encoding if both must appear in a tritanopia-sensitive chart); HFV Sky
+  vs Grass is borderline (~12 delta-E) under all CVD types; PHA Orange vs Red — flagged
+  during design review — passes all CVD types (≥ 22). No palette order was changed (Q7,
+  `plans/DECISIONS.md`, 2026-07-18). New `tests/testthat/test-cvd.R` adds
+  `colorspace::simulate_cvd()`-based regression assertions that guard minimum pairwise
+  delta-E for the first four slots of each brand palette.
+
+* Added VHA as a fourth first-class brand: `theme_vha()`, `scale_color_vha()`/
+  `scale_fill_vha()` (+ `scale_colour_vha()` alias), the full
+  `scale_*_vha_c()`/`scale_*_vha_b()` continuous/binned matrix, and
+  `vha_colors`/`vha_color()` — all generated from a single `.brands$vha`
+  registry entry (`R/brands.R`), with no VHA-specific code in `R/scales.R`/
+  `R/themes.R`. Montserrat (OFL) is bundled alongside the existing fonts. See
+  the new pkgdown article "Adding a new client brand to hdatools"
+  (`vignettes/articles/adding-a-brand.Rmd`) for the general pattern this
+  proves out. **VHA's diverging ramp is
+  provisional** — it pairs Dark Turq against Yellow, the palette's only warm
+  hue, but Yellow's natural HCL lightness is too high to survive as a dark,
+  saturated anchor, so that arm renders golden/olive rather than bright
+  yellow (an sRGB gamut limit, not a tuning slip); candidate for a follow-up
+  Ramp Lab pass, same as HDA's diverging ramp.
 * `theme_hda()`/`theme_hfv()`/`theme_pha()` alone now brand a plot with no
   `scale_*()` call required, via ggplot2 4.0's theme-carried palettes: each
   theme sets `palette.colour.discrete`/`palette.fill.discrete` to the brand's

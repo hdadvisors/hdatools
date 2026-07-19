@@ -1,0 +1,251 @@
+---
+title: "CVD accessibility audit — hdatools palettes"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{CVD accessibility audit — hdatools palettes}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>")
+```
+
+This article documents a colorblind-vision (CVD) audit of the four hdatools brand
+palettes conducted for the 0.4.0 release. It covers protanopia, deuteranopia, and
+tritanopia at full severity. **No palette color order was changed as a result of this
+audit** (see `plans/DECISIONS.md`, Q7, 2026-07-18). The findings here inform chart
+authors on which color pairs to avoid in categorical plots and when supplemental
+encodings are needed.
+
+## Method
+
+Pairwise perceptual distance (delta-E, CIE76) was computed in Lab color space via
+`colorspace`:
+
+1. Simulate full-severity CVD with `colorspace::protan()` / `deutan()` / `tritan()`
+2. Convert simulated hex values to Lab with `colorspace::hex2RGB()` → `as(., "LAB")`
+3. Compute Euclidean distance (delta-E) for every color pair
+
+Delta-E below **10** is generally considered indistinguishable; values of **10–20** are
+borderline; values above **20** are comfortably distinct. The audit focuses on the first
+four palette slots — the range almost always used in a categorical plot — plus two
+pairs flagged during the 0.4.0 design review.
+
+```{r helpers, echo = FALSE}
+library(colorspace)
+
+hex_to_lab <- function(hex) {
+  coords(methods::as(hex2RGB(hex), "LAB"))
+}
+
+pairwise_delta_e <- function(hex_vec) {
+  nm <- names(hex_vec)
+  n  <- length(hex_vec)
+  rows <- vector("list", n * (n - 1L) / 2L)
+  k <- 1L
+  for (i in seq_len(n - 1L)) {
+    for (j in seq(i + 1L, n)) {
+      dE <- sqrt(sum((hex_to_lab(hex_vec[[i]]) - hex_to_lab(hex_vec[[j]]))^2))
+      rows[[k]] <- data.frame(color1 = nm[i], color2 = nm[j],
+                              delta_e = round(dE, 1),
+                              stringsAsFactors = FALSE)
+      k <- k + 1L
+    }
+  }
+  do.call(rbind, rows)
+}
+
+cvd_table <- function(hex_vec) {
+  sim_types <- c(Normal = "normal", Protan = "protan",
+                 Deutan = "deutan", Tritan = "tritan")
+  lapply(names(sim_types), function(label) {
+    s <- sim_types[[label]]
+    sim <- if (s == "normal") hex_vec else {
+      fn <- switch(s, protan = protan, deutan = deutan, tritan = tritan)
+      structure(fn(hex_vec, sev = 1), names = names(hex_vec))
+    }
+    df <- pairwise_delta_e(sim)
+    df$cvd <- label
+    df
+  }) |> do.call(what = rbind)
+}
+
+show_table <- function(brand_name, hex_vec) {
+  df  <- cvd_table(hex_vec)
+  wide <- reshape(df,
+    idvar     = c("color1", "color2"),
+    timevar   = "cvd",
+    direction = "wide",
+    v.names   = "delta_e"
+  )
+  names(wide) <- sub("delta_e\\.", "", names(wide))
+  wide$Flag <- ifelse(
+    apply(wide[, c("Protan", "Deutan", "Tritan")], 1,
+          function(r) any(r < 10, na.rm = TRUE)),
+    "⚠️", ""
+  )
+  knitr::kable(wide, row.names = FALSE,
+               caption = sprintf("%s palette — pairwise delta-E by CVD type", brand_name))
+}
+```
+
+---
+
+## HDA
+
+Palette: Blue `#445ca9`, Green `#8baeaa`, Yellow `#e9ab3f`, Coral `#e76f52`,
+Lavender `#a97a92`, Sea Green `#8abc8e`
+
+```{r hda-table, echo = FALSE}
+hda_pal <- c(
+  "Blue"      = "#445ca9",
+  "Green"     = "#8baeaa",
+  "Yellow"    = "#e9ab3f",
+  "Coral"     = "#e76f52",
+  "Lavender"  = "#a97a92",
+  "Sea Green" = "#8abc8e"
+)
+show_table("HDA", hda_pal[1:4])
+```
+
+**First-4 audit — no failures.** The minimum pairwise delta-E across all CVD types is
+22.7 (Yellow vs Coral under deuteranopia). All first-4 pairs are comfortably distinct.
+
+### HDA: Green vs Sea Green (flagged pair)
+
+```{r hda-flagged, echo = FALSE}
+show_table("HDA — Green vs Sea Green", hda_pal[c("Green", "Sea Green")])
+```
+
+**Tritanopia failure confirmed.** Green (`#8baeaa`) and Sea Green (`#8abc8e`) collapse to
+delta-E = 5.97 under full tritanopia — effectively indistinguishable. Under protanopia
+and deuteranopia the pair is acceptable (delta-E ≈ 20–22).
+
+Tritanopia affects approximately 0.1 % of the population. Green and Sea Green are
+positions 2 and 6, so they appear together only in a 5–6-category plot. Recommendations:
+
+- **Avoid pairing Green and Sea Green in a plot that targets tritanopic accessibility.**
+- In 2–4-category plots the pair will not both appear, so no action is needed.
+- If a chart must use both and CVD robustness is critical, replace one with a manual
+  override (e.g. swap Sea Green for Coral or Lavender).
+
+---
+
+## HFV
+
+Palette: Shadow `#334a66`, Sky `#66cccc`, Lilac `#a29dd4`, Grass `#50aaa7`,
+Berry `#c0327e`, Desert `#ec7c53`, Leaf `#6fb547`, Cerulean `#7fc7e0`
+
+```{r hfv-table, echo = FALSE}
+hfv_pal <- c(
+  "Shadow"   = "#334a66",
+  "Sky"      = "#66cccc",
+  "Lilac"    = "#a29dd4",
+  "Grass"    = "#50aaa7",
+  "Berry"    = "#c0327e",
+  "Desert"   = "#ec7c53",
+  "Leaf"     = "#6fb547",
+  "Cerulean" = "#7fc7e0"
+)
+show_table("HFV", hfv_pal[1:4])
+```
+
+**Sky vs Grass is the structurally risky pair.** Delta-E is approximately 12 under all
+three CVD types (12.1–12.7) — within the borderline range and the lowest minimum of
+any first-4 audit. Both colors are teal-family; they are distinguishable in normal
+vision by their lightness contrast but that contrast diminishes under red-green CVD.
+
+No pair falls below 10 in the first-4 audit, so no automatic failure. Recommendations:
+
+- **Avoid using Sky and Grass as the only two series colors** in a CVD-sensitive chart.
+  If both are needed, add a shape, pattern, or direct-label encoding alongside color.
+- 3-category or 4-category plots should order series so Sky and Grass are not adjacent
+  in a legend (where label proximity compensates for color proximity).
+
+---
+
+## PHA
+
+Palette: Green `#5bab8e`, Light Blue `#a6cccc`, Orange `#f39152`, Red `#be451c`,
+Purple `#a5add0`, Dark Blue `#2b6b9c`
+
+```{r pha-table, echo = FALSE}
+pha_pal <- c(
+  "Green"      = "#5bab8e",
+  "Light Blue" = "#a6cccc",
+  "Orange"     = "#f39152",
+  "Red"        = "#be451c",
+  "Purple"     = "#a5add0",
+  "Dark Blue"  = "#2b6b9c"
+)
+show_table("PHA", pha_pal[1:4])
+```
+
+**Green vs Light Blue is the tightest pair** (delta-E ≈ 18.5–21.3 across CVD types).
+Both are cool desaturated colors that lose further differentiation under red-green CVD.
+No pair falls below 10.
+
+### PHA: Orange vs Red (flagged pair)
+
+```{r pha-flagged, echo = FALSE}
+show_table("PHA — Orange vs Red", pha_pal[c("Orange", "Red")])
+```
+
+**Not confirmed as a failure.** The flagged Orange/Red pair maintains delta-E ≥ 22 under
+all CVD types; the lightness difference (Orange is substantially lighter) provides the
+primary perceptual cue and it is preserved under CVD simulation.
+
+Recommendation: no action needed for the Orange/Red pair. For Green vs Light Blue in
+4-category plots, consider adding a secondary encoding if tritanopic accessibility is a
+concern.
+
+---
+
+## VHA
+
+Palette: Dark Turq `#0C4D4F`, Light Green `#A0D18E`, Yellow `#ECC51E`,
+Light Turq `#19787B`, Grey `#2E3030`, Light Blue `#E3F3F5`
+
+```{r vha-table, echo = FALSE}
+vha_pal <- c(
+  "Dark Turq"   = "#0C4D4F",
+  "Light Green" = "#A0D18E",
+  "Yellow"      = "#ECC51E",
+  "Light Turq"  = "#19787B",
+  "Grey"        = "#2E3030",
+  "Light Blue"  = "#E3F3F5"
+)
+show_table("VHA", vha_pal[1:4])
+```
+
+**Dark Turq vs Light Turq is the tightest pair** (delta-E ≈ 16.5–18.3 across CVD
+types). Both are deep teal tones; the primary cue under CVD is the lightness difference
+(Dark Turq is considerably darker). No pair falls below 10 in the first-4 audit.
+
+Recommendations:
+
+- In 2-category plots the pair is acceptable; the lightness contrast is sufficient.
+- In 4-category plots, prefer not to place Dark Turq and Light Turq as the only two
+  categories without supplemental encoding.
+
+---
+
+## Diverging ramp caveat
+
+As documented in NEWS.md, 7-class diverging maps built from any of the six continuous
+ramps lose sign distinction in the innermost class pair under protanopia, because both
+arms converge toward the shared cream center. This is structural to any cream-centered
+diverging ramp; the mitigation is to always pair a `palette = "diverging"` map with a
+legend or direct class labels.
+
+---
+
+## Regression tests
+
+`tests/testthat/test-cvd.R` contains `colorspace::simulate_cvd()`-based assertions
+that the first four colors of each brand palette maintain the minimum pairwise delta-E
+thresholds observed above. These tests guard against future palette edits that silently
+reduce CVD distinguishability; they do not validate the absolute CVD safety of the
+palettes, and they do not test the HDA Green/Sea Green tritanopia failure (which is a
+documented limitation, not a threshold a future edit could improve accidentally).

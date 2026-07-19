@@ -236,6 +236,32 @@ clone" (vhtf, after this phase) and "delete local hardcoded hex vectors"
 
 ## Findings (filled in during sessions)
 
+### Session 5 (item 2.5)
+
+**CVD audit method:** `colorspace::simulate_cvd()` (protan/deutan/tritan, sev = 1),
+pairwise delta-E (CIE76) in Lab space. Audit covers first four palette slots per brand
+plus the two design-review-flagged pairs.
+
+**Key findings (delta-E < 10 = indistinguishable; 10–20 = borderline):**
+
+| Brand | CVD type | Worst pair | delta-E | Status |
+|---|---|---|---|---|
+| HDA | tritanopia | Green vs Sea Green (pos 2/6) | **5.97** | **Failure** — severe under tritanopia only |
+| HFV | all three | Sky vs Grass (pos 2/4) | 12.1–12.7 | Borderline — no failure, documented |
+| PHA | deuteranopia | Green vs Light Blue (pos 1/2) | 18.5 | Acceptable |
+| VHA | deuteranopia | Dark Turq vs Light Turq (pos 1/4) | 16.5 | Acceptable |
+| PHA | protan/deutan/tritan | Orange vs Red (pos 3/4) | 22.5–28.9 | **Cleared** (design-review flag not confirmed) |
+
+HDA Green/Sea Green tritanopia failure accepted as documented-only per Q7. Tritanopia
+affects ~0.1 % of the population; the pair only co-occurs in a ≥5-category plot.
+Vignette recommends a secondary encoding if CVD robustness is required there.
+
+HFV Sky/Grass borderline (~12 across all CVD types): teal-family structural issue;
+documented with "use secondary encoding" guidance, same document-only posture.
+
+**Deliverables landed:** `tests/testthat/test-cvd.R` (regression guards, first-4 per
+brand + both flagged pairs); `vignettes/articles/cvd-audit.Rmd`; NEWS.md bullet.
+
 ### Session 2 (item 2.2)
 
 - **Scope expanded to continuous + binned.** This session's task brief asked
