@@ -3,7 +3,10 @@
 All font faces below are redistributed unmodified from, or (where noted)
 static-instanced from, files in the [google/fonts](https://github.com/google/fonts)
 repository, pinned at commit
-[`26c5c976d82d50c24a8f0a7ac455e0a7c639c226`](https://github.com/google/fonts/tree/26c5c976d82d50c24a8f0a7ac455e0a7c639c226).
+[`26c5c976d82d50c24a8f0a7ac455e0a7c639c226`](https://github.com/google/fonts/tree/26c5c976d82d50c24a8f0a7ac455e0a7c639c226) —
+**except Montserrat**, added later and downloaded directly rather than
+verified against that pinned commit; its own `OFL.txt` (redistributed
+alongside it, as with every other family) is the authoritative license.
 
 ## Manifest
 
@@ -22,6 +25,8 @@ repository, pinned at commit
 | Noto Sans | `noto-sans/NotoSans-Regular.ttf` | `ofl/notosans/NotoSans[wdth,wght].ttf`, static-instanced at `wght=400, wdth=100` | OFL 1.1 | 2022 The Noto Project Authors |
 | Noto Sans | `noto-sans/NotoSans-Bold.ttf` | `ofl/notosans/NotoSans[wdth,wght].ttf`, static-instanced at `wght=700, wdth=100` | OFL 1.1 | 2022 The Noto Project Authors |
 | Noto Sans | `noto-sans/NotoSans-Italic.ttf` | `ofl/notosans/NotoSans-Italic[wdth,wght].ttf`, static-instanced at `wght=400, wdth=100` | OFL 1.1 | 2022 The Noto Project Authors |
+| Montserrat | `montserrat/Montserrat-Regular.ttf` | `ofl/montserrat/Montserrat-Regular.ttf` (current tree, not the pinned commit above) | OFL 1.1 | 2024 The Montserrat.Git Project Authors |
+| Montserrat | `montserrat/Montserrat-SemiBold.ttf` | `ofl/montserrat/Montserrat-SemiBold.ttf` (current tree, not the pinned commit above) | OFL 1.1 | 2024 The Montserrat.Git Project Authors |
 
 **Static-instanced** means: Roboto Slab, Open Sans, and Noto Sans ship in the
 google/fonts repository only as variable fonts (no static per-weight files
@@ -41,7 +46,7 @@ Each family's original `OFL.txt` or `LICENSE.txt` is also kept in its own
 
 ## SIL Open Font License, Version 1.1
 
-Covers Lato, Open Sans, Poppins, and Noto Sans.
+Covers Lato, Open Sans, Poppins, Noto Sans, and Montserrat.
 
 ```
 This Font Software is licensed under the SIL Open Font License, Version 1.1.

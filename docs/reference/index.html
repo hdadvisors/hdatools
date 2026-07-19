@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hdatools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +20,8 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/branded-themes.html">Using branded ggplot2 themes</a></li>
+    <li><a class="dropdown-item" href="../articles/cvd-audit.html">CVD accessibility audit</a></li>
+    <li><a class="dropdown-item" href="../articles/adding-a-brand.html">Adding a new client brand</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><a class="external-link nav-link" href="https://github.com/hdadvisors/hdatools"><span class="fa fa-github fa-lg"></span></a></li>
@@ -37,7 +39,7 @@
     <div class="section level2">
       <h2 id="themes">Themes<a class="anchor" aria-label="anchor" href="#themes"></a></h2>
 
-      <div class="section-desc"><p>ggplot2 themes for HDAdvisors, HousingForward Virginia, and PHA projects.</p></div>
+      <div class="section-desc"><p>ggplot2 themes for HDAdvisors, HousingForward Virginia, PHA, and VHA projects.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -64,10 +66,17 @@
 
         </dt>
         <dd>Use a PHA-branded ggplot2 theme</dd>
+
+        <dt>
+
+          <code><a href="theme_vha.html">theme_vha()</a></code>
+
+        </dt>
+        <dd>Use a VHA-branded ggplot2 theme</dd>
       </dl></div><div class="section level2">
       <h2 id="palettes-scales">Palettes &amp; scales<a class="anchor" aria-label="anchor" href="#palettes-scales"></a></h2>
 
-      <div class="section-desc"><p>Discrete and continuous color palettes and ggplot2 scale functions.</p></div>
+      <div class="section-desc"><p>Discrete, continuous, and binned color scales for all four brands.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -75,27 +84,6 @@
 
 
       <dl><dt>
-
-          <code><a href="hda_pal_discrete.html">hda_pal_discrete()</a></code>
-          <span class="badge lifecycle lifecycle-deprecated">deprecated</span>
-        </dt>
-        <dd>Generate a discrete HDA color palette</dd>
-
-        <dt>
-
-          <code><a href="hfv_pal_discrete.html">hfv_pal_discrete()</a></code>
-          <span class="badge lifecycle lifecycle-deprecated">deprecated</span>
-        </dt>
-        <dd>Generate a discrete HFV color palette</dd>
-
-        <dt>
-
-          <code><a href="pha_pal_discrete.html">pha_pal_discrete()</a></code>
-          <span class="badge lifecycle lifecycle-deprecated">deprecated</span>
-        </dt>
-        <dd>Generate a discrete PHA color palette</dd>
-
-        <dt>
 
           <code><a href="scale_color_hda.html">scale_color_hda()</a></code> <code><a href="scale_color_hda.html">scale_colour_hda()</a></code>
 
@@ -118,6 +106,13 @@
 
         <dt>
 
+          <code><a href="scale_color_vha.html">scale_color_vha()</a></code> <code><a href="scale_color_vha.html">scale_colour_vha()</a></code>
+
+        </dt>
+        <dd>VHA-branded discrete color scale</dd>
+
+        <dt>
+
           <code><a href="scale_fill_hda.html">scale_fill_hda()</a></code>
 
         </dt>
@@ -136,6 +131,146 @@
 
         </dt>
         <dd>PHA-branded discrete fill scale</dd>
+
+        <dt>
+
+          <code><a href="scale_fill_vha.html">scale_fill_vha()</a></code>
+
+        </dt>
+        <dd>VHA-branded discrete fill scale</dd>
+
+        <dt>
+
+          <code><a href="scale_color_hda_c.html">scale_color_hda_c()</a></code> <code><a href="scale_color_hda_c.html">scale_colour_hda_c()</a></code>
+
+        </dt>
+        <dd>HDA-branded continuous color scale</dd>
+
+        <dt>
+
+          <code><a href="scale_color_hfv_c.html">scale_color_hfv_c()</a></code> <code><a href="scale_color_hfv_c.html">scale_colour_hfv_c()</a></code>
+
+        </dt>
+        <dd>HFV-branded continuous color scale</dd>
+
+        <dt>
+
+          <code><a href="scale_color_pha_c.html">scale_color_pha_c()</a></code> <code><a href="scale_color_pha_c.html">scale_colour_pha_c()</a></code>
+
+        </dt>
+        <dd>PHA-branded continuous color scale</dd>
+
+        <dt>
+
+          <code><a href="scale_color_vha_c.html">scale_color_vha_c()</a></code> <code><a href="scale_color_vha_c.html">scale_colour_vha_c()</a></code>
+
+        </dt>
+        <dd>VHA-branded continuous color scale</dd>
+
+        <dt>
+
+          <code><a href="scale_fill_hda_c.html">scale_fill_hda_c()</a></code>
+
+        </dt>
+        <dd>HDA-branded continuous fill scale</dd>
+
+        <dt>
+
+          <code><a href="scale_fill_hfv_c.html">scale_fill_hfv_c()</a></code>
+
+        </dt>
+        <dd>HFV-branded continuous fill scale</dd>
+
+        <dt>
+
+          <code><a href="scale_fill_pha_c.html">scale_fill_pha_c()</a></code>
+
+        </dt>
+        <dd>PHA-branded continuous fill scale</dd>
+
+        <dt>
+
+          <code><a href="scale_fill_vha_c.html">scale_fill_vha_c()</a></code>
+
+        </dt>
+        <dd>VHA-branded continuous fill scale</dd>
+
+        <dt>
+
+          <code><a href="scale_color_hda_b.html">scale_color_hda_b()</a></code> <code><a href="scale_color_hda_b.html">scale_colour_hda_b()</a></code>
+
+        </dt>
+        <dd>HDA-branded binned color scale</dd>
+
+        <dt>
+
+          <code><a href="scale_color_hfv_b.html">scale_color_hfv_b()</a></code> <code><a href="scale_color_hfv_b.html">scale_colour_hfv_b()</a></code>
+
+        </dt>
+        <dd>HFV-branded binned color scale</dd>
+
+        <dt>
+
+          <code><a href="scale_color_pha_b.html">scale_color_pha_b()</a></code> <code><a href="scale_color_pha_b.html">scale_colour_pha_b()</a></code>
+
+        </dt>
+        <dd>PHA-branded binned color scale</dd>
+
+        <dt>
+
+          <code><a href="scale_color_vha_b.html">scale_color_vha_b()</a></code> <code><a href="scale_color_vha_b.html">scale_colour_vha_b()</a></code>
+
+        </dt>
+        <dd>VHA-branded binned color scale</dd>
+
+        <dt>
+
+          <code><a href="scale_fill_hda_b.html">scale_fill_hda_b()</a></code>
+
+        </dt>
+        <dd>HDA-branded binned fill scale</dd>
+
+        <dt>
+
+          <code><a href="scale_fill_hfv_b.html">scale_fill_hfv_b()</a></code>
+
+        </dt>
+        <dd>HFV-branded binned fill scale</dd>
+
+        <dt>
+
+          <code><a href="scale_fill_pha_b.html">scale_fill_pha_b()</a></code>
+
+        </dt>
+        <dd>PHA-branded binned fill scale</dd>
+
+        <dt>
+
+          <code><a href="scale_fill_vha_b.html">scale_fill_vha_b()</a></code>
+
+        </dt>
+        <dd>VHA-branded binned fill scale</dd>
+
+        <dt>
+
+          <code><a href="hda_pal_discrete.html">hda_pal_discrete()</a></code>
+          <span class="badge lifecycle lifecycle-deprecated">deprecated</span>
+        </dt>
+        <dd>Generate a discrete HDA color palette</dd>
+
+        <dt>
+
+          <code><a href="hfv_pal_discrete.html">hfv_pal_discrete()</a></code>
+          <span class="badge lifecycle lifecycle-deprecated">deprecated</span>
+        </dt>
+        <dd>Generate a discrete HFV color palette</dd>
+
+        <dt>
+
+          <code><a href="pha_pal_discrete.html">pha_pal_discrete()</a></code>
+          <span class="badge lifecycle lifecycle-deprecated">deprecated</span>
+        </dt>
+        <dd>Generate a discrete PHA color palette</dd>
 
         <dt>
 
@@ -222,6 +357,127 @@
 
         </dt>
         <dd>Generate a function to wrap and format facet labels with markdown</dd>
+      </dl></div><div class="section level2">
+      <h2 id="color-utilities">Color utilities<a class="anchor" aria-label="anchor" href="#color-utilities"></a></h2>
+
+      <div class="section-desc"><p>Named color vectors, per-brand color accessors, ggtext span helpers, and focus/emphasis palettes.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="hda_colors.html">hda_colors</a></code>
+
+        </dt>
+        <dd>Named HDA color vector</dd>
+
+        <dt>
+
+          <code><a href="hfv_colors.html">hfv_colors</a></code>
+
+        </dt>
+        <dd>Named HFV color vector</dd>
+
+        <dt>
+
+          <code><a href="pha_colors.html">pha_colors</a></code>
+
+        </dt>
+        <dd>Named PHA color vector</dd>
+
+        <dt>
+
+          <code><a href="vha_colors.html">vha_colors</a></code>
+
+        </dt>
+        <dd>Named VHA color vector</dd>
+
+        <dt>
+
+          <code><a href="hda_color.html">hda_color()</a></code>
+
+        </dt>
+        <dd>Look up a single HDA color by name</dd>
+
+        <dt>
+
+          <code><a href="hfv_color.html">hfv_color()</a></code>
+
+        </dt>
+        <dd>Look up a single HFV color by name</dd>
+
+        <dt>
+
+          <code><a href="pha_color.html">pha_color()</a></code>
+
+        </dt>
+        <dd>Look up a single PHA color by name</dd>
+
+        <dt>
+
+          <code><a href="vha_color.html">vha_color()</a></code>
+
+        </dt>
+        <dd>Look up a single VHA color by name</dd>
+
+        <dt>
+
+          <code><a href="hda_span.html">hda_span()</a></code>
+
+        </dt>
+        <dd>Wrap text in a brand-colored HTML span (HDA)</dd>
+
+        <dt>
+
+          <code><a href="hfv_span.html">hfv_span()</a></code>
+
+        </dt>
+        <dd>Wrap text in a brand-colored HTML span (HFV)</dd>
+
+        <dt>
+
+          <code><a href="pha_span.html">pha_span()</a></code>
+
+        </dt>
+        <dd>Wrap text in a brand-colored HTML span (PHA)</dd>
+
+        <dt>
+
+          <code><a href="vha_span.html">vha_span()</a></code>
+
+        </dt>
+        <dd>Wrap text in a brand-colored HTML span (VHA)</dd>
+
+        <dt>
+
+          <code><a href="hda_focus_pal.html">hda_focus_pal()</a></code>
+
+        </dt>
+        <dd>Focus/emphasis palette for HDA</dd>
+
+        <dt>
+
+          <code><a href="hfv_focus_pal.html">hfv_focus_pal()</a></code>
+
+        </dt>
+        <dd>Focus/emphasis palette for HFV</dd>
+
+        <dt>
+
+          <code><a href="pha_focus_pal.html">pha_focus_pal()</a></code>
+
+        </dt>
+        <dd>Focus/emphasis palette for PHA</dd>
+
+        <dt>
+
+          <code><a href="vha_focus_pal.html">vha_focus_pal()</a></code>
+
+        </dt>
+        <dd>Focus/emphasis palette for VHA</dd>
       </dl></div><div class="section level2">
       <h2 id="analysis-utils">Analysis utils<a class="anchor" aria-label="anchor" href="#analysis-utils"></a></h2>
 

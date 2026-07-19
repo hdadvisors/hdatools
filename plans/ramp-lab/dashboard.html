@@ -1,0 +1,796 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>hdatools Ramp Lab</title>
+<style>
+  :root {
+    --bg: #f4f5f7;
+    --panel: #ffffff;
+    --border: #dde1e6;
+    --text: #1c2126;
+    --muted: #667085;
+    --accent: #445ca9;
+    --warn-bg: #fff4e5;
+    --warn-border: #f2b155;
+    --warn-text: #7a4a00;
+    --pick-bg: #eaf6ec;
+    --pick-border: #4caf6f;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 20px;
+  }
+  h1 { font-size: 18px; margin: 0 0 8px; }
+  .controls-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+  }
+  .tabgroup { display: flex; gap: 4px; }
+  .tabgroup button {
+    border: 1px solid var(--border);
+    background: var(--panel);
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .tabgroup button.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  label.inline { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+  select { padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border); }
+  #picks-summary {
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+  #picks-summary .pick-chip {
+    border: 1px solid var(--pick-border);
+    background: var(--pick-bg);
+    border-radius: 10px;
+    padding: 2px 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  #picks-summary .swatch { width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
+  main { padding: 16px 20px 60px; }
+  #grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 16px;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+  }
+  .card.picked { border-color: var(--pick-border); box-shadow: 0 0 0 2px var(--pick-bg) inset; }
+  .card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .card-title { font-size: 14px; font-weight: 600; margin: 0; }
+  .card-sub { font-size: 11px; color: var(--muted); margin: 2px 0 8px; }
+  .nudge-note { font-size: 11px; color: var(--muted); margin: 4px 0 8px; line-height: 1.4; }
+  .warnings { margin: 6px 0; }
+  .warning-item {
+    background: var(--warn-bg);
+    border: 1px solid var(--warn-border);
+    color: var(--warn-text);
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    margin-bottom: 4px;
+  }
+  .preview-block { margin: 10px 0; }
+  .preview-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin-bottom: 3px; }
+  .swatch-bar { height: 22px; border-radius: 4px; border: 1px solid var(--border); }
+  .binned-bar { display: flex; height: 18px; border-radius: 4px; overflow: hidden; border: 1px solid var(--border); }
+  .binned-bar div { flex: 1; }
+  svg { display: block; max-width: 100%; }
+  .sliders { display: grid; grid-template-columns: 1fr; gap: 4px; margin-top: 10px; font-size: 11px; }
+  .slider-row { display: grid; grid-template-columns: 70px 1fr 44px; align-items: center; gap: 6px; }
+  .slider-row input[type=range] { width: 100%; }
+  .card-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  button.action {
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: #f9fafb;
+    cursor: pointer;
+  }
+  button.action.pick { border-color: var(--pick-border); }
+  button.action.pick.active { background: var(--pick-bg); }
+  textarea.note {
+    width: 100%;
+    font-size: 12px;
+    margin-top: 6px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px;
+    resize: vertical;
+    min-height: 32px;
+  }
+  .snippet-box {
+    display: none;
+    margin-top: 8px;
+  }
+  .snippet-box textarea {
+    width: 100%;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    min-height: 90px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px;
+  }
+  .delta-note { font-size: 10px; color: var(--muted); margin-top: 4px; }
+  footer { padding: 10px 20px 40px; font-size: 11px; color: var(--muted); }
+</style>
+</head>
+<body>
+<header>
+  <h1>hdatools Ramp Lab — continuous ramp candidates (Session 2 / item 2.2)</h1>
+  <div class="controls-row">
+    <div class="tabgroup" id="brand-tabs"></div>
+    <div class="tabgroup" id="type-tabs"></div>
+    <label class="inline">
+      CVD simulation
+      <select id="cvd-mode">
+        <option value="normal">Normal vision</option>
+        <option value="protanopia">Protanopia</option>
+        <option value="deuteranopia">Deuteranopia</option>
+        <option value="tritanopia">Tritanopia</option>
+      </select>
+    </label>
+    <label class="inline">
+      <input type="checkbox" id="reset-all-btn-holder" style="display:none">
+    </label>
+    <button class="action" id="reset-all">Reset all sliders to generated defaults</button>
+  </div>
+  <div id="picks-summary"></div>
+</header>
+<main>
+  <div id="grid"></div>
+</main>
+<footer>
+  Every ramp's light end (sequential) / center (diverging) anchors to a shared brand-wide hint of
+  cream (H~80, C~10) instead of pure white or a same-hue tint — a real hue shift, not just low
+  chroma — so light classes stay visible against a white page/basemap; tune it per-card via the
+  "cream" sliders. HFV's Leaf and Cerulean anchors are experimental secondary colors (not part of
+  <code>hdatools:::.brands</code>) swapped in for a weaker original pick — see each card's nudge
+  note for what they replaced. Map/bar/line preview data is a single fixed synthetic dataset shared
+  across all candidates so only the palette varies. CVD simulation uses the Machado 2009 linear-RGB
+  transform matrices (an approximation for live feedback — verify any picked candidate against real
+  <code>colorspace::simulate_cvd()</code> before finalizing).
+</footer>
+<script src="candidates.js"></script>
+<script>
+"use strict";
+
+/* ============================== HCL / sRGB math ==============================
+   Validated against colorspace::polarLUV()+hex() and colorspace::sequential_hcl()/
+   diverging_hcl() output (exact hex match on 8 spot checks + 4 full-ramp checks).
+   This is a deliberate reimplementation for live slider feedback; treat it as an
+   approximation near gamut edges (no "fixup" gamut clamping is applied here). */
+
+function hclToHex(L, C, H) {
+  const hrad = H * Math.PI / 180;
+  const u = C * Math.cos(hrad);
+  const v = C * Math.sin(hrad);
+  const Xn = 95.047, Yn = 100.0, Zn = 108.883;
+  const un = 4 * Xn / (Xn + 15 * Yn + 3 * Zn);
+  const vn = 9 * Yn / (Xn + 15 * Yn + 3 * Zn);
+  const kappa = 903.3, epsilon = 0.008856;
+  let Y;
+  if (L > kappa * epsilon) {
+    Y = Math.pow((L + 16) / 116, 3) * Yn;
+  } else {
+    Y = (L / kappa) * Yn;
+  }
+  let X, Z;
+  if (L <= 0) {
+    X = 0; Y = 0; Z = 0;
+  } else {
+    const up = u / (13 * L) + un;
+    const vp = v / (13 * L) + vn;
+    X = Y * 9 * up / (4 * vp);
+    Z = Y * (12 - 3 * up - 20 * vp) / (4 * vp);
+  }
+  const Xs = X / 100, Ys = Y / 100, Zs = Z / 100;
+  let r = 3.2406 * Xs - 1.5372 * Ys - 0.4986 * Zs;
+  let g = -0.9689 * Xs + 1.8758 * Ys + 0.0415 * Zs;
+  let b = 0.0557 * Xs - 0.2040 * Ys + 1.0570 * Zs;
+  const gam = c => c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055;
+  r = gam(r); g = gam(g); b = gam(b);
+  const clamp = c => Math.max(0, Math.min(1, c));
+  const toHex = c => Math.round(clamp(c) * 255).toString(16).padStart(2, "0").toUpperCase();
+  return "#" + toHex(r) + toHex(g) + toHex(b);
+}
+
+function lintrj(x, a, b) { return a * x + b * (1 - x); }
+
+function seqhclColor(i, h1, h2, c1, c2, l1, l2, p1, p2) {
+  const L = lintrj(Math.pow(i, p2), l1, l2);
+  const C = lintrj(Math.pow(i, p1), c1, c2);
+  const H = lintrj(i, h1, h2);
+  return { hex: hclToHex(L, C, H), L, C, H };
+}
+
+/* Sequential: single real sequential_hcl()-equivalent hue shift from the dark
+   anchor (h1) to the shared cream tone (hc/cc) at the light end (l2). */
+function sequentialHcl(n, opts) {
+  const { h1, c1, hc, cc, l1, l2, power = 1 } = opts;
+  const p1 = power, p2 = power;
+  const out = [];
+  for (let k = 0; k < n; k++) {
+    const i = n === 1 ? 1 : 1 - k / (n - 1);
+    out.push(seqhclColor(i, h1, hc, c1, cc, l1, l2, p1, p2));
+  }
+  return out;
+}
+
+/* Diverging: colorspace::diverging_hcl() always collapses its center to pure
+   achromatic (chroma 0) by construction, so it can't express a cream center.
+   Build it from two independent sequential arms (dark anchor -> cream),
+   stitched with the same n/n2/parity logic diverging_hcl() uses internally —
+   see the matching R-side build_diverging() for the real colorspace calls
+   this approximates. */
+function divergingHcl(n, opts) {
+  const { h1, h2, c1, hc, cc, l1, l2, power = 1 } = opts;
+  const p1 = power, p2 = power;
+  const n2 = Math.ceil(n / 2);
+  let rvals;
+  if (n === 1) { rvals = [0]; }
+  else {
+    rvals = [];
+    for (let k = 0; k < n2; k++) rvals.push(Math.max(0, 1 - k * (2 / (n - 1))));
+  }
+  const arm1 = rvals.map(i => seqhclColor(i, h1, hc, c1, cc, l1, l2, p1, p2));
+  const arm2 = rvals.map(i => seqhclColor(i, h2, hc, c1, cc, l1, l2, p1, p2)).reverse();
+  let result = arm1.concat(arm2);
+  if (Math.floor(n / 2) < n2) result.splice(n2 - 1, 1);
+  return result;
+}
+
+/* ============================== CVD simulation ==============================
+   Machado, Oliveira & Fernandes (2009) full-severity linear-RGB transforms —
+   the same matrices Chrome DevTools' vision-deficiency emulation uses. */
+
+const CVD_MATRICES = {
+  protanopia: [
+    [0.152286, 1.052583, -0.204868],
+    [0.114503, 0.786281, 0.099216],
+    [-0.003882, -0.048116, 1.051998]
+  ],
+  deuteranopia: [
+    [0.367322, 0.860646, -0.227968],
+    [0.280085, 0.672501, 0.047413],
+    [-0.011820, 0.042940, 0.968881]
+  ],
+  tritanopia: [
+    [1.255528, -0.076749, -0.178779],
+    [-0.078411, 0.930809, 0.147602],
+    [0.004733, 0.691367, 0.303900]
+  ]
+};
+
+function hexToRgb(hex) {
+  const n = parseInt(hex.slice(1), 16);
+  return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+}
+function rgbToHex(r, g, b) {
+  const c = v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, "0").toUpperCase();
+  return "#" + c(r) + c(g) + c(b);
+}
+function srgbToLinear(c) { c /= 255; return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); }
+function linearToSrgb(c) { return c <= 0.0031308 ? c * 12.92 : 1.055 * Math.pow(c, 1 / 2.4) - 0.055; }
+
+function simulateCvd(hex, mode) {
+  if (mode === "normal") return hex;
+  const m = CVD_MATRICES[mode];
+  const { r, g, b } = hexToRgb(hex);
+  const rl = srgbToLinear(r), gl = srgbToLinear(g), bl = srgbToLinear(b);
+  const rr = linearToSrgb(m[0][0] * rl + m[0][1] * gl + m[0][2] * bl) * 255;
+  const gg = linearToSrgb(m[1][0] * rl + m[1][1] * gl + m[1][2] * bl) * 255;
+  const bb = linearToSrgb(m[2][0] * rl + m[2][1] * gl + m[2][2] * bl) * 255;
+  return rgbToHex(rr, gg, bb);
+}
+
+function displayHex(hex) { return simulateCvd(hex, state.cvdMode); }
+
+/* ============================== Guardrail checks (live) ============================== */
+
+function hueDist(h1, h2) {
+  const d = Math.abs(h1 - h2) % 360;
+  return Math.min(d, 360 - d);
+}
+
+function liveWarnings(type, params, stops) {
+  const warnings = [];
+  const Ls = stops.map(s => s.L);
+  if (type === "sequential") {
+    let up = false, down = false;
+    for (let i = 1; i < Ls.length; i++) {
+      const d = Ls[i] - Ls[i - 1];
+      if (d > 0.3) up = true;
+      if (d < -0.3) down = true;
+    }
+    if (up && down) warnings.push("Luminance is not monotonic end to end — the ramp reverses direction somewhere in the middle.");
+    const lightEnd = Ls[Ls.length - 1];
+    const darkEnd = Ls[0];
+    if (lightEnd > 96.5) warnings.push(`Light end (L=${lightEnd.toFixed(1)}) nearly disappears against a white background.`);
+    if (darkEnd < 14) warnings.push(`Dark end (L=${darkEnd.toFixed(1)}) is close enough to black to fight with text/gridlines.`);
+  } else {
+    const d = hueDist(params.h1, params.h2);
+    if (d < 60) warnings.push(`Anchor hues are only ${d.toFixed(0)}° apart — too close to read as a genuine diverging scheme (aim for >=60-90°).`);
+    const lightCenter = Math.max(...Ls);
+    const darkEnd = Math.min(...Ls);
+    if (lightCenter > 98.5) warnings.push(`Center (L=${lightCenter.toFixed(1)}) nearly disappears against a white background.`);
+    if (darkEnd < 14) warnings.push(`Dark arm end (L=${darkEnd.toFixed(1)}) is close enough to black to fight with text/gridlines.`);
+  }
+  return warnings;
+}
+
+/* ============================== Fixed synthetic dataset ==============================
+   One seeded PRNG dataset shared by every candidate/card so palette is the only
+   thing that varies between previews. */
+
+function mulberry32(seed) {
+  return function () {
+    seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+const rng = mulberry32(20260718);
+const MAP_COLS = 9, MAP_ROWS = 6;
+const MAP_VALUES = Array.from({ length: MAP_COLS * MAP_ROWS }, () => rng());
+const BAR_VALUES = Array.from({ length: 7 }, () => 0.25 + rng() * 0.75);
+const LINE_SERIES = Array.from({ length: 7 }, (_, s) =>
+  Array.from({ length: 10 }, (_, x) => {
+    const base = (s + 1) / 7;
+    return Math.max(0.05, Math.min(0.98, base + Math.sin(x * 0.7 + s) * 0.12 + (rng() - 0.5) * 0.06));
+  })
+);
+const DIVERGING_VALUES = Array.from({ length: 11 }, () => (rng() - 0.5) * 2);
+
+function binIndex(value, nBins) {
+  return Math.max(0, Math.min(nBins - 1, Math.floor(value * nBins)));
+}
+
+/* ============================== State ============================== */
+
+const BRANDS = Object.keys(CANDIDATES);
+const TYPES = ["sequential", "diverging"];
+const STORAGE_KEY = "hdatools-ramp-lab-v1";
+
+const state = {
+  brand: BRANDS[0],
+  type: TYPES[0],
+  cvdMode: "normal",
+  overrides: {},   // id -> {h1,c1,l1,hc,cc,l2,power} (sequential) or {h1,h2,c1,l1,hc,cc,l2,power} (diverging)
+  picks: {},       // "brand:type" -> {id, note}
+  notes: {}        // id -> note text (kept even if not picked, for convenience)
+};
+
+function loadPersisted() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const saved = JSON.parse(raw);
+    Object.assign(state.overrides, saved.overrides || {});
+    Object.assign(state.picks, saved.picks || {});
+    Object.assign(state.notes, saved.notes || {});
+  } catch (e) { console.warn("Ramp Lab: could not load saved state", e); }
+}
+function persist() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      overrides: state.overrides, picks: state.picks, notes: state.notes
+    }));
+  } catch (e) { /* ignore quota errors in a dev tool */ }
+}
+
+function currentParams(candidate) {
+  return state.overrides[candidate.id] || { ...candidate.params };
+}
+
+function currentStops(candidate, n) {
+  const p = currentParams(candidate);
+  return candidate.type === "sequential" ? sequentialHcl(n, p) : divergingHcl(n, p);
+}
+
+/* ============================== Rendering helpers ============================== */
+
+function el(tag, attrs = {}, children = []) {
+  const node = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") node.className = v;
+    else if (k === "html") node.innerHTML = v;
+    else if (k.startsWith("on") && typeof v === "function") node.addEventListener(k.slice(2), v);
+    else node.setAttribute(k, v);
+  }
+  for (const c of [].concat(children)) {
+    if (c == null) continue;
+    node.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+  }
+  return node;
+}
+
+function renderSwatchBar(hexStops) {
+  const grad = hexStops.map(displayHex).join(",");
+  return el("div", { class: "swatch-bar", style: `background: linear-gradient(to right, ${grad});` });
+}
+
+function renderBinnedBar(hexStops) {
+  const wrap = el("div", { class: "binned-bar" });
+  hexStops.forEach(h => wrap.appendChild(el("div", { style: `background:${displayHex(h)}` })));
+  return wrap;
+}
+
+function svgWrap(width, height, inner) {
+  return `<svg viewBox="0 0 ${width} ${height}" width="100%" height="${height}">${inner}</svg>`;
+}
+
+function renderMapSwatch(hexBinned) {
+  const w = 270, h = 180;
+  const cw = w / MAP_COLS, ch = h / MAP_ROWS;
+  const n = hexBinned.length;
+  let cells = "";
+  for (let r = 0; r < MAP_ROWS; r++) {
+    for (let c = 0; c < MAP_COLS; c++) {
+      const v = MAP_VALUES[r * MAP_COLS + c];
+      const color = displayHex(hexBinned[binIndex(v, n)]);
+      const x = c * cw, y = r * ch;
+      cells += `<rect x="${x + 1}" y="${y + 1}" width="${cw - 2}" height="${ch - 2}" fill="${color}" />`;
+    }
+  }
+  const box = document.createElement("div");
+  box.innerHTML = svgWrap(w, h, cells);
+  return box.firstChild;
+}
+
+function renderBarChart(hexBinned) {
+  const w = 270, h = 140, pad = 4;
+  const n = BAR_VALUES.length;
+  const bw = (w - pad * 2) / n;
+  let bars = "";
+  BAR_VALUES.forEach((v, i) => {
+    const barH = v * (h - 10);
+    const color = displayHex(hexBinned[i % hexBinned.length]);
+    bars += `<rect x="${pad + i * bw + 2}" y="${h - barH}" width="${bw - 4}" height="${barH}" fill="${color}" rx="2" />`;
+  });
+  const box = document.createElement("div");
+  box.innerHTML = svgWrap(w, h, bars);
+  return box.firstChild;
+}
+
+function renderLineChart(hexBinned) {
+  const w = 270, h = 140, pad = 6;
+  const n = hexBinned.length;
+  let paths = "";
+  LINE_SERIES.forEach((series, s) => {
+    const color = displayHex(hexBinned[s % n]);
+    const points = series.map((v, x) => {
+      const px = pad + (x / (series.length - 1)) * (w - pad * 2);
+      const py = h - pad - v * (h - pad * 2);
+      return `${px.toFixed(1)},${py.toFixed(1)}`;
+    });
+    const areaPoints = `${points.join(" ")} ${w - pad},${h - pad} ${pad},${h - pad}`;
+    paths += `<polygon points="${areaPoints}" fill="${color}" opacity="0.12" />`;
+    paths += `<polyline points="${points.join(" ")}" fill="none" stroke="${color}" stroke-width="2" />`;
+  });
+  const box = document.createElement("div");
+  box.innerHTML = svgWrap(w, h, paths);
+  return box.firstChild;
+}
+
+function renderDivergingBar(hexBinned) {
+  const w = 270, h = 160, pad = 6;
+  const n = hexBinned.length;
+  const mid = h / 2;
+  const barW = (w - pad * 2) / DIVERGING_VALUES.length;
+  let bars = "";
+  DIVERGING_VALUES.forEach((v, i) => {
+    const idx = binIndex((v + 1) / 2, n);
+    const color = displayHex(hexBinned[idx]);
+    const barH = Math.abs(v) * (h / 2 - 8);
+    const y = v >= 0 ? mid - barH : mid;
+    bars += `<rect x="${pad + i * barW + 2}" y="${y}" width="${barW - 4}" height="${barH}" fill="${color}" rx="2" />`;
+  });
+  bars += `<line x1="0" y1="${mid}" x2="${w}" y2="${mid}" stroke="#9aa1a9" stroke-width="1" />`;
+  const box = document.createElement("div");
+  box.innerHTML = svgWrap(w, h, bars);
+  return box.firstChild;
+}
+
+function previewBlock(label, node) {
+  return el("div", { class: "preview-block" }, [
+    el("div", { class: "preview-label" }, label),
+    node
+  ]);
+}
+
+/* ============================== Slider config ============================== */
+
+const SEQ_SLIDERS = [
+  { key: "h1", label: "Hue (dark)", min: 0, max: 360, step: 1 },
+  { key: "c1", label: "Chroma (dark)", min: 0, max: 100, step: 1 },
+  { key: "l1", label: "Lum (dark)", min: 5, max: 60, step: 1 },
+  { key: "hc", label: "Hue (cream)", min: 0, max: 360, step: 1 },
+  { key: "cc", label: "Chroma (cream)", min: 0, max: 40, step: 1 },
+  { key: "l2", label: "Lum (cream)", min: 60, max: 99, step: 0.5 },
+  { key: "power", label: "Power", min: 0.3, max: 3, step: 0.05 }
+];
+const DIV_SLIDERS = [
+  { key: "h1", label: "Hue (arm 1)", min: 0, max: 360, step: 1 },
+  { key: "h2", label: "Hue (arm 2)", min: 0, max: 360, step: 1 },
+  { key: "c1", label: "Chroma (arms)", min: 0, max: 100, step: 1 },
+  { key: "l1", label: "Lum (arms)", min: 5, max: 60, step: 1 },
+  { key: "hc", label: "Hue (cream center)", min: 0, max: 360, step: 1 },
+  { key: "cc", label: "Chroma (cream center)", min: 0, max: 40, step: 1 },
+  { key: "l2", label: "Lum (cream center)", min: 60, max: 99, step: 0.5 },
+  { key: "power", label: "Power", min: 0.3, max: 3, step: 0.05 }
+];
+
+/* ============================== R snippet ============================== */
+
+function rSnippet(candidate) {
+  const p = currentParams(candidate);
+  const n = candidate.hexBinned.length;
+  const stops = currentStops(candidate, n).map(s => s.hex);
+  if (candidate.type === "sequential") {
+    return `colorspace::sequential_hcl(\n  n = ${n},\n  h = c(${p.h1.toFixed(1)}, ${p.hc.toFixed(1)}),\n  c = c(${p.c1.toFixed(1)}, ${p.cc.toFixed(1)}),\n  l = c(${p.l1.toFixed(1)}, ${p.l2.toFixed(1)}),\n  power = ${p.power.toFixed(2)}\n)\n# JS-approximated hex (verify against the real call above):\n# ${JSON.stringify(stops)}`;
+  }
+  // diverging_hcl() always collapses its center to pure achromatic (chroma 0)
+  // by construction, so a cream (not neutral) center can't be expressed with
+  // one diverging_hcl() call — build it from two real sequential_hcl() arms
+  // instead, stitched exactly like diverging_hcl() does internally.
+  return `n <- ${n}\nn2 <- ceiling(n / 2)\narm <- function(h) colorspace::sequential_hcl(\n  n2, h = c(h, ${p.hc.toFixed(1)}), c = c(${p.c1.toFixed(1)}, ${p.cc.toFixed(1)}),\n  l = c(${p.l1.toFixed(1)}, ${p.l2.toFixed(1)}), power = ${p.power.toFixed(2)}\n)\ndiverging_hex <- c(arm(${p.h1.toFixed(1)}), rev(arm(${p.h2.toFixed(1)})))\nif (floor(n / 2) < n2) diverging_hex <- diverging_hex[-n2]\ndiverging_hex\n# JS-approximated hex (verify against the real construction above):\n# ${JSON.stringify(stops)}`;
+}
+
+/* ============================== Card build/update ============================== */
+
+function pickKey() { return `${state.brand}:${state.type}`; }
+
+function buildCard(candidate) {
+  const card = el("div", { class: "card", "data-id": candidate.id });
+  renderCardInner(card, candidate);
+  return card;
+}
+
+function renderCardInner(card, candidate) {
+  card.innerHTML = "";
+  const pk = pickKey();
+  const isPicked = state.picks[pk] && state.picks[pk].id === candidate.id;
+  card.classList.toggle("picked", !!isPicked);
+
+  const head = el("div", { class: "card-head" }, [
+    el("div", {}, [
+      el("p", { class: "card-title" }, candidate.anchorLabel),
+      el("p", { class: "card-sub" }, `${candidate.variantLabel}`)
+    ])
+  ]);
+  card.appendChild(head);
+  card.appendChild(el("div", { class: "nudge-note" }, candidate.nudgeNote));
+
+  const n = candidate.hexBinned.length;
+  const smoothStops = currentStops(candidate, candidate.hexSmooth.length);
+  const binnedStops = currentStops(candidate, n);
+  const hexSmooth = smoothStops.map(s => s.hex);
+  const hexBinned = binnedStops.map(s => s.hex);
+
+  const warnings = liveWarnings(candidate.type, currentParams(candidate), binnedStops);
+  if (warnings.length) {
+    const wbox = el("div", { class: "warnings" });
+    warnings.forEach(w => wbox.appendChild(el("div", { class: "warning-item" }, w)));
+    card.appendChild(wbox);
+  }
+
+  card.appendChild(previewBlock("Smooth gradient", renderSwatchBar(hexSmooth)));
+  card.appendChild(previewBlock(`Binned (${n}-class)`, renderBinnedBar(hexBinned)));
+  card.appendChild(previewBlock("Choropleth-style map", renderMapSwatch(hexBinned)));
+  card.appendChild(previewBlock("Bar chart", renderBarChart(hexBinned)));
+  card.appendChild(previewBlock("Line/area chart", renderLineChart(hexBinned)));
+  if (candidate.type === "diverging") {
+    card.appendChild(previewBlock("Diverging bar from center", renderDivergingBar(hexBinned)));
+  }
+
+  const p = currentParams(candidate);
+  const sliderDefs = candidate.type === "sequential" ? SEQ_SLIDERS : DIV_SLIDERS;
+  const slidersBox = el("div", { class: "sliders" });
+  sliderDefs.forEach(def => {
+    const valueLabel = el("span", {}, Number(p[def.key]).toFixed(def.step < 1 ? 2 : 0));
+    const input = el("input", {
+      type: "range", min: def.min, max: def.max, step: def.step, value: p[def.key],
+      oninput: (e) => {
+        const val = parseFloat(e.target.value);
+        const ov = state.overrides[candidate.id] || { ...candidate.params };
+        ov[def.key] = val;
+        state.overrides[candidate.id] = ov;
+        valueLabel.textContent = val.toFixed(def.step < 1 ? 2 : 0);
+        renderCardInner(card, candidate);
+        persist();
+      }
+    });
+    slidersBox.appendChild(el("div", { class: "slider-row" }, [
+      el("span", {}, def.label), input, valueLabel
+    ]));
+  });
+  card.appendChild(slidersBox);
+
+  // Live delta-from-generated-default (nudge-cap context for the tuned candidate)
+  const orig = candidate.params;
+  let deltaParts = [];
+  if (candidate.type === "sequential") {
+    const dH = p.h1 - orig.h1, dC = p.c1 - orig.c1;
+    if (Math.abs(dH) > 0.5 || Math.abs(dC) > 0.5) {
+      deltaParts.push(`slider delta vs. generated default: hue ${dH >= 0 ? "+" : ""}${dH.toFixed(0)}°, dark-chroma ${dC >= 0 ? "+" : ""}${dC.toFixed(0)}`);
+      const totalHue = candidate.sourceHueDelta + dH;
+      const totalChroma = candidate.sourceChromaDelta + dC;
+      if (Math.abs(totalHue) > 20 || Math.abs(totalChroma) > 30) {
+        deltaParts.push("cumulative nudge from the true brand source now exceeds the modest-nudge guideline — re-check against the named palette color before picking.");
+      }
+    }
+  } else {
+    const dH1 = p.h1 - orig.h1, dH2 = p.h2 - orig.h2;
+    if (Math.abs(dH1) > 0.5 || Math.abs(dH2) > 0.5) {
+      deltaParts.push(`slider delta vs. generated default: hue arm1 ${dH1 >= 0 ? "+" : ""}${dH1.toFixed(0)}°, arm2 ${dH2 >= 0 ? "+" : ""}${dH2.toFixed(0)}°`);
+      if (Math.abs(dH1) > 20 || Math.abs(dH2) > 20) {
+        deltaParts.push("cumulative hue nudge now exceeds the modest-nudge guideline — re-check against the named palette color before picking.");
+      }
+    }
+  }
+  if (deltaParts.length) card.appendChild(el("div", { class: "delta-note" }, deltaParts.join(" ")));
+
+  const actions = el("div", { class: "card-actions" });
+  const pickBtn = el("button", {
+    class: "action pick" + (isPicked ? " active" : ""),
+    onclick: () => {
+      if (isPicked) {
+        delete state.picks[pk];
+      } else {
+        state.picks[pk] = { id: candidate.id, note: state.notes[candidate.id] || "" };
+      }
+      persist();
+      renderGrid();
+      renderPicksSummary();
+    }
+  }, isPicked ? "★ Picked as winner" : "☆ Pick as winner");
+  actions.appendChild(pickBtn);
+
+  const resetBtn = el("button", {
+    class: "action",
+    onclick: () => {
+      delete state.overrides[candidate.id];
+      persist();
+      renderCardInner(card, candidate);
+    }
+  }, "Reset sliders");
+  actions.appendChild(resetBtn);
+
+  const copyBtn = el("button", { class: "action" }, "Copy R snippet");
+  const snippetBox = el("div", { class: "snippet-box" });
+  const snippetArea = el("textarea", { readonly: "readonly", rows: "6" });
+  snippetBox.appendChild(snippetArea);
+  copyBtn.addEventListener("click", () => {
+    const text = rSnippet(candidate);
+    snippetArea.value = text;
+    snippetBox.style.display = "block";
+    snippetArea.select();
+    navigator.clipboard.writeText(text).catch(() => {
+      try { document.execCommand("copy"); } catch (e) { /* manual select still works */ }
+    });
+  });
+  actions.appendChild(copyBtn);
+  card.appendChild(actions);
+  card.appendChild(snippetBox);
+
+  const note = el("textarea", {
+    class: "note",
+    placeholder: "Optional note on why this is (or isn't) the pick...",
+    oninput: (e) => {
+      state.notes[candidate.id] = e.target.value;
+      if (state.picks[pk] && state.picks[pk].id === candidate.id) {
+        state.picks[pk].note = e.target.value;
+      }
+      persist();
+    }
+  });
+  note.value = state.notes[candidate.id] || "";
+  card.appendChild(note);
+}
+
+/* ============================== Grid / tabs / summary ============================== */
+
+function renderGrid() {
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+  const list = (CANDIDATES[state.brand] && CANDIDATES[state.brand][state.type]) || [];
+  list.forEach(candidate => grid.appendChild(buildCard(candidate)));
+}
+
+function renderTabs() {
+  const brandTabs = document.getElementById("brand-tabs");
+  brandTabs.innerHTML = "";
+  BRANDS.forEach(b => {
+    brandTabs.appendChild(el("button", {
+      class: b === state.brand ? "active" : "",
+      onclick: () => { state.brand = b; renderTabs(); renderGrid(); renderPicksSummary(); }
+    }, b.toUpperCase()));
+  });
+
+  const typeTabs = document.getElementById("type-tabs");
+  typeTabs.innerHTML = "";
+  TYPES.forEach(t => {
+    typeTabs.appendChild(el("button", {
+      class: t === state.type ? "active" : "",
+      onclick: () => { state.type = t; renderTabs(); renderGrid(); renderPicksSummary(); }
+    }, t.charAt(0).toUpperCase() + t.slice(1)));
+  });
+}
+
+function renderPicksSummary() {
+  const box = document.getElementById("picks-summary");
+  box.innerHTML = "";
+  BRANDS.forEach(b => {
+    TYPES.forEach(t => {
+      const key = `${b}:${t}`;
+      const pick = state.picks[key];
+      const label = `${b.toUpperCase()} ${t}`;
+      if (!pick) {
+        box.appendChild(el("span", { class: "pick-chip", style: "opacity:0.5" }, `${label}: unpicked`));
+        return;
+      }
+      const cand = (CANDIDATES[b][t] || []).find(c => c.id === pick.id);
+      const swatchHex = cand ? cand.hexBinned[Math.floor(cand.hexBinned.length / 2)] : "#ccc";
+      box.appendChild(el("span", { class: "pick-chip" }, [
+        el("span", { class: "swatch", style: `background:${swatchHex}` }),
+        document.createTextNode(`${label}: ${cand ? cand.anchorLabel : pick.id}`)
+      ]));
+    });
+  });
+}
+
+/* ============================== Init ============================== */
+
+loadPersisted();
+
+document.getElementById("cvd-mode").addEventListener("change", (e) => {
+  state.cvdMode = e.target.value;
+  renderGrid();
+});
+document.getElementById("reset-all").addEventListener("click", () => {
+  state.overrides = {};
+  persist();
+  renderGrid();
+});
+
+renderTabs();
+renderGrid();
+renderPicksSummary();
+</script>
+</body>
+</html>

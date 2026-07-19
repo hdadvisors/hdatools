@@ -24,6 +24,10 @@ navbar:
       menu:
       - text: Using branded ggplot2 themes
         href: articles/branded-themes.html
+      - text: CVD accessibility audit
+        href: articles/cvd-audit.html
+      - text: Adding a new client brand
+        href: articles/adding-a-brand.html
     github:
       icon: fa-github fa-lg
       href: https://github.com/hdadvisors/hdatools
@@ -31,25 +35,44 @@ navbar:
 reference:
   - title: Themes
     desc: >
-      ggplot2 themes for HDAdvisors, HousingForward Virginia, and PHA projects.
+      ggplot2 themes for HDAdvisors, HousingForward Virginia, PHA, and VHA projects.
     contents:
       - theme_hda
       - theme_hfv
       - theme_pha
+      - theme_vha
 
   - title: Palettes & scales
     desc: >
-      Discrete and continuous color palettes and ggplot2 scale functions.
+      Discrete, continuous, and binned color scales for all four brands.
     contents:
-      - hda_pal_discrete
-      - hfv_pal_discrete
-      - pha_pal_discrete
       - scale_color_hda
       - scale_color_hfv
       - scale_color_pha
+      - scale_color_vha
       - scale_fill_hda
       - scale_fill_hfv
       - scale_fill_pha
+      - scale_fill_vha
+      - scale_color_hda_c
+      - scale_color_hfv_c
+      - scale_color_pha_c
+      - scale_color_vha_c
+      - scale_fill_hda_c
+      - scale_fill_hfv_c
+      - scale_fill_pha_c
+      - scale_fill_vha_c
+      - scale_color_hda_b
+      - scale_color_hfv_b
+      - scale_color_pha_b
+      - scale_color_vha_b
+      - scale_fill_hda_b
+      - scale_fill_hfv_b
+      - scale_fill_pha_b
+      - scale_fill_vha_b
+      - hda_pal_discrete
+      - hfv_pal_discrete
+      - pha_pal_discrete
       - scale_color_gradient_hda
       - scale_color_gradient_pha
       - scale_fill_gradient_pha
@@ -66,6 +89,28 @@ reference:
       - get_logo
       - publish_plot
       - markdown_wrap_gen
+
+  - title: Color utilities
+    desc: >
+      Named color vectors, per-brand color accessors, ggtext span helpers,
+      and focus/emphasis palettes.
+    contents:
+      - hda_colors
+      - hfv_colors
+      - pha_colors
+      - vha_colors
+      - hda_color
+      - hfv_color
+      - pha_color
+      - vha_color
+      - hda_span
+      - hfv_span
+      - pha_span
+      - vha_span
+      - hda_focus_pal
+      - hfv_focus_pal
+      - pha_focus_pal
+      - vha_focus_pal
 
   - title: Analysis utils
     desc: >

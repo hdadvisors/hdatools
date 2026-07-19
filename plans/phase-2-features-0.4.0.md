@@ -236,4 +236,55 @@ clone" (vhtf, after this phase) and "delete local hardcoded hex vectors"
 
 ## Findings (filled in during sessions)
 
-*(none yet — phase not started)*
+### Session 5 (item 2.5)
+
+**CVD audit method:** `colorspace::simulate_cvd()` (protan/deutan/tritan, sev = 1),
+pairwise delta-E (CIE76) in Lab space. Audit covers first four palette slots per brand
+plus the two design-review-flagged pairs.
+
+**Key findings (delta-E < 10 = indistinguishable; 10–20 = borderline):**
+
+| Brand | CVD type | Worst pair | delta-E | Status |
+|---|---|---|---|---|
+| HDA | tritanopia | Green vs Sea Green (pos 2/6) | **5.97** | **Failure** — severe under tritanopia only |
+| HFV | all three | Sky vs Grass (pos 2/4) | 12.1–12.7 | Borderline — no failure, documented |
+| PHA | deuteranopia | Green vs Light Blue (pos 1/2) | 18.5 | Acceptable |
+| VHA | deuteranopia | Dark Turq vs Light Turq (pos 1/4) | 16.5 | Acceptable |
+| PHA | protan/deutan/tritan | Orange vs Red (pos 3/4) | 22.5–28.9 | **Cleared** (design-review flag not confirmed) |
+
+HDA Green/Sea Green tritanopia failure accepted as documented-only per Q7. Tritanopia
+affects ~0.1 % of the population; the pair only co-occurs in a ≥5-category plot.
+Vignette recommends a secondary encoding if CVD robustness is required there.
+
+HFV Sky/Grass borderline (~12 across all CVD types): teal-family structural issue;
+documented with "use secondary encoding" guidance, same document-only posture.
+
+**Deliverables landed:** `tests/testthat/test-cvd.R` (regression guards, first-4 per
+brand + both flagged pairs); `vignettes/articles/cvd-audit.Rmd`; NEWS.md bullet.
+
+### Session 2 (item 2.2)
+
+- **Scope expanded to continuous + binned.** This session's task brief asked
+  for a continuous *and* binned scale matrix (`_c()`/`_b()`, 18 exports
+  total), one step beyond this doc's original Session 2 spec (`_c()` only,
+  9 exports). Treated as authoritative; `n.breaks = 7` defaults on the binned
+  side since every ramp was tuned/CVD-checked specifically at 7 classes.
+- **HFV `na_color` gap filled.** HFV had no `na_color` (`NULL`) since it never
+  had a continuous scale before. Added `#d6dadd` (a light cool-leaning gray,
+  echoing HFV's Shadow/Sky/Cerulean blues) alongside HDA's `#cfcfd0`/PHA's
+  `#e2e4e3`, confirmed with Jonathan rather than invented silently.
+- **All six R snippets in `plans/ramp-lab/REVIEW.md` re-verified via Rscript**
+  before transcription into the registry — all six reproduced their stated
+  hex exactly.
+- Deprecation `with =` targets added to the three existing
+  `scale_*_gradient_*()` soft-deprecations (this doc's step 4), one session
+  early relative to a strict reading of the numbered steps above, since the
+  replacement functions now exist.
+- **Swatch eyeball check (continuous + binned, all six ramps):** all render as
+  described in `REVIEW.md` — sequential ramps run cream (low) to the brand's
+  dark anchor (high); HDA/PHA diverging run navy-family (low) through cream to
+  brick/coral (high); HFV diverging runs green (low) through cream to
+  berry-magenta (high), with the periwinkle/seafoam transitional band near
+  center that REVIEW.md's HFV-diverging residual-concerns note called out.
+  Binned (n=7) bands match the continuous ramp's color story at each stop. No
+  surprises; nothing to flag beyond what REVIEW.md already documented.

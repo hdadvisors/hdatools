@@ -9,6 +9,7 @@ test_that("themes use no deprecated ggplot2 idioms", {
   expect_no_error(theme_hda(), class = "lifecycle_error_deprecated")
   expect_no_error(theme_hfv(), class = "lifecycle_error_deprecated")
   expect_no_error(theme_pha(), class = "lifecycle_error_deprecated")
+  expect_no_error(theme_vha(), class = "lifecycle_error_deprecated")
 })
 
 test_that("discrete scales use no deprecated ggplot2 idioms", {
@@ -16,9 +17,11 @@ test_that("discrete scales use no deprecated ggplot2 idioms", {
   expect_no_error(scale_fill_hda(), class = "lifecycle_error_deprecated")
   expect_no_error(scale_fill_hfv(), class = "lifecycle_error_deprecated")
   expect_no_error(scale_fill_pha(), class = "lifecycle_error_deprecated")
+  expect_no_error(scale_fill_vha(), class = "lifecycle_error_deprecated")
   expect_no_error(scale_color_hda(), class = "lifecycle_error_deprecated")
   expect_no_error(scale_color_hfv(), class = "lifecycle_error_deprecated")
   expect_no_error(scale_color_pha(), class = "lifecycle_error_deprecated")
+  expect_no_error(scale_color_vha(), class = "lifecycle_error_deprecated")
 })
 
 test_that("gradient scales use no deprecated ggplot2 idioms", {
@@ -78,4 +81,10 @@ test_that("exercised consumer surface builds with no deprecated idioms", {
     scale_fill_pha(direction = -1) +
     theme_pha(base_size = 10)
   expect_no_error(ggplot2::ggplot_build(p2), class = "lifecycle_error_deprecated")
+
+  p3 <- ggplot2::ggplot(d, ggplot2::aes(x, y, fill = g)) +
+    ggplot2::geom_col() +
+    scale_fill_vha() +
+    theme_vha()
+  expect_no_error(ggplot2::ggplot_build(p3), class = "lifecycle_error_deprecated")
 })

@@ -15,7 +15,9 @@ test_that("the bundled font files ship with the package", {
     c("poppins",     "Poppins-SemiBold.ttf"),
     c("noto-sans",   "NotoSans-Regular.ttf"),
     c("noto-sans",   "NotoSans-Bold.ttf"),
-    c("noto-sans",   "NotoSans-Italic.ttf")
+    c("noto-sans",   "NotoSans-Italic.ttf"),
+    c("montserrat",  "Montserrat-Regular.ttf"),
+    c("montserrat",  "Montserrat-SemiBold.ttf")
   )
   for (f in files) {
     path <- system.file("fonts", f[[1]], f[[2]], package = "hdatools")
@@ -24,10 +26,10 @@ test_that("the bundled font files ship with the package", {
   }
 })
 
-test_that("register_hda_fonts() registers the five bundled families offline", {
+test_that("register_hda_fonts() registers the six bundled families offline", {
   expect_true(register_hda_fonts(quiet = TRUE))
   fams <- sysfonts::font_families()
-  for (family in c("Lato", "Roboto Slab", "Open Sans", "Poppins", "Noto Sans")) {
+  for (family in c("Lato", "Roboto Slab", "Open Sans", "Poppins", "Noto Sans", "Montserrat")) {
     expect_true(family %in% fams, info = family)
   }
 })

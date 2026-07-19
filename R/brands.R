@@ -1,6 +1,7 @@
 # Internal brand registry. Single source of truth for the discrete palette,
-# gradient stops, NA colour, font families, and theme parameters that differ
-# per brand. Not exported; read via .brands$<brand>$<field>.
+# gradient stops, NA colour, font families, theme parameters, and continuous
+# ramp anchors that differ per brand. Not exported; read via
+# .brands$<brand>$<field>.
 #
 # Discrete `palette` vectors carry colour-label names; gradient/theme fields
 # do not need them since nothing consumes the labels yet.
@@ -10,6 +11,12 @@
 # base_family instead of a brand-fixed family. `theme_margins` gives the
 # plot.title/subtitle margins (which vary by brand); caption and strip margins
 # are identical across brands and live directly in .brand_theme().
+#
+# `ramps` holds colorspace::sequential_hcl() parameters for the sequential and
+# diverging continuous scales (R/ramps.R builds the hex vectors; R/scales.R
+# exposes them as scale_*_<brand>_c()/scale_*_<brand>_b()). The shared cream
+# light-end/center hue and chroma are fixed design constants, not brand data —
+# see .RAMP_CREAM_H/.RAMP_CREAM_C in R/ramps.R.
 
 .brands <- list(
 
@@ -36,20 +43,33 @@
     theme_margins = list(
       title = ggplot2::margin(b = 10, unit = "pt"),
       subtitle = ggplot2::margin(t = -5, b = 10, unit = "pt")
+    ),
+    # Sequential/diverging HCL ramp anchors (colorspace::sequential_hcl()
+    # parameters), tuned and CVD-verified in the Ramp Lab review
+    # (plans/ramp-lab/REVIEW.md, signed off 2026-07-18). h/c/l1 are the dark
+    # (or arm) end; l2 is the light end/cream-center luminance shared with the
+    # fixed cream hue/chroma constants in R/ramps.R. HDA's diverging ramp is
+    # provisional pending a follow-up pass to differentiate it from PHA's
+    # (see plans/DECISIONS.md, 2026-07-18 row).
+    ramps = list(
+      sequential = list(h1 = 259.2, c1 = 64, l1 = 26, l2 = 95, power = 0.85),
+      diverging  = list(h1 = 259.2, h2 = 20.4, c1 = 76, l1 = 26, l2 = 95, power = 0.90)
     )
   ),
 
   hfv = list(
     palette = c(
-      "Shadow" = "#334a66",
-      "Sky"    = "#66cccc",
-      "Lilac"  = "#a29dd4",
-      "Grass"  = "#50aaa7",
-      "Berry"  = "#c0327e",
-      "Desert" = "#ec7c53"
+      "Shadow"   = "#334a66",
+      "Sky"      = "#66cccc",
+      "Lilac"    = "#a29dd4",
+      "Grass"    = "#50aaa7",
+      "Berry"    = "#c0327e",
+      "Desert"   = "#ec7c53",
+      "Leaf"     = "#6fb547",
+      "Cerulean" = "#7fc7e0"
     ),
     gradient = NULL,
-    na_color = NULL,
+    na_color = "#d6dadd",
     fonts = list(title = "Open Sans", body = "Open Sans"),
     base_size = 14,
     html_adjust = 4,
@@ -59,6 +79,10 @@
     theme_margins = list(
       title = ggplot2::margin(b = 10, unit = "pt"),
       subtitle = ggplot2::margin(t = -5, b = 10, unit = "pt")
+    ),
+    ramps = list(
+      sequential = list(h1 = 118.5, c1 = 65, l1 = 28, l2 = 95, power = 1.00),
+      diverging  = list(h1 = 118.5, h2 = 344.0, c1 = 68, l1 = 26, l2 = 95, power = 0.95)
     )
   ),
 
@@ -84,6 +108,46 @@
     theme_margins = list(
       title = NULL,
       subtitle = ggplot2::margin(t = 5, b = 20, unit = "pt")
+    ),
+    ramps = list(
+      sequential = list(h1 = 19.7, c1 = 84, l1 = 28, l2 = 95, power = 0.95),
+      diverging  = list(h1 = 243.4, h2 = 19.7, c1 = 72, l1 = 26, l2 = 95, power = 0.90)
+    )
+  ),
+
+  vha = list(
+    palette = c(
+      "Dark Turq"   = "#0C4D4F",
+      "Light Green" = "#A0D18E",
+      "Yellow"      = "#ECC51E",
+      "Light Turq"  = "#19787B",
+      "Grey"        = "#2E3030",
+      "Light Blue"  = "#E3F3F5"
+    ),
+    gradient = NULL,
+    na_color = "#d6dbdb",
+    fonts = list(title = "Montserrat", body = "Montserrat"),
+    base_size = 13,
+    html_adjust = 4,
+    pdf_adjust = 7,
+    lineheight = 0.9,
+    theme_fonts = list(
+      title = "Montserrat", subtitle = "Montserrat", caption = "Montserrat", strip = NULL
+    ),
+    theme_margins = list(
+      title = ggplot2::margin(b = 10, unit = "pt"),
+      subtitle = ggplot2::margin(t = -5, b = 10, unit = "pt")
+    ),
+    # Sequential anchors on Dark Turq (h1 = its own HCL hue, c1 near its own
+    # chroma at that lightness). Diverging pairs Dark Turq against Yellow, the
+    # palette's only true warm hue — Yellow's natural HCL lightness (~81) is
+    # too high to survive as a dark, saturated anchor, so that arm renders
+    # golden/olive rather than bright yellow at l1 (a sRGB gamut limit, not a
+    # tuning slip; confirmed via swatch + CVD-sim render). Ships provisional,
+    # same as HDA's diverging ramp — candidate for a follow-up Ramp Lab pass.
+    ramps = list(
+      sequential = list(h1 = 196.3, c1 = 22, l1 = 27, l2 = 95, power = 0.90),
+      diverging  = list(h1 = 196.3, h2 = 67.6, c1 = 70, l1 = 40, l2 = 95, power = 0.90)
     )
   )
 

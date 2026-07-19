@@ -2,7 +2,8 @@
 #'
 #' Registers the font faces bundled in `inst/fonts/` (Lato and Roboto Slab for
 #' `theme_hda()`, Open Sans and Poppins for `theme_hfv()`, Noto Sans for
-#' `theme_pha()`) with \pkg{sysfonts}, then enables \pkg{showtext} rendering.
+#' `theme_pha()`, Montserrat for `theme_vha()`) with \pkg{sysfonts}, then
+#' enables \pkg{showtext} rendering.
 #' Everything is read from files installed with the package, so this never
 #' makes a network request.
 #'
@@ -64,6 +65,12 @@ register_hda_fonts <- function(quiet = FALSE) {
       regular = font_path("noto-sans", "NotoSans-Regular.ttf"),
       bold    = font_path("noto-sans", "NotoSans-Bold.ttf"),
       italic  = font_path("noto-sans", "NotoSans-Italic.ttf")
+    )
+
+    sysfonts::font_add(
+      family  = "Montserrat",
+      regular = font_path("montserrat", "Montserrat-Regular.ttf"),
+      bold    = font_path("montserrat", "Montserrat-SemiBold.ttf")
     )
 
     TRUE

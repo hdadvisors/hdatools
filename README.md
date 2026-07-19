@@ -35,8 +35,23 @@ class.
 - `scale_color_hda()`/`scale_colour_hda()`, `scale_fill_hda()`: HDA-branded discrete color scales
 - `scale_color_hfv()`/`scale_colour_hfv()`, `scale_fill_hfv()`: HFV-branded discrete color scales
 - `scale_color_pha()`/`scale_colour_pha()`, `scale_fill_pha()`: PHA-branded discrete color scales
-- `scale_color_gradient_hda()`/`scale_colour_gradient_hda()`: HDA-branded continuous color scale
-- `scale_color_gradient_pha()`/`scale_colour_gradient_pha()`, `scale_fill_gradient_pha()`: PHA-branded continuous color scales
+- `scale_color_gradient_hda()`/`scale_colour_gradient_hda()`: HDA-branded continuous color scale (deprecated, use `scale_color_hda_c()`)
+- `scale_color_gradient_pha()`/`scale_colour_gradient_pha()`, `scale_fill_gradient_pha()`: PHA-branded continuous color scales (deprecated, use `scale_color_pha_c()`/`scale_fill_pha_c()`)
+
+### Continuous ramp scales
+
+Six `colorspace` HCL sequential/diverging ramps (one pair per brand), tuned
+and CVD-checked in the Ramp Lab review. HDA's diverging ramp is provisional
+(see `NEWS.md`).
+
+- `scale_color_hda_c()`/`scale_colour_hda_c()`, `scale_fill_hda_c()`: HDA-branded continuous color/fill scales
+- `scale_color_hfv_c()`/`scale_colour_hfv_c()`, `scale_fill_hfv_c()`: HFV-branded continuous color/fill scales
+- `scale_color_pha_c()`/`scale_colour_pha_c()`, `scale_fill_pha_c()`: PHA-branded continuous color/fill scales
+- `scale_color_hda_b()`/`scale_colour_hda_b()`, `scale_fill_hda_b()`: HDA-branded binned color/fill scales (7 classes by default)
+- `scale_color_hfv_b()`/`scale_colour_hfv_b()`, `scale_fill_hfv_b()`: HFV-branded binned color/fill scales (7 classes by default)
+- `scale_color_pha_b()`/`scale_colour_pha_b()`, `scale_fill_pha_b()`: PHA-branded binned color/fill scales (7 classes by default)
+
+Each takes `palette = c("sequential", "diverging")` to choose the ramp.
 
 ### Utility Functions
 

@@ -1,3 +1,96 @@
+# hdatools 0.4.0
+
+* New `hda_focus_pal()`/`hfv_focus_pal()`/`pha_focus_pal()`/`vha_focus_pal()`
+  return a focus/emphasis palette for "highlight one series, mute the rest"
+  charts: element 1 is the named brand color hex, elements 2–`n` are the
+  brand's neutral gray. Pass directly to `scale_fill_manual(values = …)` or
+  `scale_colour_manual(values = …)`.
+
+* New `hda_span()`/`hfv_span()`/`pha_span()`/`vha_span()` wrap a text string
+  in `<span style='color:#…'>…</span>` using a named brand color, for use with
+  `ggtext::element_markdown()` and `ggtext::element_textbox()`. Color is
+  resolved through the per-brand `.*_color()` accessor, so invalid names error
+  with the valid list.
+
+* New pkgdown article "CVD accessibility audit" (`vignettes/articles/cvd-audit.Rmd`)
+  documents pairwise perceptual-distance (delta-E, CIE76) results for all four brand
+  palettes under full-severity protanopia, deuteranopia, and tritanopia. Key findings:
+  HDA Green vs Sea Green collapses to delta-E ≈ 6 under tritanopia (positions 2 and 6;
+  use a secondary encoding if both must appear in a tritanopia-sensitive chart); HFV Sky
+  vs Grass is borderline (~12 delta-E) under all CVD types; PHA Orange vs Red — flagged
+  during design review — passes all CVD types (≥ 22). No palette order was changed (Q7,
+  `plans/DECISIONS.md`, 2026-07-18). New `tests/testthat/test-cvd.R` adds
+  `colorspace::simulate_cvd()`-based regression assertions that guard minimum pairwise
+  delta-E for the first four slots of each brand palette.
+
+* Added VHA as a fourth first-class brand: `theme_vha()`, `scale_color_vha()`/
+  `scale_fill_vha()` (+ `scale_colour_vha()` alias), the full
+  `scale_*_vha_c()`/`scale_*_vha_b()` continuous/binned matrix, and
+  `vha_colors`/`vha_color()` — all generated from a single `.brands$vha`
+  registry entry (`R/brands.R`), with no VHA-specific code in `R/scales.R`/
+  `R/themes.R`. Montserrat (OFL) is bundled alongside the existing fonts. See
+  the new pkgdown article "Adding a new client brand to hdatools"
+  (`vignettes/articles/adding-a-brand.Rmd`) for the general pattern this
+  proves out. **VHA's diverging ramp is
+  provisional** — it pairs Dark Turq against Yellow, the palette's only warm
+  hue, but Yellow's natural HCL lightness is too high to survive as a dark,
+  saturated anchor, so that arm renders golden/olive rather than bright
+  yellow (an sRGB gamut limit, not a tuning slip); candidate for a follow-up
+  Ramp Lab pass, same as HDA's diverging ramp.
+* `theme_hda()`/`theme_hfv()`/`theme_pha()` alone now brand a plot with no
+  `scale_*()` call required, via ggplot2 4.0's theme-carried palettes: each
+  theme sets `palette.colour.discrete`/`palette.fill.discrete` to the brand's
+  full discrete palette and `palette.colour.continuous`/
+  `palette.fill.continuous` to the brand's sequential ramp (the same ramps
+  behind `scale_color_hda_c()` and friends). An explicit `scale_*()` call (or
+  a manual `aes()` value) always overrides these theme-carried defaults, so
+  every existing plot that already sets its own scale is unaffected.
+* The same three themes now set a default `geom` fill/colour (via
+  `ggplot2::element_geom()`), so a bare `geom_bar()`/`geom_col()`/
+  `geom_point()`/`geom_line()` with no `fill`/`colour` mapping at all renders
+  in the brand's first palette color instead of ggplot2's stock grey/black.
+* Raised the `ggplot2` dependency floor to `>= 4.0.0` (from `>= 3.5.0`), the
+  version required for the theme-carried palette/`element_geom()` features
+  above.
+* New `scale_color_hda_c()`/`scale_colour_hda_c()`/`scale_fill_hda_c()` (and
+  the matching `hfv`/`pha` versions) — a full continuous color/fill scale
+  matrix (9 exports) built from six `colorspace` HCL sequential/diverging
+  ramps tuned and CVD-checked (protanopia/deuteranopia/tritanopia) in the Ramp
+  Lab review (`plans/ramp-lab/REVIEW.md`). Each takes `palette = c("sequential",
+  "diverging")` to choose the ramp, plus `direction`, `na.value`, and `guide`.
+  Sequential ramps default to higher value = darker color; diverging ramps
+  default to the ramp's own low-to-high arm order as reviewed. **HDA's
+  diverging ramp (Blue vs Coral) is provisional** — it's a near-twin of PHA's
+  and is pending a follow-up Ramp Lab pass to differentiate it before final
+  adoption (`plans/DECISIONS.md`, 2026-07-18).
+* New `scale_color_hda_b()`/`scale_colour_hda_b()`/`scale_fill_hda_b()` (and
+  the matching `hfv`/`pha` versions) — the binned counterpart of the above (9
+  exports), defaulting to `n.breaks = 7`, the class count every ramp was
+  tuned and CVD-checked against.
+* 7-class diverging maps built from any of the six ramps lose sign
+  distinction in their innermost class pair under protanopia (structural to
+  the shared cream center) — always pair a `palette = "diverging"` map with a
+  legend or direct labels (documented on every new scale's help page).
+* `scale_color_gradient_hda()`, `scale_color_gradient_pha()`, and
+  `scale_fill_gradient_pha()`'s existing soft-deprecation notices now name
+  their replacement (e.g. `scale_color_hda_c()`) via `lifecycle`'s
+  `use_instead`, now that one exists.
+* `"Leaf"` (`#6fb547`) and `"Cerulean"` (`#7fc7e0`) join `hfv_colors` and
+  `.brands$hfv$palette` as official HFV secondary colors — both HFV ramps are
+  built on Leaf, and Cerulean was approved alongside it at Ramp Lab sign-off.
+* HFV gets its first `na.value` default (`#d6dadd`), needed now that it has
+  continuous scales for the first time; HDA/PHA already had their own
+  (`#cfcfd0`/`#e2e4e3`).
+* `colorspace` joins Imports (used only internally by the new ramp scales).
+* New `hda_colors`, `hfv_colors`, `pha_colors` — exported named character
+  vectors of each brand's palette hex values, sourced directly from the
+  internal `.brands` registry. Downstream consumers can now reference brand
+  hexes by name (e.g. `hda_colors["Blue"]`) or pass the full vector to
+  `scale_fill_manual(values = hda_colors)` without hardcoding hex strings.
+* New `hda_color()`, `hfv_color()`, `pha_color()` — per-brand accessors that
+  return the hex for a named color and error with the list of valid names on
+  an unknown input.
+
 # hdatools 0.3.0
 
 * New `scale_colour_hda()`, `scale_colour_hfv()`, `scale_colour_pha()`,
