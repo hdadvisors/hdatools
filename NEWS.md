@@ -1,5 +1,35 @@
 # hdatools (development version)
 
+* New `scale_color_hda_c()`/`scale_colour_hda_c()`/`scale_fill_hda_c()` (and
+  the matching `hfv`/`pha` versions) — a full continuous color/fill scale
+  matrix (9 exports) built from six `colorspace` HCL sequential/diverging
+  ramps tuned and CVD-checked (protanopia/deuteranopia/tritanopia) in the Ramp
+  Lab review (`plans/ramp-lab/REVIEW.md`). Each takes `palette = c("sequential",
+  "diverging")` to choose the ramp, plus `direction`, `na.value`, and `guide`.
+  Sequential ramps default to higher value = darker color; diverging ramps
+  default to the ramp's own low-to-high arm order as reviewed. **HDA's
+  diverging ramp (Blue vs Coral) is provisional** — it's a near-twin of PHA's
+  and is pending a follow-up Ramp Lab pass to differentiate it before final
+  adoption (`plans/DECISIONS.md`, 2026-07-18).
+* New `scale_color_hda_b()`/`scale_colour_hda_b()`/`scale_fill_hda_b()` (and
+  the matching `hfv`/`pha` versions) — the binned counterpart of the above (9
+  exports), defaulting to `n.breaks = 7`, the class count every ramp was
+  tuned and CVD-checked against.
+* 7-class diverging maps built from any of the six ramps lose sign
+  distinction in their innermost class pair under protanopia (structural to
+  the shared cream center) — always pair a `palette = "diverging"` map with a
+  legend or direct labels (documented on every new scale's help page).
+* `scale_color_gradient_hda()`, `scale_color_gradient_pha()`, and
+  `scale_fill_gradient_pha()`'s existing soft-deprecation notices now name
+  their replacement (e.g. `scale_color_hda_c()`) via `lifecycle`'s
+  `use_instead`, now that one exists.
+* `"Leaf"` (`#6fb547`) and `"Cerulean"` (`#7fc7e0`) join `hfv_colors` and
+  `.brands$hfv$palette` as official HFV secondary colors — both HFV ramps are
+  built on Leaf, and Cerulean was approved alongside it at Ramp Lab sign-off.
+* HFV gets its first `na.value` default (`#d6dadd`), needed now that it has
+  continuous scales for the first time; HDA/PHA already had their own
+  (`#cfcfd0`/`#e2e4e3`).
+* `colorspace` joins Imports (used only internally by the new ramp scales).
 * New `hda_colors`, `hfv_colors`, `pha_colors` — exported named character
   vectors of each brand's palette hex values, sourced directly from the
   internal `.brands` registry. Downstream consumers can now reference brand

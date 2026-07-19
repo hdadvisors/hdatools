@@ -153,3 +153,101 @@ test_that("scale_colour_gradient_*() aliases are identical to scale_color_gradie
   expect_identical(scale_colour_gradient_hda, scale_color_gradient_hda)
   expect_identical(scale_colour_gradient_pha, scale_color_gradient_pha)
 })
+
+test_that("scale_*_gradient_*() deprecations now name their _c() replacement", {
+  withr::local_options(lifecycle_verbosity = "warning")
+  lifecycle::expect_deprecated(scale_color_gradient_hda(), "scale_color_hda_c")
+  lifecycle::expect_deprecated(scale_color_gradient_pha(), "scale_color_pha_c")
+  lifecycle::expect_deprecated(scale_fill_gradient_pha(), "scale_fill_pha_c")
+})
+
+# --- Continuous/binned ramp scales (item 2.2, new in 0.4.0) ----------------
+
+test_that("continuous sequential scales default to higher value = darker (dark = high convention)", {
+  hda_c <- scale_color_hda_c()
+  expect_identical(toupper(hda_c$palette(0)), "#F3F1E4")
+  expect_identical(toupper(hda_c$palette(1)), "#0A388A")
+
+  hfv_c <- scale_fill_hfv_c()
+  expect_identical(toupper(hfv_c$palette(0)), "#F3F1E4")
+  expect_identical(toupper(hfv_c$palette(1)), "#005000")
+
+  pha_c <- scale_color_pha_c()
+  expect_identical(toupper(pha_c$palette(0)), "#F3F1E4")
+  expect_identical(toupper(pha_c$palette(1)), "#811C00")
+})
+
+test_that("continuous diverging scales keep the ramp's own arm1 -> arm2 order", {
+  hda_div <- scale_fill_hda_c(palette = "diverging")
+  expect_identical(toupper(hda_div$palette(0)), "#00369B")
+  expect_identical(toupper(hda_div$palette(1)), "#781C00")
+
+  pha_div <- scale_color_pha_c(palette = "diverging")
+  expect_identical(toupper(pha_div$palette(0)), "#00468E")
+  expect_identical(toupper(pha_div$palette(1)), "#761E00")
+})
+
+test_that("direction = -1 reverses continuous scale endpoints", {
+  hda_c <- scale_color_hda_c(direction = -1)
+  expect_identical(toupper(hda_c$palette(0)), "#0A388A")
+  expect_identical(toupper(hda_c$palette(1)), "#F3F1E4")
+
+  hda_div <- scale_fill_hda_c(palette = "diverging", direction = -1)
+  expect_identical(toupper(hda_div$palette(0)), "#781C00")
+  expect_identical(toupper(hda_div$palette(1)), "#00369B")
+})
+
+test_that("continuous/binned scale na.value defaults are the brand greys, including HFV's new one", {
+  expect_identical(scale_color_hda_c()$na.value, "#cfcfd0")
+  expect_identical(scale_fill_hfv_c()$na.value, "#d6dadd")
+  expect_identical(scale_color_pha_c()$na.value, "#e2e4e3")
+  expect_identical(scale_fill_hda_b()$na.value, "#cfcfd0")
+  expect_identical(scale_color_hfv_b()$na.value, "#d6dadd")
+  expect_identical(scale_fill_pha_b()$na.value, "#e2e4e3")
+})
+
+test_that("binned scales default to n.breaks = 7", {
+  expect_identical(scale_color_hda_b()$n.breaks, 7)
+  expect_identical(scale_fill_hfv_b()$n.breaks, 7)
+  expect_identical(scale_color_pha_b(palette = "diverging")$n.breaks, 7)
+})
+
+test_that("palette argument validates and errors on an unknown value", {
+  expect_error(scale_color_hda_c(palette = "not-a-palette"))
+  expect_error(scale_fill_hfv_b(palette = "not-a-palette"))
+})
+
+test_that("scale_colour_*_c()/_b() aliases are identical to scale_color_*_c()/_b()", {
+  expect_identical(scale_colour_hda_c, scale_color_hda_c)
+  expect_identical(scale_colour_hfv_c, scale_color_hfv_c)
+  expect_identical(scale_colour_pha_c, scale_color_pha_c)
+  expect_identical(scale_colour_hda_b, scale_color_hda_b)
+  expect_identical(scale_colour_hfv_b, scale_color_hfv_b)
+  expect_identical(scale_colour_pha_b, scale_color_pha_b)
+})
+
+test_that("scale_fill_hda_c() maps a continuous variable into the built plot", {
+  d <- data.frame(x = 1:3, y = 1:3, v = c(0, 50, 100))
+  bd <- ggplot2::ggplot_build(
+    ggplot2::ggplot(d, ggplot2::aes(x, y, fill = v)) +
+      ggplot2::geom_tile() + scale_fill_hda_c()
+  )
+  fills <- toupper(bd$data[[1]]$fill)
+  expect_identical(fills[1], "#F3F1E4")
+  expect_identical(fills[3], "#0A388A")
+})
+
+test_that("scale_fill_hda_b() discretizes a continuous variable in the built plot", {
+  d <- data.frame(x = 1:20, y = 1:20, v = seq(0, 100, length.out = 20))
+  bd <- ggplot2::ggplot_build(
+    ggplot2::ggplot(d, ggplot2::aes(x, y, fill = v)) +
+      ggplot2::geom_tile() + scale_fill_hda_b()
+  )
+  n_classes <- length(unique(bd$data[[1]]$fill))
+  expect_true(n_classes <= 8 && n_classes >= 5)
+})
+
+test_that("HFV palette includes the new Leaf and Cerulean colors", {
+  expect_identical(unname(hfv_colors["Leaf"]), "#6fb547")
+  expect_identical(unname(hfv_colors["Cerulean"]), "#7fc7e0")
+})

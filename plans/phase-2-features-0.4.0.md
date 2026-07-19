@@ -236,4 +236,29 @@ clone" (vhtf, after this phase) and "delete local hardcoded hex vectors"
 
 ## Findings (filled in during sessions)
 
-*(none yet — phase not started)*
+### Session 2 (item 2.2)
+
+- **Scope expanded to continuous + binned.** This session's task brief asked
+  for a continuous *and* binned scale matrix (`_c()`/`_b()`, 18 exports
+  total), one step beyond this doc's original Session 2 spec (`_c()` only,
+  9 exports). Treated as authoritative; `n.breaks = 7` defaults on the binned
+  side since every ramp was tuned/CVD-checked specifically at 7 classes.
+- **HFV `na_color` gap filled.** HFV had no `na_color` (`NULL`) since it never
+  had a continuous scale before. Added `#d6dadd` (a light cool-leaning gray,
+  echoing HFV's Shadow/Sky/Cerulean blues) alongside HDA's `#cfcfd0`/PHA's
+  `#e2e4e3`, confirmed with Jonathan rather than invented silently.
+- **All six R snippets in `plans/ramp-lab/REVIEW.md` re-verified via Rscript**
+  before transcription into the registry — all six reproduced their stated
+  hex exactly.
+- Deprecation `with =` targets added to the three existing
+  `scale_*_gradient_*()` soft-deprecations (this doc's step 4), one session
+  early relative to a strict reading of the numbered steps above, since the
+  replacement functions now exist.
+- **Swatch eyeball check (continuous + binned, all six ramps):** all render as
+  described in `REVIEW.md` — sequential ramps run cream (low) to the brand's
+  dark anchor (high); HDA/PHA diverging run navy-family (low) through cream to
+  brick/coral (high); HFV diverging runs green (low) through cream to
+  berry-magenta (high), with the periwinkle/seafoam transitional band near
+  center that REVIEW.md's HFV-diverging residual-concerns note called out.
+  Binned (n=7) bands match the continuous ramp's color story at each stop. No
+  surprises; nothing to flag beyond what REVIEW.md already documented.
