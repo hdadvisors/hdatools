@@ -1,3 +1,6 @@
+> **ARCHIVED — completed.** Phase 2 gate interview concluded 2026-07-17 (PR #17);
+> decisions recorded in DECISIONS.md. Kept for historical reference; content below is unedited.
+
 # Phase 2 gate interview — session prompt
 
 > **Purpose.** Kickoff instructions for a Claude Code cloud session that

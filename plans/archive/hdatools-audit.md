@@ -1,3 +1,6 @@
+> **ARCHIVED — completed.** Post-v0.2.0 audit session, 2026-07-15; all findings addressed
+> before Phase 0 kicked off. Kept for historical reference; content below is unedited.
+
 \# hdatools post-v0.2.0 audit — findings and follow-up plan
 
 

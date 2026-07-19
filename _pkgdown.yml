@@ -22,8 +22,6 @@ navbar:
     articles:
       text: Articles
       menu:
-      - text: Using branded ggplot2 themes
-        href: articles/branded-themes.html
       - text: CVD accessibility audit
         href: articles/cvd-audit.html
       - text: Adding a new client brand

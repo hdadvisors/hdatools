@@ -4,8 +4,7 @@ Title: Tools and Themes for 'HDAdvisors' Projects
 Version: 0.4.0
 Authors@R: c(
     person("Jonathan", "Knopf", email = "jonathan@hdadvisors.net", role = "cre"),
-    person("Kyle", "Walker", email = "kyle@walker-data.com", role = "aut"),
-    person("Eric", "Mai", email = "eric@hdadvisors.net", role = "aut"))
+    person("Kyle", "Walker", email = "kyle@walker-data.com", role = "aut"))
 Description: Tools and workflows for HDAdvisors and HousingForward Virginia Projects.
     Functions include general analytical utilities and custom ggplot2 themes.
 License: file LICENSE
