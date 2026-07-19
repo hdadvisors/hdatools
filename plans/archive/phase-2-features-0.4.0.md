@@ -1,3 +1,5 @@
+> **ARCHIVED — completed 2026-07-19.** All seven Tier 2 items landed; 405 tests passing; PR #19 squash-merged to main; tagged v0.4.0.
+
 # Phase 2 — Features (release 0.4.0)
 
 | | |
