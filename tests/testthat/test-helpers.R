@@ -22,6 +22,26 @@ test_that("get_output_format returns studio outside a knitr render", {
   expect_equal(get_output_format(), "studio")
 })
 
+test_that("get_output_format returns typst when pandoc_to() reports typst", {
+  withr::local_options(knitr.in.progress = TRUE)
+  local_mocked_bindings(
+    is_html_output = function(...) FALSE,
+    pandoc_to = function(...) "typst",
+    .package = "knitr"
+  )
+  expect_equal(get_output_format(), "typst")
+})
+
+test_that("get_output_format returns docx when pandoc_to() reports docx", {
+  withr::local_options(knitr.in.progress = TRUE)
+  local_mocked_bindings(
+    is_html_output = function(...) FALSE,
+    pandoc_to = function(...) "docx",
+    .package = "knitr"
+  )
+  expect_equal(get_output_format(), "docx")
+})
+
 test_that("add_zero_line draws a line at the expected linewidth and colour", {
   d <- data.frame(x = letters[1:3], y = 1:3)
   bd <- suppressWarnings(ggplot2::ggplot_build(

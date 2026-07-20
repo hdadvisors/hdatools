@@ -136,13 +136,15 @@ markdown_wrap_gen <- function(width = 25) {
 #'
 #' This function checks the current environment to determine whether the code
 #' is being run in an interactive session (like RStudio), or as part of rendering
-#' an HTML or PDF document.
+#' an HTML, PDF, Typst, or Word document.
 #'
 #' @param manual_format An optional string specifying the format. If provided,
 #'   this overrides the automatic detection.
 #'
-#' @return A string indicating the detected format: "studio" for interactive
-#'   sessions, "html" for HTML output, or "pdf" for PDF output.
+#' @return A string indicating the detected format: `"studio"` for interactive
+#'   sessions, `"html"` for HTML output, `"typst"` for Typst output, `"docx"`
+#'   for Word output, or `"pdf"` for PDF/LaTeX and any other non-HTML knitr
+#'   output.
 #'
 #' @examples
 #' # Automatic detection
@@ -155,22 +157,22 @@ markdown_wrap_gen <- function(width = 25) {
 get_output_format <- function(manual_format = NULL) {
   if (!is.null(manual_format)) {
     return(manual_format)
-  } else {
-    # Check if we're in a knitr context
-    in_knitr <- isTRUE(getOption('knitr.in.progress'))
-
-    if (in_knitr) {
-      # We're rendering a document
-      if (knitr::is_html_output()) {
-        return("html")
-      } else {
-        return("pdf")
-      }
-    } else {
-      # We're likely in RStudio or another interactive environment
-      return("studio")
-    }
   }
+
+  in_knitr <- isTRUE(getOption('knitr.in.progress'))
+
+  if (!in_knitr) {
+    return("studio")
+  }
+
+  if (knitr::is_html_output()) {
+    return("html")
+  }
+
+  fmt <- tryCatch(knitr::pandoc_to(), error = function(e) NULL)
+  if (identical(fmt, "typst")) return("typst")
+  if (identical(fmt, "docx")) return("docx")
+  return("pdf")
 }
 
 #' Adjust base size for different output formats
