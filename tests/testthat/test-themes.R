@@ -227,12 +227,12 @@ test_that("theme_*() carry the brand's sequential ramp as palette.*.continuous",
   }
 })
 
-test_that("theme_*() default geom fill/colour to the brand's first palette color", {
+test_that("theme_*() default geom fill to brand's first palette color; colour is NA", {
   for (brand in names(brand_themes)) {
     first <- unname(.brands[[brand]]$palette)[1]
     geom_el <- ggplot2::calc_element("geom", brand_themes[[brand]])
     expect_identical(geom_el$fill, first)
-    expect_identical(geom_el$colour, first)
+    expect_true(is.na(geom_el$colour))
   }
 })
 
