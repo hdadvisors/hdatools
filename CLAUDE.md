@@ -117,7 +117,8 @@ Run these in order after changing R source or roxygen comments:
 
 Consumer rollout (pinned repos: pha-update-2026, fhfh, faar) happens in those
 repos' own sessions — bump the pin, `renv::snapshot()`, re-render, compare. Never
-force a consumer bump as a drive-by.
+force a consumer bump as a drive-by. See [`plans/consumer-rollout.md`](plans/consumer-rollout.md)
+for the reusable procedure.
 
 ## Skills
 
@@ -132,18 +133,12 @@ force a consumer bump as a drive-by.
 They assume R is on PATH with inline `Rscript -e`; use the temp-file convention
 above instead.
 
-## Development dashboard
+## Contributing and dev process
 
-A local HTML dashboard at `plans/dashboard/` tracks phases, branches/PRs,
-decisions, and release state, generated from ROADMAP.md, DECISIONS.md, the
-phase plans, NEWS.md, DESCRIPTION, and live git/gh data. **Re-run the
-generator after any commit that changes project state** (phase status, NEWS,
-DESCRIPTION, branch/PR changes): `python plans/dashboard/generate_dashboard.py`,
-or double-click `plans\dashboard\update-dashboard.bat` to regenerate and open
-it. `dashboard.html` and `gh-cache.json` are gitignored (generated, not
-committed). The plan docs are the source of truth — when the dashboard shows
-consistency warnings, fix the docs by hand; never treat the dashboard itself
-as authoritative.
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the getting-started guide,
+versioning convention, release-when-ready flow, NEWS/test/docs rules, and how
+to file issues. The release checklist below is the authoritative step list;
+CONTRIBUTING.md references it.
 
 ## Planning docs
 

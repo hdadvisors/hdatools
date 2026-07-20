@@ -1,3 +1,5 @@
+> **ARCHIVED — 2026-07-20. v0.5.0-specific rollout notes; superseded by the generic procedure at [`plans/consumer-rollout.md`](consumer-rollout.md). Consumer-repo issues (pin bump, ragg_png config) to be filed in each repo's own session.**
+
 # Consumer rollout guide — hdatools v0.5.0
 
 **Status:** not yet executed. Written after the hdatools v0.5.0 release

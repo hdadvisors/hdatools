@@ -1,3 +1,5 @@
+> **ARCHIVED — 2026-07-20. The phase-gate model is retired. Ongoing work is tracked via GitHub Issues; see CONTRIBUTING.md for the current process.**
+
 # hdatools modernization roadmap
 
 > **Status:** live. Created 2026-07-16 from the approved design review
