@@ -22,6 +22,8 @@ navbar:
     articles:
       text: Articles
       menu:
+      - text: Using branded themes
+        href: articles/branded-themes.html
       - text: Migrating from showtext to ragg
         href: articles/ragg-migration.html
       - text: CVD accessibility audit

@@ -1,8 +1,12 @@
+> **ARCHIVED — completed 2026-07-20.** All four sessions landed; the fhfh
+> side-by-side render comparison was signed off pre-tag; released as v0.5.0
+> (PR #22, tagged). See NEWS.md.
+
 # Phase 3 — Fonts (release 0.5.0)
 
 | | |
 |---|---|
-| **Status** | Session 2 complete — Session 3 pending |
+| **Status** | Complete — all sessions landed; released v0.5.0 |
 | **Branch** | `release-0.5.0` (off `main`) |
 | **Target version** | `0.5.0` |
 | **Entry criteria** | Phase 2 merged and tagged `v0.4.0` |
@@ -185,3 +189,13 @@ before tagging.
     registered family to its exact bundled TTF path (not a system
     substitute), and a `ragg::agg_png()`-rendered PNG using a registered
     family succeeds. `devtools::test()`: 364 pass / 0 fail.
+
+- **Session 3 complete (2026-07-20):** fhfh side-by-side render comparison
+  (0.4.0 vs 0.5.0) signed off pre-tag. Added
+  `vignettes/articles/ragg-migration.Rmd` (the `dev: ragg_png` guidance), and
+  extended `get_output_format()` to distinguish `"typst"`/`"docx"` from
+  `"pdf"`.
+
+- **Session 4 complete (2026-07-20):** released 0.5.0 per the CLAUDE.md
+  checklist — `devtools::check()` clean, pkgdown site rebuilt, PR #22
+  squash-merged to `main`, tag `v0.5.0` pushed.

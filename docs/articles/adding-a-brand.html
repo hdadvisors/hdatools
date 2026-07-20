@@ -34,7 +34,8 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/ragg-migration.html">Migrating from showtext to ragg</a></li>
+<li><a class="dropdown-item" href="../articles/branded-themes.html">Using branded themes</a></li>
+    <li><a class="dropdown-item" href="../articles/ragg-migration.html">Migrating from showtext to ragg</a></li>
     <li><a class="dropdown-item" href="../articles/cvd-audit.html">CVD accessibility audit</a></li>
     <li><a class="dropdown-item" href="../articles/adding-a-brand.html">Adding a new client brand</a></li>
   </ul>
@@ -85,9 +86,9 @@ invent or infer them):</p>
 <li>The brand’s hex palette, with a label for each color.</li>
 <li>Rights to bundle the brand’s font(s) — hdatools ships static
 <code>.ttf</code> files in <code>inst/fonts/</code>, registered offline
-via <code><a href="https://rdrr.io/pkg/sysfonts/man/font_add.html" class="external-link">sysfonts::font_add()</a></code> (never a network fetch like
-<code><a href="https://rdrr.io/pkg/sysfonts/man/font_add_google.html" class="external-link">sysfonts::font_add_google()</a></code>), so redistribution rights
-matter, not just “the font looks free.”</li>
+via <code><a href="https://systemfonts.r-lib.org/reference/register_font.html" class="external-link">systemfonts::register_font()</a></code> (from the bundled file,
+never fetched from a font server), so redistribution rights matter, not
+just “the font looks free.”</li>
 <li>Any design decisions specific to the brand (base text size,
 output-format size adjustments, line height, title/subtitle margins) if
 the client already has an existing house style to match.</li>
@@ -150,7 +151,7 @@ that looks wrong.</p>
 alongside its license file, add a manifest row to
 <code>inst/fonts/LICENSES.md</code>, and register it in
 <code><a href="../reference/register_hda_fonts.html">register_hda_fonts()</a></code> (<code>R/theme_helpers.R</code>) with
-<code><a href="https://rdrr.io/pkg/sysfonts/man/font_add.html" class="external-link">sysfonts::font_add()</a></code>.</p>
+<code><a href="https://systemfonts.r-lib.org/reference/register_font.html" class="external-link">systemfonts::register_font()</a></code>.</p>
 </div>
 <div class="section level2">
 <h2 id="add-the-one-line-wrapper-exports">3. Add the one-line wrapper exports<a class="anchor" aria-label="anchor" href="#add-the-one-line-wrapper-exports"></a>

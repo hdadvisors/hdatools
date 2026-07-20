@@ -37,7 +37,7 @@ touching the next one.
   needed. `git diff`/`git show` after rendering tells you exactly what
   changed.
 - `fhfh/_quarto.yml` already sets `knitr: opts_chunk: dev: "ragg_png"` (line
-  11) — needed for hdatools' systemfonts-based font stack (0.3.0+) to
+  11) — needed for hdatools' systemfonts-based font stack (0.5.0) to
   actually render the bundled brand fonts. **`pha-update-2026/_quarto.yml`
   does not have this set.** Expect font-rendering differences in
   `pha-update-2026`'s figures after the bump — that's the known,

@@ -6,7 +6,7 @@ output: html_document
 ```{r setup, include=FALSE}
 
 knitr::opts_chunk$set(message = FALSE, warning = FALSE, fig.width = 8,
-                      fig.showtext = TRUE)
+                      dev = "ragg_png")
 
 ```
 
@@ -27,8 +27,8 @@ or infer them):
 
 - The brand's hex palette, with a label for each color.
 - Rights to bundle the brand's font(s) — hdatools ships static `.ttf` files
-  in `inst/fonts/`, registered offline via `sysfonts::font_add()` (never a
-  network fetch like `sysfonts::font_add_google()`), so redistribution
+  in `inst/fonts/`, registered offline via `systemfonts::register_font()`
+  (from the bundled file, never fetched from a font server), so redistribution
   rights matter, not just "the font looks free."
 - Any design decisions specific to the brand (base text size, output-format
   size adjustments, line height, title/subtitle margins) if the client
@@ -89,7 +89,7 @@ rather than silently shipping a ramp that looks wrong.
 If the brand introduces a new font family, bundle its static `.ttf` files
 under `inst/fonts/<family>/` alongside its license file, add a manifest row
 to `inst/fonts/LICENSES.md`, and register it in `register_hda_fonts()`
-(`R/theme_helpers.R`) with `sysfonts::font_add()`.
+(`R/theme_helpers.R`) with `systemfonts::register_font()`.
 
 ## 3. Add the one-line wrapper exports
 

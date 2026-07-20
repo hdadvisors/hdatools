@@ -64,10 +64,13 @@ Run these in order after changing R source or roxygen comments:
      assuming a path. (Cloud sessions get a system `pandoc` from the
      SessionStart hook, already on `PATH` — this workaround is for local
      sessions without RStudio/Quarto installed.)
-   - `build_site()` re-knits `vignettes/articles/branded-themes.Rmd`, which needs
-     tidycensus + a Census API key + network and will fail offline. For doc/theme
-     changes, rebuild only what changed instead:
-     `init_site()` + `build_home()` + `build_reference()` + `build_news()`.
+   - `build_site()` re-knits every article in `vignettes/articles/`. As of
+     0.5.0 `branded-themes.Rmd` uses a small bundled data table instead of a
+     live `tidycensus::get_acs()` call, so it no longer needs a Census API key
+     or network to build. For faster doc/theme iteration you can still rebuild
+     only what changed:
+     `init_site()` + `build_home()` + `build_reference()` + `build_news()` +
+     `build_articles()`.
 
 ## Generated files — never hand-edit
 

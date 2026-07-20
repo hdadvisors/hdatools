@@ -36,7 +36,8 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/ragg-migration.html">Migrating from showtext to ragg</a></li>
+<li><a class="dropdown-item" href="articles/branded-themes.html">Using branded themes</a></li>
+    <li><a class="dropdown-item" href="articles/ragg-migration.html">Migrating from showtext to ragg</a></li>
     <li><a class="dropdown-item" href="articles/cvd-audit.html">CVD accessibility audit</a></li>
     <li><a class="dropdown-item" href="articles/adding-a-brand.html">Adding a new client brand</a></li>
   </ul>
@@ -62,7 +63,7 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/install-deprecated.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"hdadvisors/hdatools"</span><span class="op">)</span></span></code></pre></div>
-<p>hdatools bundles the Lato, Roboto Slab, Open Sans, Poppins, and Noto Sans faces used by its themes and registers them with systemfonts offline the first time the package loads — no network request, no per-session Google Fonts download. To skip registration (for example, to supply your own font setup), set <code>options(hdatools.fonts = FALSE)</code> or the environment variable <code>HDATOOLS_NO_FONTS</code> before loading the package.</p>
+<p>hdatools bundles the Lato, Roboto Slab, Open Sans, Poppins, Noto Sans, and Montserrat faces used by its themes and registers them with systemfonts offline the first time the package loads — no network request, no per-session Google Fonts download. To skip registration (for example, to supply your own font setup), set <code>options(hdatools.fonts = FALSE)</code> or the environment variable <code>HDATOOLS_NO_FONTS</code> before loading the package.</p>
 <p>Rendering plots with these fonts requires a systemfonts-aware graphics device. In a Quarto document, add the following to <code>_quarto.yml</code> (the default Cairo device does not consult the systemfonts registry, so without this the bundled fonts won’t appear in rendered output):</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">knitr</span><span class="kw">:</span></span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="at">  </span><span class="fu">opts_chunk</span><span class="kw">:</span></span>
@@ -81,6 +82,8 @@
 <code><a href="reference/theme_hfv.html">theme_hfv()</a></code>: HousingForward Virginia-branded ggplot2 theme</li>
 <li>
 <code><a href="reference/theme_pha.html">theme_pha()</a></code>: PHA-branded ggplot2 theme</li>
+<li>
+<code><a href="reference/theme_vha.html">theme_vha()</a></code>: VHA-branded ggplot2 theme</li>
 </ul>
 <p>Under ggplot2 &gt;= 4.0, override a theme’s <code>strip.text</code> (e.g. for faceted plots) with <code><a href="https://wilkelab.org/ggtext/reference/element_markdown.html" class="external-link">ggtext::element_markdown()</a></code>, never a raw <code><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">ggplot2::element_text()</a></code> — the themes’ own strip element is a ggtext markdown element, and ggplot2 4.0 only merges theme elements of the same class.</p>
 </div>
@@ -95,15 +98,13 @@
 <li>
 <code><a href="reference/scale_color_pha.html">scale_color_pha()</a></code>/<code><a href="reference/scale_color_pha.html">scale_colour_pha()</a></code>, <code><a href="reference/scale_fill_pha.html">scale_fill_pha()</a></code>: PHA-branded discrete color scales</li>
 <li>
-<code>scale_color_gradient_hda()</code>/<code>scale_colour_gradient_hda()</code>: HDA-branded continuous color scale (deprecated, use <code><a href="reference/scale_color_hda_c.html">scale_color_hda_c()</a></code>)</li>
-<li>
-<code>scale_color_gradient_pha()</code>/<code>scale_colour_gradient_pha()</code>, <code>scale_fill_gradient_pha()</code>: PHA-branded continuous color scales (deprecated, use <code><a href="reference/scale_color_pha_c.html">scale_color_pha_c()</a></code>/<code><a href="reference/scale_fill_pha_c.html">scale_fill_pha_c()</a></code>)</li>
+<code><a href="reference/scale_color_vha.html">scale_color_vha()</a></code>/<code><a href="reference/scale_color_vha.html">scale_colour_vha()</a></code>, <code><a href="reference/scale_fill_vha.html">scale_fill_vha()</a></code>: VHA-branded discrete color scales</li>
 </ul>
 </div>
 <div class="section level3">
 <h3 id="continuous-ramp-scales">Continuous ramp scales<a class="anchor" aria-label="anchor" href="#continuous-ramp-scales"></a>
 </h3>
-<p>Six <code>colorspace</code> HCL sequential/diverging ramps (one pair per brand), tuned and CVD-checked in the Ramp Lab review. HDA’s diverging ramp is provisional (see <code>NEWS.md</code>).</p>
+<p>Sequential and diverging <code>colorspace</code> HCL ramps, one pair per brand. The HDA/HFV/PHA ramps were tuned and CVD-checked in the Ramp Lab review; VHA’s pair was generated by the same method when VHA was added. HDA’s and VHA’s diverging ramps are provisional (see <code>NEWS.md</code>).</p>
 <ul>
 <li>
 <code><a href="reference/scale_color_hda_c.html">scale_color_hda_c()</a></code>/<code><a href="reference/scale_color_hda_c.html">scale_colour_hda_c()</a></code>, <code><a href="reference/scale_fill_hda_c.html">scale_fill_hda_c()</a></code>: HDA-branded continuous color/fill scales</li>
@@ -112,11 +113,15 @@
 <li>
 <code><a href="reference/scale_color_pha_c.html">scale_color_pha_c()</a></code>/<code><a href="reference/scale_color_pha_c.html">scale_colour_pha_c()</a></code>, <code><a href="reference/scale_fill_pha_c.html">scale_fill_pha_c()</a></code>: PHA-branded continuous color/fill scales</li>
 <li>
+<code><a href="reference/scale_color_vha_c.html">scale_color_vha_c()</a></code>/<code><a href="reference/scale_color_vha_c.html">scale_colour_vha_c()</a></code>, <code><a href="reference/scale_fill_vha_c.html">scale_fill_vha_c()</a></code>: VHA-branded continuous color/fill scales</li>
+<li>
 <code><a href="reference/scale_color_hda_b.html">scale_color_hda_b()</a></code>/<code><a href="reference/scale_color_hda_b.html">scale_colour_hda_b()</a></code>, <code><a href="reference/scale_fill_hda_b.html">scale_fill_hda_b()</a></code>: HDA-branded binned color/fill scales (7 classes by default)</li>
 <li>
 <code><a href="reference/scale_color_hfv_b.html">scale_color_hfv_b()</a></code>/<code><a href="reference/scale_color_hfv_b.html">scale_colour_hfv_b()</a></code>, <code><a href="reference/scale_fill_hfv_b.html">scale_fill_hfv_b()</a></code>: HFV-branded binned color/fill scales (7 classes by default)</li>
 <li>
 <code><a href="reference/scale_color_pha_b.html">scale_color_pha_b()</a></code>/<code><a href="reference/scale_color_pha_b.html">scale_colour_pha_b()</a></code>, <code><a href="reference/scale_fill_pha_b.html">scale_fill_pha_b()</a></code>: PHA-branded binned color/fill scales (7 classes by default)</li>
+<li>
+<code><a href="reference/scale_color_vha_b.html">scale_color_vha_b()</a></code>/<code><a href="reference/scale_color_vha_b.html">scale_colour_vha_b()</a></code>, <code><a href="reference/scale_fill_vha_b.html">scale_fill_vha_b()</a></code>: VHA-branded binned color/fill scales (7 classes by default)</li>
 </ul>
 <p>Each takes <code>palette = c("sequential", "diverging")</code> to choose the ramp.</p>
 </div>
@@ -144,6 +149,15 @@
 <code><a href="reference/adjust_base_size.html">adjust_base_size()</a></code>: Adjust a base font size for the detected output format</li>
 <li>
 <code><a href="reference/register_hda_fonts.html">register_hda_fonts()</a></code>: Register hdatools’ bundled fonts (called automatically on load)</li>
+<li>
+<code>hda_colors</code>/<code>hfv_colors</code>/<code>pha_colors</code>/<code>vha_colors</code>: Named character vectors of each brand’s palette hex values</li>
+<li>
+<code><a href="reference/hda_color.html">hda_color()</a></code>/<code><a href="reference/hfv_color.html">hfv_color()</a></code>/<code><a href="reference/pha_color.html">pha_color()</a></code>/<code><a href="reference/vha_color.html">vha_color()</a></code>: Return the hex for a named brand color (errors with the valid list on an unknown name)</li>
+<li>
+<code><a href="reference/hda_span.html">hda_span()</a></code>/<code><a href="reference/hfv_span.html">hfv_span()</a></code>/<code><a href="reference/pha_span.html">pha_span()</a></code>/<code><a href="reference/vha_span.html">vha_span()</a></code>: Wrap text in a colored <code>&lt;span&gt;</code> for use with <code><a href="https://wilkelab.org/ggtext/reference/element_markdown.html" class="external-link">ggtext::element_markdown()</a></code>
+</li>
+<li>
+<code><a href="reference/hda_focus_pal.html">hda_focus_pal()</a></code>/<code><a href="reference/hfv_focus_pal.html">hfv_focus_pal()</a></code>/<code><a href="reference/pha_focus_pal.html">pha_focus_pal()</a></code>/<code><a href="reference/vha_focus_pal.html">vha_focus_pal()</a></code>: Focus/emphasis palette — highlight one series in the brand color, mute the rest to gray</li>
 </ul>
 </div>
 </div>
