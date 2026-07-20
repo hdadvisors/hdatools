@@ -1,4 +1,17 @@
-# hdatools (development version)
+# hdatools 0.5.0
+
+* Fixed an unwanted stroke outline on `geom_col()`/`geom_bar()` bars: brand
+  themes (`theme_hda()`, `theme_hfv()`, `theme_pha()`, `theme_vha()`) now set
+  `colour = NA` in their `ggplot2::element_geom()` default instead of the
+  fill color, so column/bar charts no longer render a visible border
+  (closes #21).
+
+* `get_output_format()` now distinguishes `"typst"` and `"docx"` output from
+  `"pdf"` instead of folding all three into `"pdf"`.
+
+* The "Using branded themes in hdatools" article no longer requires a
+  Census API key or network access to build — it now uses a small bundled
+  data table instead of a live `tidycensus::get_acs()` call.
 
 * Replaced the `showtext`/`sysfonts` font stack with `systemfonts`
   (`ragg` moved to Suggests, as a recommended rendering device — hdatools

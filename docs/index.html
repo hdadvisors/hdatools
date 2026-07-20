@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">hdatools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,7 +36,8 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/cvd-audit.html">CVD accessibility audit</a></li>
+<li><a class="dropdown-item" href="articles/ragg-migration.html">Migrating from showtext to ragg</a></li>
+    <li><a class="dropdown-item" href="articles/cvd-audit.html">CVD accessibility audit</a></li>
     <li><a class="dropdown-item" href="articles/adding-a-brand.html">Adding a new client brand</a></li>
   </ul>
 </li>
@@ -61,7 +62,11 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/install-deprecated.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"hdadvisors/hdatools"</span><span class="op">)</span></span></code></pre></div>
-<p>hdatools bundles the Lato, Roboto Slab, Open Sans, Poppins, and Noto Sans faces used by its themes and registers them offline the first time the package loads — no network request, no per-session Google Fonts download. To skip registration (for example, to supply your own font setup), set <code>options(hdatools.fonts = FALSE)</code> or the environment variable <code>HDATOOLS_NO_FONTS</code> before loading the package.</p>
+<p>hdatools bundles the Lato, Roboto Slab, Open Sans, Poppins, and Noto Sans faces used by its themes and registers them with systemfonts offline the first time the package loads — no network request, no per-session Google Fonts download. To skip registration (for example, to supply your own font setup), set <code>options(hdatools.fonts = FALSE)</code> or the environment variable <code>HDATOOLS_NO_FONTS</code> before loading the package.</p>
+<p>Rendering plots with these fonts requires a systemfonts-aware graphics device. In a Quarto document, add the following to <code>_quarto.yml</code> (the default Cairo device does not consult the systemfonts registry, so without this the bundled fonts won’t appear in rendered output):</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">knitr</span><span class="kw">:</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="at">  </span><span class="fu">opts_chunk</span><span class="kw">:</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="at">    </span><span class="fu">dev</span><span class="kw">:</span><span class="at"> </span><span class="st">"ragg_png"</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
@@ -90,9 +95,9 @@
 <li>
 <code><a href="reference/scale_color_pha.html">scale_color_pha()</a></code>/<code><a href="reference/scale_color_pha.html">scale_colour_pha()</a></code>, <code><a href="reference/scale_fill_pha.html">scale_fill_pha()</a></code>: PHA-branded discrete color scales</li>
 <li>
-<code><a href="reference/scale_color_gradient_hda.html">scale_color_gradient_hda()</a></code>/<code><a href="reference/scale_color_gradient_hda.html">scale_colour_gradient_hda()</a></code>: HDA-branded continuous color scale (deprecated, use <code><a href="reference/scale_color_hda_c.html">scale_color_hda_c()</a></code>)</li>
+<code>scale_color_gradient_hda()</code>/<code>scale_colour_gradient_hda()</code>: HDA-branded continuous color scale (deprecated, use <code><a href="reference/scale_color_hda_c.html">scale_color_hda_c()</a></code>)</li>
 <li>
-<code><a href="reference/scale_color_gradient_pha.html">scale_color_gradient_pha()</a></code>/<code><a href="reference/scale_color_gradient_pha.html">scale_colour_gradient_pha()</a></code>, <code><a href="reference/scale_fill_gradient_pha.html">scale_fill_gradient_pha()</a></code>: PHA-branded continuous color scales (deprecated, use <code><a href="reference/scale_color_pha_c.html">scale_color_pha_c()</a></code>/<code><a href="reference/scale_fill_pha_c.html">scale_fill_pha_c()</a></code>)</li>
+<code>scale_color_gradient_pha()</code>/<code>scale_colour_gradient_pha()</code>, <code>scale_fill_gradient_pha()</code>: PHA-branded continuous color scales (deprecated, use <code><a href="reference/scale_color_pha_c.html">scale_color_pha_c()</a></code>/<code><a href="reference/scale_fill_pha_c.html">scale_fill_pha_c()</a></code>)</li>
 </ul>
 </div>
 <div class="section level3">
@@ -146,7 +151,7 @@
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
 <p>Basic example:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/hdadvisors/hdatools" class="external-link">hdatools</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span></span>
