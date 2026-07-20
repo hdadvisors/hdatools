@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | not started |
+| **Status** | Session 1 complete — Session 2 pending |
 | **Branch** | `release-0.5.0` (off `main`) |
 | **Target version** | `0.5.0` |
 | **Entry criteria** | Phase 2 merged and tagged `v0.4.0` |
@@ -144,4 +144,12 @@ before tagging.
 
 ## Findings
 
-(none yet)
+- **Session 1 complete (2026-07-20):** all six soft-deprecated exports removed
+  (`hda_pal_discrete`, `hfv_pal_discrete`, `pha_pal_discrete`,
+  `scale_color_gradient_hda`, `scale_color_gradient_pha`,
+  `scale_fill_gradient_pha`) plus their two British-spelling aliases and the
+  now-orphaned `.scale_brand_gradient` internal. `devtools::check()` returned
+  0 errors / 0 warnings / 0 notes. `faar` had one call site
+  (`data-notes.qmd:197`) but that project is delivered and frozen — no
+  re-render will ever be needed. `fed-workforce` likewise frozen; not locally
+  accessible but confirmed out of scope.

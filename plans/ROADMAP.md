@@ -114,7 +114,6 @@ own session — **never done as a drive-by from hdatools work**.
 | Pin hdatools (renv or tagged ref) — currently floats on `main` | vhtf | before Phase 1 merges, ideally during Phase 0 |
 | Pin hdatools — currently floats on `main` | fed-workforce | before Phase 1 merges, ideally during Phase 0 |
 | Verify `add_reliability()` cv_col/percent path against real data; retire the CLAUDE.md/README ban (Q10) | fhfh | fhfh's next data session |
-| Re-snapshot to 0.3.0 / 0.4.0 / 0.5.0 and compare renders after each release | fhfh (binding), faar (optional) | after each release, per existing rollout convention |
+| Re-snapshot to 0.3.0 / 0.4.0 / 0.5.0 and compare renders after each release | fhfh (binding) | after each release, per existing rollout convention |
 | Retire the ~200-line local VHA clone once `theme_vha()` ships in 0.4.0 | vhtf | after Phase 2 release |
-| Delete local hardcoded hex vectors once `*_colors` export in 0.4.0 | faar, fhfh, fed-workforce | after Phase 2 release |
-| Verify `ggsave(bg = "white")` workaround is obsolete (§1.9) | fed-workforce | at its 0.4.0 bump |
+| Delete local hardcoded hex vectors once `*_colors` export in 0.4.0 | fhfh | after Phase 2 release |

@@ -22,7 +22,6 @@ Useful links:
 Authors:
 \itemize{
   \item Kyle Walker \email{kyle@walker-data.com}
-  \item Eric Mai \email{eric@hdadvisors.net}
 }
 
 }

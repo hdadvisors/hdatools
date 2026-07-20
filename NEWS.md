@@ -1,3 +1,13 @@
+# hdatools (development version)
+
+* Removed `hda_pal_discrete()`, `hfv_pal_discrete()`, `pha_pal_discrete()`,
+  `scale_color_gradient_hda()`, `scale_colour_gradient_hda()`,
+  `scale_color_gradient_pha()`, `scale_colour_gradient_pha()`, and
+  `scale_fill_gradient_pha()` — all soft-deprecated in 0.3.0. Use the
+  discrete scales (`scale_color_hda()` / `scale_fill_hda()` etc.) and
+  continuous ramp scales (`scale_color_hda_c()` / `scale_fill_hda_c()` etc.)
+  introduced in 0.3.0 and 0.4.0 respectively.
+
 # hdatools 0.4.0
 
 * New `hda_focus_pal()`/`hfv_focus_pal()`/`pha_focus_pal()`/`vha_focus_pal()`
