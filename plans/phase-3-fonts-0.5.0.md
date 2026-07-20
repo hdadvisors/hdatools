@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Session 1 complete — Session 2 pending |
+| **Status** | Session 2 complete — Session 3 pending |
 | **Branch** | `release-0.5.0` (off `main`) |
 | **Target version** | `0.5.0` |
 | **Entry criteria** | Phase 2 merged and tagged `v0.4.0` |
@@ -153,3 +153,35 @@ before tagging.
   (`data-notes.qmd:197`) but that project is delivered and frozen — no
   re-render will ever be needed. `fed-workforce` likewise frozen; not locally
   accessible but confirmed out of scope.
+
+- **Session 2 complete (2026-07-20):** showtext/sysfonts replaced by
+  systemfonts in `register_hda_fonts()` (`R/theme_helpers.R`), using
+  `systemfonts::register_font()` (the plan's `add_font()` doesn't exist in
+  the installed systemfonts 1.3.2 API — confirmed via `getNamespaceExports()`).
+  Two findings that changed the plan's approach:
+  - **`register_font()` hard-refuses to shadow an already-installed system
+    font of the same name** (`stop("A system font called '<name>' already
+    exists")`, no override argument). "Open Sans" collided with a
+    system-installed copy on the dev machine — plausible on many consumer
+    machines too, since it's a common bundled web font. The original
+    single-`tryCatch`-around-six-calls design would have silently dropped
+    Poppins/Noto Sans/Montserrat registration too on any such machine.
+    Rewrote to register each family independently and treat the
+    "already exists" collision as a benign skip (the name still resolves,
+    just via the system's copy) rather than a failure. Test
+    (`tests/testthat/test-fonts.R`) now checks availability via
+    `system_fonts()` OR `registry_fonts()`, not just the latter.
+  - **`ragg` is never called by package code** — hdatools only registers
+    fonts with `systemfonts`; the actual `ragg` device is invoked by the
+    *consumer's* own Quarto/knitr config via `dev: "ragg_png"`. Declaring it
+    in `Imports` (per the plan's literal wording) tripped `devtools::check()`
+    ("Namespace in Imports field not imported from: 'ragg'"). Moved it to
+    `Suggests` instead — `devtools::check()` returns 0 errors/0 warnings/
+    **0 notes** (better than the license-NOTE-only baseline; not a
+    regression). `textshaping` was not needed: not even in systemfonts' own
+    Suggests, and `register_font()`/`match_fonts()`/`ragg::agg_png()` all
+    resolved the bundled TTFs correctly without it.
+  - Verified end-to-end: `systemfonts::match_font()` resolves each
+    registered family to its exact bundled TTF path (not a system
+    substitute), and a `ragg::agg_png()`-rendered PNG using a registered
+    family succeeds. `devtools::test()`: 364 pass / 0 fail.

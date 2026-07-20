@@ -10,11 +10,22 @@ devtools::install_github("hdadvisors/hdatools")
 ```
 
 hdatools bundles the Lato, Roboto Slab, Open Sans, Poppins, and Noto Sans
-faces used by its themes and registers them offline the first time the
-package loads — no network request, no per-session Google Fonts download.
-To skip registration (for example, to supply your own font setup), set
-`options(hdatools.fonts = FALSE)` or the environment variable
+faces used by its themes and registers them with systemfonts offline the
+first time the package loads — no network request, no per-session Google
+Fonts download. To skip registration (for example, to supply your own font
+setup), set `options(hdatools.fonts = FALSE)` or the environment variable
 `HDATOOLS_NO_FONTS` before loading the package.
+
+Rendering plots with these fonts requires a systemfonts-aware graphics
+device. In a Quarto document, add the following to `_quarto.yml` (the default
+Cairo device does not consult the systemfonts registry, so without this the
+bundled fonts won't appear in rendered output):
+
+```yaml
+knitr:
+  opts_chunk:
+    dev: "ragg_png"
+```
 
 ## Features
 

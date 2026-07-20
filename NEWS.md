@@ -1,5 +1,17 @@
 # hdatools (development version)
 
+* Replaced the `showtext`/`sysfonts` font stack with `systemfonts`
+  (`ragg` moved to Suggests, as a recommended rendering device — hdatools
+  itself never calls it). `register_hda_fonts()` now registers the bundled
+  Lato, Roboto Slab, Open Sans, Poppins, Noto Sans, and Montserrat faces via
+  `systemfonts::register_font()`; the `hdatools.fonts` opt-out still works
+  the same way. Consumers rendering with knitr/Quarto must add
+  `dev: "ragg_png"` under `knitr: opts_chunk:` in `_quarto.yml` (see
+  `README.md`) — the default Cairo device does not consult the systemfonts
+  registry, so without it the bundled fonts won't appear in rendered output.
+  hdatools no longer sets `knitr::opts_chunk$set(fig.showtext = TRUE)` as a
+  load-time global side effect.
+
 * Removed `hda_pal_discrete()`, `hfv_pal_discrete()`, `pha_pal_discrete()`,
   `scale_color_gradient_hda()`, `scale_colour_gradient_hda()`,
   `scale_color_gradient_pha()`, `scale_colour_gradient_pha()`, and
