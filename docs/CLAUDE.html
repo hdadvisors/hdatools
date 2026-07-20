@@ -19,7 +19,8 @@
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="articles/ragg-migration.html">Migrating from showtext to ragg</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="articles/branded-themes.html">Using branded themes</a></li>
+    <li><a class="dropdown-item" href="articles/ragg-migration.html">Migrating from showtext to ragg</a></li>
     <li><a class="dropdown-item" href="articles/cvd-audit.html">CVD accessibility audit</a></li>
     <li><a class="dropdown-item" href="articles/adding-a-brand.html">Adding a new client brand</a></li>
   </ul></li>
@@ -62,7 +63,7 @@
 <code><a href="https://pkgdown.r-lib.org/reference/build_site.html" class="external-link">pkgdown::build_site()</a></code> — rebuilds the site into <code>docs/</code>. Two gotchas when running via standalone Rscript (no RStudio):
 <ul><li>pkgdown/rmarkdown need Pandoc, which a bare <code>Rscript</code> may not find. If a build fails with “Pandoc not available,” point R at a bundled copy via <code>Sys.setenv(RSTUDIO_PANDOC = &lt;dir&gt;)</code> — Quarto and RStudio each ship one in a <code>tools</code> directory. Locate the copy on the current machine rather than assuming a path. (Cloud sessions get a system <code>pandoc</code> from the SessionStart hook, already on <code>PATH</code> — this workaround is for local sessions without RStudio/Quarto installed.)</li>
 <li>
-<code>build_site()</code> re-knits <code>vignettes/articles/branded-themes.Rmd</code>, which needs tidycensus + a Census API key + network and will fail offline. For doc/theme changes, rebuild only what changed instead: <code>init_site()</code> + <code>build_home()</code> + <code>build_reference()</code> + <code>build_news()</code>.</li>
+<code>build_site()</code> re-knits every article in <code>vignettes/articles/</code>. As of 0.5.0 <code>branded-themes.Rmd</code> uses a small bundled data table instead of a live <code><a href="https://walker-data.com/tidycensus/reference/get_acs.html" class="external-link">tidycensus::get_acs()</a></code> call, so it no longer needs a Census API key or network to build. For faster doc/theme iteration you can still rebuild only what changed: <code>init_site()</code> + <code>build_home()</code> + <code>build_reference()</code> + <code>build_news()</code> + <code>build_articles()</code>.</li>
 </ul></li>
 </ol></div>
 <div class="section level2">

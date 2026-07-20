@@ -8,7 +8,9 @@
 >
 > "Q#" rows refer to the open questions in
 > [archive/hdatools-design-review.md §3](archive/hdatools-design-review.md).
-> OPEN rows get filled at their phase gate (see ROADMAP.md).
+> New work is tracked via **GitHub Issues** — file an issue with the
+> `design-decision` label when a decision is needed; record the outcome here
+> once settled.
 
 ## Settled
 
@@ -36,17 +38,11 @@
 | 2026-07-18 | 2.2 | **HDA diverging to be differentiated from PHA's before final adoption** — the two are visual siblings (navy vs warm brick). Follow-up ramp-lab pass: push HDA's cool arm teal-forward (or equivalent), then re-run the CVD checks. PHA's diverging is final as picked (its only structurally sound pair). | HDA and PHA charts can plausibly share a page; HDA is the lever because PHA has no alternative pair (Purple vs Green fails outright). | Blocks HDA `scale_*_hda_c()` diverging only; other five ramps unblocked |
 | 2026-07-19 | Q5 | **Migrate to systemfonts/ragg** — drop `showtext`/`sysfonts` from Imports; register bundled TTFs via `systemfonts::add_font()`/`register_variant()`; remove the `.onLoad` `showtext_auto()` side effect; keep the `hdatools.fonts` opt-out; consumers add `dev: ragg_png` to their Quarto YAML. Side-by-side render comparison in **fhfh** before tagging 0.5.0. | Accepted recommended default. | Phase 3 scope (Tier 3.1); fhfh must add `dev: ragg_png` to its `_quarto.yml` after adopting 0.5.0; all other consumers coordinate at their own rollout sessions |
 
-## Open — settle at phase gates
+## Open
 
-| Ref | Question (short) | Recommended default (review §3) | Gate |
+All phase-gate questions (Q1–Q9) are settled above. The one remaining open
+item is Q10, which belongs to fhfh's own session:
+
+| Ref | Question (short) | Recommended default (review §3) | Owner |
 |---|---|---|---|
-| Q1 | Palette single source of truth? | Plain named character vectors in an internal registry + exported vectors; not `data/`, not brand.yml-driven | Phase 1 |
-| Q3 | Deprecate old names or break them? | fhfh surface inviolable; soft-deprecate `scale_*_gradient_*` and `*_pal_discrete()` now, remove 0.5+ | Phase 1 |
-| Q2 | Adopt `_brand.yml`? | Yes as an *output* generated from the registry (Tier 3.2), never a runtime input | Phase 2 |
-| Q4 | Raise ggplot2 floor to ≥ 4.0? | Yes, at the 0.4.0 release (theme-carried palettes need it) | Phase 2 |
-| Q6 | Continuous ramp design method? | Programmatic from brand anchors via colorspace HCL, then eyeballed + CVD-checked | Phase 2 |
-| Q7 | Reorder palettes for CVD safety? | Audit + document now; reorder only with explicit sign-off (it recolors existing charts) | Phase 2 |
-| Q8 | Add VHA as first-class brand? | Yes; confirm hex ownership, bundle Montserrat (OFL) | Phase 2 |
-| Q9 | Keep house theme defaults (no legend, blank axis titles)? | Keep — ~150 call sites depend on them | Phase 2 |
-| Q5 | Migrate fonts to systemfonts/ragg? | Yes, in a dedicated release with a side-by-side render comparison in one consumer first | Phase 3 |
-| Q10 | `add_reliability()` — anything more? | Verify against fhfh's real data in *fhfh's* session, then retire its ban there | n/a (fhfh repo) |
+| Q10 | `add_reliability()` — anything more? | Verify against fhfh's real data in *fhfh's* session, then retire its ban there | fhfh repo |

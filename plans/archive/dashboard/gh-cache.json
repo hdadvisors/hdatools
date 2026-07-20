@@ -1,0 +1,367 @@
+{
+  "fetched_at": "2026-07-19T01:25:49.966517-04:00",
+  "prs": [
+    {
+      "baseRefName": "main",
+      "headRefName": "claude/session-start-hook",
+      "mergeCommit": {
+        "oid": "934d54efbca9b8a0f0e5187f002ea0b2354a56c3"
+      },
+      "mergedAt": "2026-07-18T05:08:44Z",
+      "number": 18,
+      "state": "MERGED",
+      "title": "Add SessionStart hook to provision R for cloud sessions",
+      "url": "https://github.com/hdadvisors/hdatools/pull/18"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "claude/phase-2-gate-interview-urrxkk",
+      "mergeCommit": {
+        "oid": "f81705788dc871ebd0ce40a93ae94a893f42c723"
+      },
+      "mergedAt": "2026-07-18T01:46:17Z",
+      "number": 17,
+      "state": "MERGED",
+      "title": "Phase 2 gate: record interview decisions, finalize phase plan",
+      "url": "https://github.com/hdadvisors/hdatools/pull/17"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "dashboard-tooling",
+      "mergeCommit": {
+        "oid": "968e87f76bd24f33eb8e1058963ecc565dd816ee"
+      },
+      "mergedAt": "2026-07-18T01:11:20Z",
+      "number": 16,
+      "state": "MERGED",
+      "title": "Add development dashboard tooling",
+      "url": "https://github.com/hdadvisors/hdatools/pull/16"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "release-0.3.0",
+      "mergeCommit": {
+        "oid": "7ae0e8fd26acf2dcbc7657caebfadd6dee0ab681"
+      },
+      "mergedAt": "2026-07-17T18:27:10Z",
+      "number": 15,
+      "state": "MERGED",
+      "title": "Release 0.3.0: theme/scale consolidation",
+      "url": "https://github.com/hdadvisors/hdatools/pull/15"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "phase-0-groundwork",
+      "mergeCommit": {
+        "oid": "75c43618c5fc76e432d77f3ec9c0100e7ffbaef8"
+      },
+      "mergedAt": "2026-07-16T19:54:17Z",
+      "number": 14,
+      "state": "MERGED",
+      "title": "Phase 0: CI, pkgdown Bootstrap 5, pha-update-2026 survey",
+      "url": "https://github.com/hdadvisors/hdatools/pull/14"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "docs/pathless-claude-md",
+      "mergeCommit": {
+        "oid": "16d916e7f8cced50de9b0f84848c2c0794ed3a69"
+      },
+      "mergedAt": "2026-07-16T15:54:58Z",
+      "number": 13,
+      "state": "MERGED",
+      "title": "Make R/Pandoc guidance in CLAUDE.md fully path-free",
+      "url": "https://github.com/hdadvisors/hdatools/pull/13"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "post-0.2.0-cleanup",
+      "mergeCommit": {
+        "oid": "060e219ee057f3b144c06cfa3c961df042839e6d"
+      },
+      "mergedAt": "2026-07-16T15:31:10Z",
+      "number": 12,
+      "state": "MERGED",
+      "title": "Post-v0.2.0 cleanup: doc rendering, packaging hygiene, test coverage, dev workflow",
+      "url": "https://github.com/hdadvisors/hdatools/pull/12"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "showtext-knitr-fix",
+      "mergeCommit": {
+        "oid": "447090dff02c1dc3a47c11b1598c224595e2cb0b"
+      },
+      "mergedAt": "2023-04-05T19:15:17Z",
+      "number": 10,
+      "state": "MERGED",
+      "title": "showtext knitr fix",
+      "url": "https://github.com/hdadvisors/hdatools/pull/10"
+    },
+    {
+      "baseRefName": "category-colors",
+      "headRefName": "main",
+      "mergeCommit": {
+        "oid": "2fdabe9042a2b1a5be736b18e28004e45225dcac"
+      },
+      "mergedAt": "2022-12-19T12:46:25Z",
+      "number": 7,
+      "state": "MERGED",
+      "title": "Update category-colors branch with new updates to main",
+      "url": "https://github.com/hdadvisors/hdatools/pull/7"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "fonts-onload",
+      "mergeCommit": {
+        "oid": "79c95d2733a2c3f312e64c3b537a2a623d0d9148"
+      },
+      "mergedAt": "2022-11-28T16:29:49Z",
+      "number": 5,
+      "state": "MERGED",
+      "title": "load Google fonts when package is loaded, not when building ggplots",
+      "url": "https://github.com/hdadvisors/hdatools/pull/5"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "jtk",
+      "mergeCommit": {
+        "oid": "254f784cb7c9b2c9f13a2cbb7c4d8b17c53aa880"
+      },
+      "mergedAt": "2022-11-16T19:50:40Z",
+      "number": 3,
+      "state": "MERGED",
+      "title": "merge first batch of updates into main",
+      "url": "https://github.com/hdadvisors/hdatools/pull/3"
+    },
+    {
+      "baseRefName": "jtk",
+      "headRefName": "jtk-repeat-pal",
+      "mergeCommit": {
+        "oid": "dbba0be0778c220ddfc5d478339f15d7dd87e7eb"
+      },
+      "mergedAt": "2022-11-15T22:36:58Z",
+      "number": 2,
+      "state": "MERGED",
+      "title": "option to repeat the palette in scale_*_hda() functions",
+      "url": "https://github.com/hdadvisors/hdatools/pull/2"
+    }
+  ],
+  "runs": [
+    {
+      "conclusion": "success",
+      "createdAt": "2026-07-19T02:28:40Z",
+      "headBranch": "release-0.4.0",
+      "status": "completed",
+      "url": "https://github.com/hdadvisors/hdatools/actions/runs/29670252573",
+      "workflowName": "R-CMD-check"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-07-18T19:52:39Z",
+      "headBranch": "release-0.4.0",
+      "status": "completed",
+      "url": "https://github.com/hdadvisors/hdatools/actions/runs/29658624682",
+      "workflowName": "R-CMD-check"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-07-18T05:49:21Z",
+      "headBranch": "release-0.4.0",
+      "status": "completed",
+      "url": "https://github.com/hdadvisors/hdatools/actions/runs/29632916076",
+      "workflowName": "R-CMD-check"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-07-18T05:08:47Z",
+      "headBranch": "main",
+      "status": "completed",
+      "url": "https://github.com/hdadvisors/hdatools/actions/runs/29631755936",
+      "workflowName": "R-CMD-check"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-07-18T05:08:46Z",
+      "headBranch": "main",
+      "status": "completed",
+      "url": "https://github.com/hdadvisors/hdatools/actions/runs/29631755616",
+      "workflowName": "pages-build-deployment"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-07-18T04:19:51Z",
+      "headBranch": "claude/session-start-hook",
+      "status": "completed",
+      "url": "https://github.com/hdadvisors/hdatools/actions/runs/29630374189",
+      "workflowName": "R-CMD-check"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-07-18T01:46:19Z",
+      "headBranch": "main",
+      "status": "completed",
+      "url": "https://github.com/hdadvisors/hdatools/actions/runs/29625838062",
+      "workflowName": "R-CMD-check"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-07-18T01:46:18Z",
+      "headBranch": "main",
+      "status": "completed",
+      "url": "https://github.com/hdadvisors/hdatools/actions/runs/29625837720",
+      "workflowName": "pages-build-deployment"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-07-18T01:42:37Z",
+      "headBranch": "claude/phase-2-gate-interview-urrxkk",
+      "status": "completed",
+      "url": "https://github.com/hdadvisors/hdatools/actions/runs/29625719807",
+      "workflowName": "R-CMD-check"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-07-18T01:27:16Z",
+      "headBranch": "main",
+      "status": "completed",
+      "url": "https://github.com/hdadvisors/hdatools/actions/runs/29625219495",
+      "workflowName": "R-CMD-check"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-07-18T01:27:15Z",
+      "headBranch": "main",
+      "status": "completed",
+      "url": "https://github.com/hdadvisors/hdatools/actions/runs/29625219180",
+      "workflowName": "pages-build-deployment"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-07-18T01:11:22Z",
+      "headBranch": "main",
+      "status": "completed",
+      "url": "https://github.com/hdadvisors/hdatools/actions/runs/29624712412",
+      "workflowName": "R-CMD-check"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-07-18T01:11:21Z",
+      "headBranch": "main",
+      "status": "completed",
+      "url": "https://github.com/hdadvisors/hdatools/actions/runs/29624712047",
+      "workflowName": "pages-build-deployment"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-07-18T01:04:32Z",
+      "headBranch": "dashboard-tooling",
+      "status": "completed",
+      "url": "https://github.com/hdadvisors/hdatools/actions/runs/29624478247",
+      "workflowName": "R-CMD-check"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-07-17T18:27:12Z",
+      "headBranch": "main",
+      "status": "completed",
+      "url": "https://github.com/hdadvisors/hdatools/actions/runs/29603857457",
+      "workflowName": "R-CMD-check"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-07-17T18:27:11Z",
+      "headBranch": "main",
+      "status": "completed",
+      "url": "https://github.com/hdadvisors/hdatools/actions/runs/29603856681",
+      "workflowName": "pages-build-deployment"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-07-17T18:22:03Z",
+      "headBranch": "release-0.3.0",
+      "status": "completed",
+      "url": "https://github.com/hdadvisors/hdatools/actions/runs/29603541060",
+      "workflowName": "R-CMD-check"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-07-17T18:21:50Z",
+      "headBranch": "release-0.3.0",
+      "status": "completed",
+      "url": "https://github.com/hdadvisors/hdatools/actions/runs/29603528442",
+      "workflowName": "R-CMD-check"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-07-16T19:54:20Z",
+      "headBranch": "main",
+      "status": "completed",
+      "url": "https://github.com/hdadvisors/hdatools/actions/runs/29529842665",
+      "workflowName": "R-CMD-check"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-07-16T19:54:19Z",
+      "headBranch": "main",
+      "status": "completed",
+      "url": "https://github.com/hdadvisors/hdatools/actions/runs/29529841725",
+      "workflowName": "pages-build-deployment"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-07-16T19:47:46Z",
+      "headBranch": "phase-0-groundwork",
+      "status": "completed",
+      "url": "https://github.com/hdadvisors/hdatools/actions/runs/29529412368",
+      "workflowName": "R-CMD-check"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-07-16T19:39:40Z",
+      "headBranch": "phase-0-groundwork",
+      "status": "completed",
+      "url": "https://github.com/hdadvisors/hdatools/actions/runs/29528881367",
+      "workflowName": "R-CMD-check"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-07-16T19:00:35Z",
+      "headBranch": "main",
+      "status": "completed",
+      "url": "https://github.com/hdadvisors/hdatools/actions/runs/29526283559",
+      "workflowName": "pages-build-deployment"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-07-16T15:55:00Z",
+      "headBranch": "main",
+      "status": "completed",
+      "url": "https://github.com/hdadvisors/hdatools/actions/runs/29513299988",
+      "workflowName": "pages-build-deployment"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-07-16T15:31:12Z",
+      "headBranch": "main",
+      "status": "completed",
+      "url": "https://github.com/hdadvisors/hdatools/actions/runs/29511504312",
+      "workflowName": "pages-build-deployment"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-07-16T11:59:59Z",
+      "headBranch": "main",
+      "status": "completed",
+      "url": "https://github.com/hdadvisors/hdatools/actions/runs/29496473620",
+      "workflowName": "pages-build-deployment"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-07-16T03:52:21Z",
+      "headBranch": "main",
+      "status": "completed",
+      "url": "https://github.com/hdadvisors/hdatools/actions/runs/29469984211",
+      "workflowName": "pages-build-deployment"
+    }
+  ]
+}
