@@ -11,13 +11,15 @@ get_output_format(manual_format = NULL)
 this overrides the automatic detection.}
 }
 \value{
-A string indicating the detected format: "studio" for interactive
-sessions, "html" for HTML output, or "pdf" for PDF output.
+A string indicating the detected format: \code{"studio"} for interactive
+sessions, \code{"html"} for HTML output, \code{"typst"} for Typst output, \code{"docx"}
+for Word output, or \code{"pdf"} for PDF/LaTeX and any other non-HTML knitr
+output.
 }
 \description{
 This function checks the current environment to determine whether the code
 is being run in an interactive session (like RStudio), or as part of rendering
-an HTML or PDF document.
+an HTML, PDF, Typst, or Word document.
 }
 \examples{
 # Automatic detection

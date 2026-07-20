@@ -10,24 +10,24 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, fig.width = 8,
 
 ```
 
-Let's get some data:
+Let's get some data. This is median household income for three Richmond-area
+localities, from the 2017-2021 5-year American Community Survey (variable
+`B19013_001`) — bundled here as a static table so this article builds without
+a Census API key or network access:
 
 ```{r get-data}
 
 library(tidyverse)
-library(tidycensus)
 library(scales)
 library(hdatools)
 library(ggtext)
 
-rva_inc <- get_acs(
-  geography = "county",
-  state = "Virginia", 
-  county = c("Richmond city", "Chesterfield County", "Henrico County"),
-  variables = "B19013_001",
-  year = 2021
-) |> 
-  mutate(NAME = str_remove(NAME, ", Virginia"))
+rva_inc <- tribble(
+  ~GEOID,  ~NAME,                 ~variable,     ~estimate, ~moe,
+  "51041", "Chesterfield County", "B19013_001",  88315,     1599,
+  "51087", "Henrico County",      "B19013_001",  76345,     1353,
+  "51760", "Richmond city",       "B19013_001",  54795,     1737
+)
 
 ```
 

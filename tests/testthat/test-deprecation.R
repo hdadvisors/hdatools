@@ -24,26 +24,6 @@ test_that("discrete scales use no deprecated ggplot2 idioms", {
   expect_no_error(scale_color_vha(), class = "lifecycle_error_deprecated")
 })
 
-test_that("gradient scales use no deprecated ggplot2 idioms", {
-  withr::local_options(lifecycle_verbosity = "error")
-  # Call the internal constructor directly: the exported scale_*_gradient_*()
-  # wrappers are themselves soft-deprecated as of 0.3.0 (see test-scales.R), so
-  # calling them here would trip this guard on our own deprecation notice
-  # instead of a ggplot2-idiom regression.
-  expect_no_error(
-    .scale_brand_gradient("color", .brands$hda$gradient, NULL, "Lab", .brands$hda$na_color, "colorbar"),
-    class = "lifecycle_error_deprecated"
-  )
-  expect_no_error(
-    .scale_brand_gradient("color", .brands$pha$gradient, NULL, "Lab", .brands$pha$na_color, "colorbar"),
-    class = "lifecycle_error_deprecated"
-  )
-  expect_no_error(
-    .scale_brand_gradient("fill", .brands$pha$gradient, NULL, "Lab", .brands$pha$na_color, "colorbar"),
-    class = "lifecycle_error_deprecated"
-  )
-})
-
 test_that("theme helpers use no deprecated ggplot2 idioms", {
   withr::local_options(lifecycle_verbosity = "error")
   expect_no_error(flip_gridlines(), class = "lifecycle_error_deprecated")

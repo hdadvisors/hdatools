@@ -144,7 +144,7 @@
         ink = "#383c3d",
         paper = "white",
         accent = discrete_pal[1],
-        colour = discrete_pal[1],
+        colour = NA,
         fill = discrete_pal[1]
       )
 

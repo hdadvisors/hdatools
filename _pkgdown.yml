@@ -22,6 +22,8 @@ navbar:
     articles:
       text: Articles
       menu:
+      - text: Migrating from showtext to ragg
+        href: articles/ragg-migration.html
       - text: CVD accessibility audit
         href: articles/cvd-audit.html
       - text: Adding a new client brand
@@ -68,12 +70,6 @@ reference:
       - scale_fill_hfv_b
       - scale_fill_pha_b
       - scale_fill_vha_b
-      - hda_pal_discrete
-      - hfv_pal_discrete
-      - pha_pal_discrete
-      - scale_color_gradient_hda
-      - scale_color_gradient_pha
-      - scale_fill_gradient_pha
 
   - title: Helpers
     desc: >

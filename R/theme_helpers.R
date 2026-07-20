@@ -2,21 +2,34 @@
 #'
 #' Registers the font faces bundled in `inst/fonts/` (Lato and Roboto Slab for
 #' `theme_hda()`, Open Sans and Poppins for `theme_hfv()`, Noto Sans for
-#' `theme_pha()`, Montserrat for `theme_vha()`) with \pkg{sysfonts}, then
-#' enables \pkg{showtext} rendering.
-#' Everything is read from files installed with the package, so this never
-#' makes a network request.
+#' `theme_pha()`, Montserrat for `theme_vha()`) with \pkg{systemfonts}, making
+#' them available by name to \pkg{ragg} graphics devices (and any other
+#' systemfonts-aware device). Everything is read from files installed with
+#' the package, so this never makes a network request.
+#'
+#' Rendering with these fonts requires a systemfonts-aware device — for
+#' knitr/Quarto output, set `dev: "ragg_png"` (see `README.md`); the default
+#' Cairo device does not consult the systemfonts registry.
 #'
 #' Registration can be skipped by setting `options(hdatools.fonts = FALSE)`
 #' or the environment variable `HDATOOLS_NO_FONTS` to any non-empty value —
 #' useful if a consumer wants to supply its own font setup.
 #'
-#' @param quiet If `TRUE`, suppresses the message emitted when registration
-#'   fails. Registration failure is non-fatal: hdatools falls back to
-#'   whatever fonts are already available on the system.
+#' Each bundled family is registered independently. `systemfonts::register_font()`
+#' refuses to register a name that already matches an installed system font
+#' (e.g. Open Sans ships with several common apps) — when that happens, this
+#' function leaves that one family alone (the system copy resolves under the
+#' same name anyway) and still registers the rest.
 #'
-#' @return Invisibly, `TRUE` if fonts were registered, `FALSE` if skipped via
-#'   the opt-out or if registration failed.
+#' @param quiet If `TRUE`, suppresses the message emitted when registering a
+#'   family unexpectedly fails (a name collision with an installed system
+#'   font is never reported, since it is not a failure). Registration issues
+#'   are non-fatal: hdatools falls back to whatever fonts are already
+#'   available on the system.
+#'
+#' @return Invisibly, `TRUE` if every bundled family is available (registered
+#'   by hdatools or already present as a system font), `FALSE` if skipped via
+#'   the opt-out or if a family failed to register for an unexpected reason.
 #'
 #' @export
 register_hda_fonts <- function(quiet = FALSE) {
@@ -32,64 +45,55 @@ register_hda_fonts <- function(quiet = FALSE) {
     system.file("fonts", family_dir, file, package = "hdatools")
   }
 
-  registered <- tryCatch({
-
-    sysfonts::font_add(
-      family  = "Lato",
-      regular = font_path("lato", "Lato-Regular.ttf"),
-      bold    = font_path("lato", "Lato-Bold.ttf"),
-      italic  = font_path("lato", "Lato-Italic.ttf")
+  families <- list(
+    "Lato" = list(
+      plain  = font_path("lato", "Lato-Regular.ttf"),
+      bold   = font_path("lato", "Lato-Bold.ttf"),
+      italic = font_path("lato", "Lato-Italic.ttf")
+    ),
+    "Roboto Slab" = list(
+      plain = font_path("roboto-slab", "RobotoSlab-Regular.ttf"),
+      bold  = font_path("roboto-slab", "RobotoSlab-Bold.ttf")
+    ),
+    "Open Sans" = list(
+      plain  = font_path("open-sans", "OpenSans-Regular.ttf"),
+      bold   = font_path("open-sans", "OpenSans-Bold.ttf"),
+      italic = font_path("open-sans", "OpenSans-Italic.ttf")
+    ),
+    "Poppins" = list(
+      plain = font_path("poppins", "Poppins-Regular.ttf"),
+      bold  = font_path("poppins", "Poppins-SemiBold.ttf")
+    ),
+    "Noto Sans" = list(
+      plain  = font_path("noto-sans", "NotoSans-Regular.ttf"),
+      bold   = font_path("noto-sans", "NotoSans-Bold.ttf"),
+      italic = font_path("noto-sans", "NotoSans-Italic.ttf")
+    ),
+    "Montserrat" = list(
+      plain = font_path("montserrat", "Montserrat-Regular.ttf"),
+      bold  = font_path("montserrat", "Montserrat-SemiBold.ttf")
     )
+  )
 
-    sysfonts::font_add(
-      family  = "Roboto Slab",
-      regular = font_path("roboto-slab", "RobotoSlab-Regular.ttf"),
-      bold    = font_path("roboto-slab", "RobotoSlab-Bold.ttf")
-    )
-
-    sysfonts::font_add(
-      family  = "Open Sans",
-      regular = font_path("open-sans", "OpenSans-Regular.ttf"),
-      bold    = font_path("open-sans", "OpenSans-Bold.ttf"),
-      italic  = font_path("open-sans", "OpenSans-Italic.ttf")
-    )
-
-    sysfonts::font_add(
-      family  = "Poppins",
-      regular = font_path("poppins", "Poppins-Regular.ttf"),
-      bold    = font_path("poppins", "Poppins-SemiBold.ttf")
-    )
-
-    sysfonts::font_add(
-      family  = "Noto Sans",
-      regular = font_path("noto-sans", "NotoSans-Regular.ttf"),
-      bold    = font_path("noto-sans", "NotoSans-Bold.ttf"),
-      italic  = font_path("noto-sans", "NotoSans-Italic.ttf")
-    )
-
-    sysfonts::font_add(
-      family  = "Montserrat",
-      regular = font_path("montserrat", "Montserrat-Regular.ttf"),
-      bold    = font_path("montserrat", "Montserrat-SemiBold.ttf")
-    )
-
-    TRUE
-
-  }, error = function(e) {
-    if (!quiet) {
-      packageStartupMessage("hdatools: could not register bundled fonts (", conditionMessage(e), ")")
-    }
-    FALSE
-  })
-
-  if (isTRUE(registered)) {
+  ok <- vapply(names(families), function(name) {
     tryCatch({
-      showtext::showtext_auto()
-      knitr::opts_chunk$set(fig.showtext = TRUE)
-    }, error = function(e) NULL)
-  }
+      do.call(systemfonts::register_font, c(list(name = name), families[[name]]))
+      TRUE
+    }, error = function(e) {
+      if (startsWith(conditionMessage(e), "A system font called")) {
+        return(TRUE)
+      }
+      if (!quiet) {
+        packageStartupMessage(
+          "hdatools: could not register bundled font '", name, "' (",
+          conditionMessage(e), ")"
+        )
+      }
+      FALSE
+    })
+  }, logical(1))
 
-  invisible(registered)
+  invisible(all(ok))
 
 }
 
@@ -132,13 +136,15 @@ markdown_wrap_gen <- function(width = 25) {
 #'
 #' This function checks the current environment to determine whether the code
 #' is being run in an interactive session (like RStudio), or as part of rendering
-#' an HTML or PDF document.
+#' an HTML, PDF, Typst, or Word document.
 #'
 #' @param manual_format An optional string specifying the format. If provided,
 #'   this overrides the automatic detection.
 #'
-#' @return A string indicating the detected format: "studio" for interactive
-#'   sessions, "html" for HTML output, or "pdf" for PDF output.
+#' @return A string indicating the detected format: `"studio"` for interactive
+#'   sessions, `"html"` for HTML output, `"typst"` for Typst output, `"docx"`
+#'   for Word output, or `"pdf"` for PDF/LaTeX and any other non-HTML knitr
+#'   output.
 #'
 #' @examples
 #' # Automatic detection
@@ -151,22 +157,22 @@ markdown_wrap_gen <- function(width = 25) {
 get_output_format <- function(manual_format = NULL) {
   if (!is.null(manual_format)) {
     return(manual_format)
-  } else {
-    # Check if we're in a knitr context
-    in_knitr <- isTRUE(getOption('knitr.in.progress'))
-
-    if (in_knitr) {
-      # We're rendering a document
-      if (knitr::is_html_output()) {
-        return("html")
-      } else {
-        return("pdf")
-      }
-    } else {
-      # We're likely in RStudio or another interactive environment
-      return("studio")
-    }
   }
+
+  in_knitr <- isTRUE(getOption('knitr.in.progress'))
+
+  if (!in_knitr) {
+    return("studio")
+  }
+
+  if (knitr::is_html_output()) {
+    return("html")
+  }
+
+  fmt <- tryCatch(knitr::pandoc_to(), error = function(e) NULL)
+  if (identical(fmt, "typst")) return("typst")
+  if (identical(fmt, "docx")) return("docx")
+  return("pdf")
 }
 
 #' Adjust base size for different output formats

@@ -1,3 +1,38 @@
+# hdatools 0.5.0
+
+* Fixed an unwanted stroke outline on `geom_col()`/`geom_bar()` bars: brand
+  themes (`theme_hda()`, `theme_hfv()`, `theme_pha()`, `theme_vha()`) now set
+  `colour = NA` in their `ggplot2::element_geom()` default instead of the
+  fill color, so column/bar charts no longer render a visible border
+  (closes #21).
+
+* `get_output_format()` now distinguishes `"typst"` and `"docx"` output from
+  `"pdf"` instead of folding all three into `"pdf"`.
+
+* The "Using branded themes in hdatools" article no longer requires a
+  Census API key or network access to build — it now uses a small bundled
+  data table instead of a live `tidycensus::get_acs()` call.
+
+* Replaced the `showtext`/`sysfonts` font stack with `systemfonts`
+  (`ragg` moved to Suggests, as a recommended rendering device — hdatools
+  itself never calls it). `register_hda_fonts()` now registers the bundled
+  Lato, Roboto Slab, Open Sans, Poppins, Noto Sans, and Montserrat faces via
+  `systemfonts::register_font()`; the `hdatools.fonts` opt-out still works
+  the same way. Consumers rendering with knitr/Quarto must add
+  `dev: "ragg_png"` under `knitr: opts_chunk:` in `_quarto.yml` (see
+  `README.md`) — the default Cairo device does not consult the systemfonts
+  registry, so without it the bundled fonts won't appear in rendered output.
+  hdatools no longer sets `knitr::opts_chunk$set(fig.showtext = TRUE)` as a
+  load-time global side effect.
+
+* Removed `hda_pal_discrete()`, `hfv_pal_discrete()`, `pha_pal_discrete()`,
+  `scale_color_gradient_hda()`, `scale_colour_gradient_hda()`,
+  `scale_color_gradient_pha()`, `scale_colour_gradient_pha()`, and
+  `scale_fill_gradient_pha()` — all soft-deprecated in 0.3.0. Use the
+  discrete scales (`scale_color_hda()` / `scale_fill_hda()` etc.) and
+  continuous ramp scales (`scale_color_hda_c()` / `scale_fill_hda_c()` etc.)
+  introduced in 0.3.0 and 0.4.0 respectively.
+
 # hdatools 0.4.0
 
 * New `hda_focus_pal()`/`hfv_focus_pal()`/`pha_focus_pal()`/`vha_focus_pal()`

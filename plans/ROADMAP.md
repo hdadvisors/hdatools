@@ -38,7 +38,7 @@
 | 0 — Groundwork | none (stays 0.2.0.9000) | `phase-0-groundwork` | CI (R-CMD-check), pha-update-2026 usage survey, pkgdown Bootstrap 5 + reference grouping + typo fixes (§1.9), consumer-pinning notes | [archive/phase-0-groundwork.md](archive/phase-0-groundwork.md) | **done** — merged (PR #14, squash) |
 | 1 — Consolidation | **0.3.0** | `release-0.3.0` | Tier 1 (§1.1–1.4, 1.6): safety-net tests, brand registry, one scale factory, one theme builder, colour aliases. Output provably identical. | [archive/phase-1-consolidation-0.3.0.md](archive/phase-1-consolidation-0.3.0.md) | **done** |
 | 2 — Features | **0.4.0** | `release-0.4.0` | Tier 2 (§2.1–2.7): exported color vectors + accessor, designed continuous ramps + deprecations, ggplot2 4.x theme-carried palettes (floor → ≥ 4.0), VHA brand + "adding a brand" howto, CVD audit (document-only), span helper, focus palette | [archive/phase-2-features-0.4.0.md](archive/phase-2-features-0.4.0.md) | **done** |
-| 3 — Fonts | **0.5.0** | `release-0.5.0` | Tier 3.1: systemfonts/ragg migration, drop showtext/sysfonts, consumer `dev: ragg_png` guidance (§4), side-by-side render comparison in one consumer before tagging | written at phase gate | **next up** |
+| 3 — Fonts | **0.5.0** | `release-0.5.0` | Tier 3.1: systemfonts/ragg migration, drop showtext/sysfonts, consumer `dev: ragg_png` guidance (§4), side-by-side render comparison in one consumer before tagging | [plans/phase-3-fonts-0.5.0.md](phase-3-fonts-0.5.0.md) | **in progress** |
 | 4 — Backlog | 0.6.0+ | per item | brand.yml emission (§3.2), vdiffr snapshots (§3.3), `use_hdatools()` (§3.4), rewrite `branded-themes` article (drop tidycensus/tidyverse dep, use synthetic data, add PHA/VHA). Revisit after 0.5.0. Package split (§3.5) rejected per review. | none — deliberately unplanned | deferred |
 
 Phases run strictly in order. Phase 2/3 plans are drafted **just-in-time** at
@@ -114,7 +114,6 @@ own session — **never done as a drive-by from hdatools work**.
 | Pin hdatools (renv or tagged ref) — currently floats on `main` | vhtf | before Phase 1 merges, ideally during Phase 0 |
 | Pin hdatools — currently floats on `main` | fed-workforce | before Phase 1 merges, ideally during Phase 0 |
 | Verify `add_reliability()` cv_col/percent path against real data; retire the CLAUDE.md/README ban (Q10) | fhfh | fhfh's next data session |
-| Re-snapshot to 0.3.0 / 0.4.0 / 0.5.0 and compare renders after each release | fhfh (binding), faar (optional) | after each release, per existing rollout convention |
+| Re-snapshot to 0.3.0 / 0.4.0 / 0.5.0 and compare renders after each release | fhfh (binding) | after each release, per existing rollout convention |
 | Retire the ~200-line local VHA clone once `theme_vha()` ships in 0.4.0 | vhtf | after Phase 2 release |
-| Delete local hardcoded hex vectors once `*_colors` export in 0.4.0 | faar, fhfh, fed-workforce | after Phase 2 release |
-| Verify `ggsave(bg = "white")` workaround is obsolete (§1.9) | fed-workforce | at its 0.4.0 bump |
+| Delete local hardcoded hex vectors once `*_colors` export in 0.4.0 | fhfh | after Phase 2 release |
