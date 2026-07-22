@@ -45,9 +45,9 @@ scale_fill_vha_c(
 
 **\[experimental\]** VHA's diverging ramp pairs Dark Turq against
 Yellow, the palette's only warm hue. Yellow's natural HCL lightness is
-too high to survive as a dark, saturated anchor, so that arm renders
-golden/olive rather than bright yellow — a sRGB gamut limit, not a
-tuning slip. Still monotonic and distinguishable under
-protanopia/deuteranopia/tritanopia simulation, but — like HDA's
-diverging ramp — a candidate for a follow-up Ramp Lab pass
+too high to survive as a dark, saturated anchor. That arm renders
+golden/olive rather than bright yellow. This is a sRGB gamut limit, not
+a tuning slip. It is still monotonic and distinguishable under
+protanopia, deuteranopia, and tritanopia simulation. Like HDA's
+diverging ramp, it's a candidate for a follow-up Ramp Lab pass
 (`plans/DECISIONS.md`).

@@ -73,8 +73,8 @@ This article builds the same chart in all four so you can see the brands
 side by side.</p>
 <p>Let’s get some data. This is median household income for three
 Richmond-area localities, from the 2017-2021 5-year American Community
-Survey (variable <code>B19013_001</code>) — bundled here as a static
-table so this article builds without a Census API key or network
+Survey (variable <code>B19013_001</code>). It’s bundled here as a static
+table, so this article builds without a Census API key or network
 access:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
@@ -86,7 +86,7 @@ access:</p>
 <span>  estimate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">88315</span>, <span class="fl">76345</span>, <span class="fl">54795</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Each plot below differs only in its <code>scale_fill_*()</code> and
-<code>theme_*()</code> call — everything else is identical.</p>
+<code>theme_*()</code> call. Everything else is identical.</p>
 <p>First, an HDAdvisors-branded plot:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">rva_inc</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">estimate</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/reorder.factor.html" class="external-link">reorder</a></span><span class="op">(</span><span class="va">NAME</span>, <span class="va">estimate</span><span class="op">)</span>, fill <span class="op">=</span> <span class="va">NAME</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -145,8 +145,8 @@ access:</p>
 <p><img src="branded-themes_files/figure-html/theme-vha-1.png" class="r-plt" alt="" width="768"></p>
 <p>Under ggplot2 &gt;= 4.0, a bare <code>theme_*()</code> with no
 <code>scale_*()</code> call also brands the plot, via the theme-carried
-palette — the <code>scale_fill_*()</code> line above is optional when
-the brand’s default palette order is what you want:</p>
+palette. The <code>scale_fill_*()</code> line above is optional when the
+brand’s default palette order is what you want:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">rva_inc</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">estimate</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/reorder.factor.html" class="external-link">reorder</a></span><span class="op">(</span><span class="va">NAME</span>, <span class="va">estimate</span><span class="op">)</span>, fill <span class="op">=</span> <span class="va">NAME</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>

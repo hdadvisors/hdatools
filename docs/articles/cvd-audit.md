@@ -63,8 +63,8 @@ effectively indistinguishable. Under protanopia and deuteranopia the
 pair is acceptable (delta-E ≈ 20–22).
 
 Tritanopia affects approximately 0.1 % of the population. Green and Sea
-Green are positions 2 and 6, so they appear together only in a
-5–6-category plot. Recommendations:
+Green are positions 2 and 6. They appear together only in a 5–6-category
+plot. Recommendations:
 
 - **Avoid pairing Green and Sea Green in a plot that targets tritanopic
   accessibility.**
@@ -95,8 +95,8 @@ HFV palette — pairwise delta-E by CVD type {.table}
 **Sky vs Grass is the structurally risky pair.** Delta-E is
 approximately 12 under all three CVD types (12.1–12.7) — within the
 borderline range and the lowest minimum of any first-4 audit. Both
-colors are teal-family; they are distinguishable in normal vision by
-their lightness contrast but that contrast diminishes under red-green
+colors are teal-family. They are distinguishable in normal vision by
+their lightness contrast, but that contrast diminishes under red-green
 CVD.
 
 No pair falls below 10 in the first-4 audit, so no automatic failure.
@@ -140,8 +140,8 @@ differentiation under red-green CVD. No pair falls below 10.
 PHA — Orange vs Red palette — pairwise delta-E by CVD type {.table}
 
 **Not confirmed as a failure.** The flagged Orange/Red pair maintains
-delta-E ≥ 22 under all CVD types; the lightness difference (Orange is
-substantially lighter) provides the primary perceptual cue and it is
+delta-E ≥ 22 under all CVD types. The lightness difference (Orange is
+substantially lighter) provides the primary perceptual cue, and it is
 preserved under CVD simulation.
 
 Recommendation: no action needed for the Orange/Red pair. For Green vs
@@ -167,7 +167,7 @@ Light Turq `#19787B`, Grey `#2E3030`, Light Blue `#E3F3F5`
 VHA palette — pairwise delta-E by CVD type {.table}
 
 **Dark Turq vs Light Turq is the tightest pair** (delta-E ≈ 16.5–18.3
-across CVD types). Both are deep teal tones; the primary cue under CVD
+across CVD types). Both are deep teal tones. The primary cue under CVD
 is the lightness difference (Dark Turq is considerably darker). No pair
 falls below 10 in the first-4 audit.
 
@@ -182,12 +182,12 @@ Recommendations:
 
 ## Diverging ramp caveat
 
-As documented in NEWS.md, 7-class diverging maps built from any of the
-six continuous ramps lose sign distinction in the innermost class pair
-under protanopia, because both arms converge toward the shared cream
-center. This is structural to any cream-centered diverging ramp; the
-mitigation is to always pair a `palette = "diverging"` map with a legend
-or direct class labels.
+Both arms of a 7-class diverging map converge toward the shared cream
+center. As documented in NEWS.md, this causes diverging maps built from
+any of the six continuous ramps to lose sign distinction in the
+innermost class pair under protanopia. This is structural to any
+cream-centered diverging ramp. The mitigation is to always pair a
+`palette = "diverging"` map with a legend or direct class labels.
 
 ------------------------------------------------------------------------
 
@@ -198,7 +198,7 @@ or direct class labels.
 assertions that the first four colors of each brand palette maintain the
 minimum pairwise delta-E thresholds observed above. These tests guard
 against future palette edits that silently reduce CVD
-distinguishability; they do not validate the absolute CVD safety of the
-palettes, and they do not test the HDA Green/Sea Green tritanopia
-failure (which is a documented limitation, not a threshold a future edit
-could improve accidentally).
+distinguishability. They do not validate the absolute CVD safety of the
+palettes. They also do not test the HDA Green/Sea Green tritanopia
+failure. That failure is a documented limitation, not a threshold a
+future edit could improve accidentally.

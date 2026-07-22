@@ -4,12 +4,12 @@ theme_hda(), Open Sans and Poppins for theme_hfv(), Noto Sans for
 theme_pha(), Montserrat for theme_vha()) with systemfonts, making
 them available by name to ragg graphics devices (and any other
 systemfonts-aware device). Everything is read from files installed with
-the package, so this never makes a network request."><meta property="og:description" content="Registers the font faces bundled in inst/fonts/ (Lato and Roboto Slab for
+the package. This never makes a network request."><meta property="og:description" content="Registers the font faces bundled in inst/fonts/ (Lato and Roboto Slab for
 theme_hda(), Open Sans and Poppins for theme_hfv(), Noto Sans for
 theme_pha(), Montserrat for theme_vha()) with systemfonts, making
 them available by name to ragg graphics devices (and any other
 systemfonts-aware device). Everything is read from files installed with
-the package, so this never makes a network request."></head><body>
+the package. This never makes a network request."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -29,7 +29,8 @@ the package, so this never makes a network request."></head><body>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/ragg-migration.html">Migrating from showtext to ragg</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/branded-themes.html">Using branded themes</a></li>
+    <li><a class="dropdown-item" href="../articles/ragg-migration.html">Migrating from showtext to ragg</a></li>
     <li><a class="dropdown-item" href="../articles/cvd-audit.html">CVD accessibility audit</a></li>
     <li><a class="dropdown-item" href="../articles/adding-a-brand.html">Adding a new client brand</a></li>
   </ul></li>
@@ -54,7 +55,7 @@ the package, so this never makes a network request."></head><body>
 <code><a href="theme_pha.html">theme_pha()</a></code>, Montserrat for <code><a href="theme_vha.html">theme_vha()</a></code>) with <span class="pkg">systemfonts</span>, making
 them available by name to <span class="pkg">ragg</span> graphics devices (and any other
 systemfonts-aware device). Everything is read from files installed with
-the package, so this never makes a network request.</p>
+the package. This never makes a network request.</p>
     </div>
 
     <div class="section level2">
@@ -68,8 +69,8 @@ the package, so this never makes a network request.</p>
 
 <dl><dt id="arg-quiet">quiet<a class="anchor" aria-label="anchor" href="#arg-quiet"></a></dt>
 <dd><p>If <code>TRUE</code>, suppresses the message emitted when registering a
-family unexpectedly fails (a name collision with an installed system
-font is never reported, since it is not a failure). Registration issues
+family unexpectedly fails. A name collision with an installed system
+font is not a failure, so it is never reported. Registration issues
 are non-fatal: hdatools falls back to whatever fonts are already
 available on the system.</p></dd>
 
@@ -82,17 +83,17 @@ the opt-out or if a family failed to register for an unexpected reason.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Rendering with these fonts requires a systemfonts-aware device — for
-knitr/Quarto output, set <code>dev: "ragg_png"</code> (see <code>README.md</code>); the default
+    <p>Rendering with these fonts requires a systemfonts-aware device. For
+knitr/Quarto output, set <code>dev: "ragg_png"</code> (see <code>README.md</code>). The default
 Cairo device does not consult the systemfonts registry.</p>
 <p>Registration can be skipped by setting <code>options(hdatools.fonts = FALSE)</code>
-or the environment variable <code>HDATOOLS_NO_FONTS</code> to any non-empty value —
-useful if a consumer wants to supply its own font setup.</p>
+or the environment variable <code>HDATOOLS_NO_FONTS</code> to any non-empty value.
+This is useful if a consumer wants to supply its own font setup.</p>
 <p>Each bundled family is registered independently. <code><a href="https://systemfonts.r-lib.org/reference/register_font.html" class="external-link">systemfonts::register_font()</a></code>
 refuses to register a name that already matches an installed system font
-(e.g. Open Sans ships with several common apps) — when that happens, this
-function leaves that one family alone (the system copy resolves under the
-same name anyway) and still registers the rest.</p>
+(e.g. Open Sans ships with several common apps). When that happens, this
+function leaves that one family alone and still registers the rest. The
+system copy resolves under the same name anyway.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

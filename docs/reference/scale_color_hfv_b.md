@@ -62,6 +62,6 @@ scale_colour_hfv_b(
 ## Diverging palette usage
 
 7-class diverging maps built from these ramps lose sign distinction in
-their innermost class pair under protanopia (structural to the shared
-cream center) — always pair a `palette = "diverging"` map with a legend
-or direct labels. See `plans/DECISIONS.md` (2026-07-18).
+their innermost class pair under protanopia. This is structural to the
+shared cream center. Always pair a `palette = "diverging"` map with a
+legend or direct labels. See `plans/DECISIONS.md` (2026-07-18).

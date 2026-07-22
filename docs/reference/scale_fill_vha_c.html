@@ -19,7 +19,8 @@
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/ragg-migration.html">Migrating from showtext to ragg</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/branded-themes.html">Using branded themes</a></li>
+    <li><a class="dropdown-item" href="../articles/ragg-migration.html">Migrating from showtext to ragg</a></li>
     <li><a class="dropdown-item" href="../articles/cvd-audit.html">CVD accessibility audit</a></li>
     <li><a class="dropdown-item" href="../articles/adding-a-brand.html">Adding a new client brand</a></li>
   </ul></li>
@@ -86,11 +87,11 @@ low vs. high.</p></dd>
     <p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a>
 VHA's diverging ramp pairs Dark Turq against Yellow, the palette's only
 warm hue. Yellow's natural HCL lightness is too high to survive as a
-dark, saturated anchor, so that arm renders golden/olive rather than
-bright yellow — a sRGB gamut limit, not a tuning slip. Still monotonic
-and distinguishable under protanopia/deuteranopia/tritanopia simulation,
-but — like HDA's diverging ramp — a candidate for a follow-up Ramp Lab
-pass (<code>plans/DECISIONS.md</code>).</p>
+dark, saturated anchor. That arm renders golden/olive rather than
+bright yellow. This is a sRGB gamut limit, not a tuning slip. It is
+still monotonic and distinguishable under protanopia, deuteranopia, and
+tritanopia simulation. Like HDA's diverging ramp, it's a candidate for
+a follow-up Ramp Lab pass (<code>plans/DECISIONS.md</code>).</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

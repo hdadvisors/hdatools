@@ -53,14 +53,14 @@ scale_fill_hda_b(
 ## Diverging palette usage
 
 7-class diverging maps built from these ramps lose sign distinction in
-their innermost class pair under protanopia (structural to the shared
-cream center) — always pair a `palette = "diverging"` map with a legend
-or direct labels. See `plans/DECISIONS.md` (2026-07-18).
+their innermost class pair under protanopia. This is structural to the
+shared cream center. Always pair a `palette = "diverging"` map with a
+legend or direct labels. See `plans/DECISIONS.md` (2026-07-18).
 
 ## HDA diverging is provisional
 
 **\[experimental\]** HDA's diverging ramp (Blue vs Coral) is a near-twin
-of PHA's (Dark Blue vs Red) and is pending a follow-up Ramp Lab pass to
+of PHA's (Dark Blue vs Red). It's pending a follow-up Ramp Lab pass to
 differentiate it before final adoption (see `plans/DECISIONS.md`,
-2026-07-18). It ships now so the scale matrix is complete; treat it as
+2026-07-18). It ships now so the scale matrix is complete. Treat it as
 subject to change.

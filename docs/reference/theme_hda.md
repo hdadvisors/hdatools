@@ -51,17 +51,23 @@ theme_hda(
 When overriding strip text under ggplot2 \>= 4.0, use
 [`ggtext::element_markdown()`](https://wilkelab.org/ggtext/reference/element_markdown.html),
 never a raw
-[`ggplot2::element_text()`](https://ggplot2.tidyverse.org/reference/element.html):
-the branded strip element is a ggtext markdown element, and ggplot2 4.0
-only merges theme elements of the same class.
+[`ggplot2::element_text()`](https://ggplot2.tidyverse.org/reference/element.html).
+The branded strip element is a ggtext markdown element. ggplot2 4.0 only
+merges theme elements of the same class.
 
 The theme alone carries HDA's brand identity into an otherwise unbranded
-plot: bar/column fills, point colors, and line colors default to
-`hda_colors["Blue"]` (via
-[`ggplot2::element_geom()`](https://ggplot2.tidyverse.org/reference/element.html)),
-a discrete `aes(colour =)`/`aes(fill =)` mapping cycles through the full
-HDA palette, and a continuous mapping uses the HDA sequential ramp (see
-[`scale_color_hda_c()`](https://hdadvisors.github.io/hdatools/reference/scale_color_hda_c.md))
-— all with no `scale_*()` call required. An explicit `scale_*()` (or a
-manual [`aes()`](https://ggplot2.tidyverse.org/reference/aes.html)
-value) always overrides these theme-carried defaults.
+plot, with no `scale_*()` call required:
+
+- Bar/column fills, point colors, and line colors default to
+  `hda_colors["Blue"]` (via
+  [`ggplot2::element_geom()`](https://ggplot2.tidyverse.org/reference/element.html)).
+
+- A discrete `aes(colour =)`/`aes(fill =)` mapping cycles through the
+  full HDA palette.
+
+- A continuous mapping uses the HDA sequential ramp (see
+  [`scale_color_hda_c()`](https://hdadvisors.github.io/hdatools/reference/scale_color_hda_c.md)).
+
+An explicit `scale_*()` (or a manual
+[`aes()`](https://ggplot2.tidyverse.org/reference/aes.html) value)
+always overrides these theme-carried defaults.

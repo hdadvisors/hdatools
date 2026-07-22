@@ -14,18 +14,18 @@ font rendering in R. The previous approach —
 [`sysfonts::font_add()`](https://rdrr.io/pkg/sysfonts/man/font_add.html)
 followed by
 [`showtext::showtext_auto()`](https://rdrr.io/pkg/showtext/man/showtext_auto.html)
-— works but carries a significant drawback:
+— works, but it carries a significant drawback.
 [`showtext::showtext_auto()`](https://rdrr.io/pkg/showtext/man/showtext_auto.html)
-replaces R’s graphics device hooks globally, which means loading
-hdatools was silently changing rendering behavior for every plot in a
-session, even plots unrelated to hdatools themes.
+replaces R’s graphics device hooks globally. This means loading hdatools
+was silently changing rendering behavior for every plot in a session,
+even plots unrelated to hdatools themes.
 
 ### PDF text quality
 
 The older showtext approach rasterizes text at figure resolution and
 bakes it into the PDF as pixels, not as selectable text. Fonts
 registered with `systemfonts` and rendered via `ragg` or a compatible
-device are output as real vector text in PDFs, which means the text is
+device are output as real vector text in PDFs. This means the text is
 selectable, searchable, and crisp at any zoom level. Word and Typst
 output also benefits from this approach.
 
@@ -43,8 +43,8 @@ active graphics device.
 
 To render plots with hdatools’ bundled fonts, your Quarto project must
 use a `systemfonts`-aware graphics device. The default Cairo device does
-not consult the `systemfonts` registry, so the bundled fonts will not
-appear in rendered output without this change.
+not consult the `systemfonts` registry. Without this change, the bundled
+fonts will not appear in rendered output.
 
 Add the following to your project’s `_quarto.yml`:
 
@@ -58,7 +58,7 @@ This sets `ragg_png` as the default knitr graphics device for every
 chunk in your document. `ragg_png` is the PNG device from the
 [ragg](https://ragg.r-lib.org/) package and is fully
 `systemfonts`-aware. The `ragg` package is listed in hdatools’
-`Suggests` — install it with `install.packages("ragg")` if it is not
+`Suggests`. Install it with `install.packages("ragg")` if it is not
 already present.
 
 For R Markdown documents (not Quarto), set the device per-chunk or
@@ -85,7 +85,7 @@ environment):
 
     HDATOOLS_NO_FONTS=1
 
-Either opt-out leaves hdatools’ theme functions fully functional — they
+Either opt-out leaves hdatools’ theme functions fully functional. They
 will just resolve font names through whatever faces are already
 registered on the system.
 
@@ -100,7 +100,7 @@ registered on the system.
   text wrapping in plot titles and labels).
 - Richer sub-pixel hinting on screen; crisper vector text in PDFs.
 
-In side-by-side comparisons the differences are subtle — character
+In side-by-side comparisons the differences are subtle. Character
 spacing may shift by a pixel or two in rasterized output, and wrapped
 labels may reflow slightly. These are expected and acceptable rendering
 improvements, not bugs.
@@ -126,5 +126,5 @@ improvements, not bugs.
 hdatools 0.4.x called `knitr::opts_chunk$set(fig.showtext = TRUE)` at
 load time as a global side effect. **This is gone in 0.5.0.** Code that
 relied on `fig.showtext = TRUE` being set automatically should add the
-`dev: "ragg_png"` block above instead — the `ragg` device does not need
+`dev: "ragg_png"` block above instead. The `ragg` device does not need
 `fig.showtext`.

@@ -5,7 +5,7 @@ hdatools’ theming is built on one idea: **brands are data**. Every
 `scale_*_*_c()`/`scale_*_*_b()`, and `*_colors`/`*_color()` export is a
 thin, brand-agnostic wrapper over a single internal registry, `.brands`
 (see `R/brands.R`). Adding a new client brand means adding **one entry**
-to that registry — the wrappers below it are one-liners you
+to that registry. The wrappers below it are one-liners you
 copy-and-rename, not new logic.
 
 This article walks through how VHA was added as hdatools’ fourth brand,
@@ -17,12 +17,12 @@ Before writing any code, get three things confirmed directly (never
 invent or infer them):
 
 - The brand’s hex palette, with a label for each color.
-- Rights to bundle the brand’s font(s) — hdatools ships static `.ttf`
+- Rights to bundle the brand’s font(s). hdatools ships static `.ttf`
   files in `inst/fonts/`, registered offline via
-  [`sysfonts::font_add()`](https://rdrr.io/pkg/sysfonts/man/font_add.html)
-  (never a network fetch like
-  [`sysfonts::font_add_google()`](https://rdrr.io/pkg/sysfonts/man/font_add_google.html)),
-  so redistribution rights matter, not just “the font looks free.”
+  [`systemfonts::register_font()`](https://systemfonts.r-lib.org/reference/register_font.html)
+  from the bundled file, never fetched from a font server. Because
+  hdatools redistributes the actual font files, redistribution rights
+  matter — not just whether “the font looks free.”
 - Any design decisions specific to the brand (base text size,
   output-format size adjustments, line height, title/subtitle margins)
   if the client already has an existing house style to match.
@@ -68,26 +68,34 @@ vha = list(
 )
 ```
 
-The `ramps` HCL parameters aren’t hand-picked colors — `h1`/`h2` are the
-sequential/diverging anchor colors’ own HCL hue (compute with
-`colorspace::hex2RGB(hex) |> methods::as("polarLUV")`); `c1`/`l1` follow
-that anchor’s chroma/lightness; `l2 = 95` and the cream light-end
-hue/chroma are fixed constants shared by every brand (`R/ramps.R`).
+The `ramps` HCL parameters aren’t hand-picked colors:
+
+- `h1`/`h2` are the sequential/diverging anchor colors’ own HCL hue.
+  Compute this with
+  `colorspace::hex2RGB(hex) |> methods::as("polarLUV")`.
+- `c1`/`l1` follow that anchor’s chroma/lightness.
+- `l2 = 95` and the cream light-end hue/chroma are fixed constants
+  shared by every brand (`R/ramps.R`).
+
 Render a swatch and run a CVD simulation
 ([`colorspace::deutan()`](https://colorspace.R-Forge.R-project.org/reference/simulate_cvd.html)/`protan()`/`tritan()`)
-before committing the params — a hue whose natural lightness is far from
-the dark anchor (VHA’s Yellow, used for the diverging ramp’s second arm)
-can render muddy or lose its identity at the anchor lightness. That’s an
-sRGB gamut limit, not a mistake; document it as a provisional ramp (see
+before committing the params. A hue whose natural lightness is far from
+the dark anchor — VHA’s Yellow, used for the diverging ramp’s second
+arm, is one example — can render muddy or lose its identity at the
+anchor lightness. That’s an sRGB gamut limit, not a mistake. Document it
+as a provisional ramp (see
 [`scale_color_vha_c()`](https://hdadvisors.github.io/hdatools/reference/scale_color_vha_c.md))
 rather than silently shipping a ramp that looks wrong.
 
-If the brand introduces a new font family, bundle its static `.ttf`
-files under `inst/fonts/<family>/` alongside its license file, add a
-manifest row to `inst/fonts/LICENSES.md`, and register it in
-[`register_hda_fonts()`](https://hdadvisors.github.io/hdatools/reference/register_hda_fonts.md)
-(`R/theme_helpers.R`) with
-[`sysfonts::font_add()`](https://rdrr.io/pkg/sysfonts/man/font_add.html).
+If the brand introduces a new font family, do the following:
+
+1.  Bundle its static `.ttf` files under `inst/fonts/<family>/`,
+    alongside its license file.
+2.  Add a manifest row to `inst/fonts/LICENSES.md`.
+3.  Register it in
+    [`register_hda_fonts()`](https://hdadvisors.github.io/hdatools/reference/register_hda_fonts.md)
+    (`R/theme_helpers.R`) with
+    [`systemfonts::register_font()`](https://systemfonts.r-lib.org/reference/register_font.html).
 
 ## 3. Add the one-line wrapper exports
 
@@ -111,18 +119,18 @@ brand’s wrapper, renamed:
 None of `R/scales.R`’s or `R/themes.R`’s shared internals
 (`.brand_theme()`, `.scale_brand_discrete()`,
 `.scale_brand_continuous()`, `.scale_brand_binned()`, `.ramp_hex()`)
-needed to change, or even know VHA exists — they all take `brand` as a
+needed to change, or even know VHA exists. They all take `brand` as a
 string and read everything else from `.brands[[brand]]`. If adding a
 brand ever requires an `if (brand == "...")` branch in one of those
-internals, that’s a sign the shared builder isn’t general enough yet —
-worth flagging before hand-rolling a brand-specific exception.
+internals, that’s a sign the shared builder isn’t general enough yet.
+Flag it before hand-rolling a brand-specific exception.
 
 ## 4. Document and test
 
 Run
 [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
-to pick up the new roxygen blocks (`NAMESPACE` and `man/*.Rd` are
-generated — never hand-edit them). Mirror the existing per-brand test
+to pick up the new roxygen blocks. `NAMESPACE` and `man/*.Rd` are
+generated — never hand-edit them. Mirror the existing per-brand test
 coverage in `tests/testthat/`: palette identity against the registry,
 theme element identity via
 [`ggplot2::calc_element()`](https://ggplot2.tidyverse.org/reference/calc_element.html),

@@ -23,7 +23,8 @@ against protanopia, deuteranopia, and tritanopia in the Ramp Lab review
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/ragg-migration.html">Migrating from showtext to ragg</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/branded-themes.html">Using branded themes</a></li>
+    <li><a class="dropdown-item" href="../articles/ragg-migration.html">Migrating from showtext to ragg</a></li>
     <li><a class="dropdown-item" href="../articles/cvd-audit.html">CVD accessibility audit</a></li>
     <li><a class="dropdown-item" href="../articles/adding-a-brand.html">Adding a new client brand</a></li>
   </ul></li>
@@ -91,17 +92,17 @@ review; <code>-1</code> swaps which arm represents low vs. high.</p></dd>
     <h2 id="diverging-palette-usage">Diverging palette usage<a class="anchor" aria-label="anchor" href="#diverging-palette-usage"></a></h2>
     <p>7-class diverging maps built from these
 ramps lose sign distinction in their innermost class pair under
-protanopia (structural to the shared cream center) — always pair a
-<code>palette = "diverging"</code> map with a legend or direct labels. See
+protanopia. This is structural to the shared cream center. Always pair
+a <code>palette = "diverging"</code> map with a legend or direct labels. See
 <code>plans/DECISIONS.md</code> (2026-07-18).</p>
     </div>
     <div class="section level2">
     <h2 id="hda-diverging-is-provisional">HDA diverging is provisional<a class="anchor" aria-label="anchor" href="#hda-diverging-is-provisional"></a></h2>
     <p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a>
 HDA's diverging ramp (Blue vs Coral) is a near-twin of PHA's (Dark Blue
-vs Red) and is pending a follow-up Ramp Lab pass to differentiate it
+vs Red). It's pending a follow-up Ramp Lab pass to differentiate it
 before final adoption (see <code>plans/DECISIONS.md</code>, 2026-07-18). It ships
-now so the scale matrix is complete; treat it as subject to change.</p>
+now so the scale matrix is complete. Treat it as subject to change.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

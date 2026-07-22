@@ -34,7 +34,8 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/ragg-migration.html">Migrating from showtext to ragg</a></li>
+<li><a class="dropdown-item" href="../articles/branded-themes.html">Using branded themes</a></li>
+    <li><a class="dropdown-item" href="../articles/ragg-migration.html">Migrating from showtext to ragg</a></li>
     <li><a class="dropdown-item" href="../articles/cvd-audit.html">CVD accessibility audit</a></li>
     <li><a class="dropdown-item" href="../articles/adding-a-brand.html">Adding a new client brand</a></li>
   </ul>
@@ -79,11 +80,11 @@ doesn’t) in rendered output.</p>
 <p>The tidyverse now recommends the <code>systemfonts</code> +
 <code>ragg</code> stack for custom font rendering in R. The previous
 approach — <code><a href="https://rdrr.io/pkg/sysfonts/man/font_add.html" class="external-link">sysfonts::font_add()</a></code> followed by
-<code><a href="https://rdrr.io/pkg/showtext/man/showtext_auto.html" class="external-link">showtext::showtext_auto()</a></code> — works but carries a significant
-drawback: <code><a href="https://rdrr.io/pkg/showtext/man/showtext_auto.html" class="external-link">showtext::showtext_auto()</a></code> replaces R’s graphics
-device hooks globally, which means loading hdatools was silently
-changing rendering behavior for every plot in a session, even plots
-unrelated to hdatools themes.</p>
+<code><a href="https://rdrr.io/pkg/showtext/man/showtext_auto.html" class="external-link">showtext::showtext_auto()</a></code> — works, but it carries a
+significant drawback. <code><a href="https://rdrr.io/pkg/showtext/man/showtext_auto.html" class="external-link">showtext::showtext_auto()</a></code> replaces
+R’s graphics device hooks globally. This means loading hdatools was
+silently changing rendering behavior for every plot in a session, even
+plots unrelated to hdatools themes.</p>
 </div>
 <div class="section level3">
 <h3 id="pdf-text-quality">PDF text quality<a class="anchor" aria-label="anchor" href="#pdf-text-quality"></a>
@@ -92,9 +93,8 @@ unrelated to hdatools themes.</p>
 bakes it into the PDF as pixels, not as selectable text. Fonts
 registered with <code>systemfonts</code> and rendered via
 <code>ragg</code> or a compatible device are output as real vector text
-in PDFs, which means the text is selectable, searchable, and crisp at
-any zoom level. Word and Typst output also benefits from this
-approach.</p>
+in PDFs. This means the text is selectable, searchable, and crisp at any
+zoom level. Word and Typst output also benefits from this approach.</p>
 </div>
 <div class="section level3">
 <h3 id="cleaner-package-boundaries">Cleaner package boundaries<a class="anchor" aria-label="anchor" href="#cleaner-package-boundaries"></a>
@@ -112,9 +112,9 @@ and never touches knitr globals or the active graphics device.</p>
 </h2>
 <p>To render plots with hdatools’ bundled fonts, your Quarto project
 must use a <code>systemfonts</code>-aware graphics device. The default
-Cairo device does not consult the <code>systemfonts</code> registry, so
-the bundled fonts will not appear in rendered output without this
-change.</p>
+Cairo device does not consult the <code>systemfonts</code> registry.
+Without this change, the bundled fonts will not appear in rendered
+output.</p>
 <p>Add the following to your project’s <code>_quarto.yml</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">knitr</span><span class="kw">:</span></span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="at">  </span><span class="fu">opts_chunk</span><span class="kw">:</span></span>
@@ -123,7 +123,7 @@ change.</p>
 for every chunk in your document. <code>ragg_png</code> is the PNG
 device from the <a href="https://ragg.r-lib.org/" class="external-link">ragg</a> package and
 is fully <code>systemfonts</code>-aware. The <code>ragg</code> package
-is listed in hdatools’ <code>Suggests</code> — install it with
+is listed in hdatools’ <code>Suggests</code>. Install it with
 <code>install.packages("ragg")</code> if it is not already present.</p>
 <p>For R Markdown documents (not Quarto), set the device per-chunk or
 globally:</p>
@@ -142,8 +142,8 @@ package:</p>
 <p>Or use the environment variable (useful in <code>.Renviron</code> or
 a CI environment):</p>
 <pre><code><span><span class="va">HDATOOLS_NO_FONTS</span><span class="op">=</span><span class="fl">1</span></span></code></pre>
-<p>Either opt-out leaves hdatools’ theme functions fully functional —
-they will just resolve font names through whatever faces are already
+<p>Either opt-out leaves hdatools’ theme functions fully functional.
+They will just resolve font names through whatever faces are already
 registered on the system.</p>
 </div>
 <div class="section level2">
@@ -161,7 +161,7 @@ text wrapping in plot titles and labels).</li>
 <li>Richer sub-pixel hinting on screen; crisper vector text in
 PDFs.</li>
 </ul>
-<p>In side-by-side comparisons the differences are subtle — character
+<p>In side-by-side comparisons the differences are subtle. Character
 spacing may shift by a pixel or two in rasterized output, and wrapped
 labels may reflow slightly. These are expected and acceptable rendering
 improvements, not bugs.</p>
@@ -196,7 +196,7 @@ registered.</li>
 <code>knitr::opts_chunk$set(fig.showtext = TRUE)</code> at load time as
 a global side effect. <strong>This is gone in 0.5.0.</strong> Code that
 relied on <code>fig.showtext = TRUE</code> being set automatically
-should add the <code>dev: "ragg_png"</code> block above instead — the
+should add the <code>dev: "ragg_png"</code> block above instead. The
 <code>ragg</code> device does not need <code>fig.showtext</code>.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

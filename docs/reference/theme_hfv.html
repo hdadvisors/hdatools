@@ -19,7 +19,8 @@
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/ragg-migration.html">Migrating from showtext to ragg</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/branded-themes.html">Using branded themes</a></li>
+    <li><a class="dropdown-item" href="../articles/ragg-migration.html">Migrating from showtext to ragg</a></li>
     <li><a class="dropdown-item" href="../articles/cvd-audit.html">CVD accessibility audit</a></li>
     <li><a class="dropdown-item" href="../articles/adding-a-brand.html">Adding a new client brand</a></li>
   </ul></li>
@@ -90,16 +91,17 @@
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>When overriding strip text under ggplot2 &gt;= 4.0, use
-<code><a href="https://wilkelab.org/ggtext/reference/element_markdown.html" class="external-link">ggtext::element_markdown()</a></code>, never a raw <code><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">ggplot2::element_text()</a></code>: the
-branded strip element is a ggtext markdown element, and ggplot2 4.0 only
+<code><a href="https://wilkelab.org/ggtext/reference/element_markdown.html" class="external-link">ggtext::element_markdown()</a></code>, never a raw <code><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">ggplot2::element_text()</a></code>. The
+branded strip element is a ggtext markdown element. ggplot2 4.0 only
 merges theme elements of the same class.</p>
 <p>The theme alone carries HFV's brand identity into an otherwise
-unbranded plot: bar/column fills, point colors, and line colors default
-to <code>hfv_colors["Shadow"]</code> (via <code><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">ggplot2::element_geom()</a></code>), a discrete
-<code>aes(colour =)</code>/<code>aes(fill =)</code> mapping cycles through the full HFV
-palette, and a continuous mapping uses the HFV sequential ramp
-(see <code><a href="scale_color_hfv_c.html">scale_color_hfv_c()</a></code>) — all with no <code>scale_*()</code> call required.
-An explicit <code>scale_*()</code> (or a manual <code><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes()</a></code> value) always overrides
+unbranded plot, with no <code>scale_*()</code> call required:</p><ul><li><p>Bar/column fills, point colors, and line colors default to
+<code>hfv_colors["Shadow"]</code> (via <code><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">ggplot2::element_geom()</a></code>).</p></li>
+<li><p>A discrete <code>aes(colour =)</code>/<code>aes(fill =)</code> mapping cycles through the
+full HFV palette.</p></li>
+<li><p>A continuous mapping uses the HFV sequential ramp (see
+<code><a href="scale_color_hfv_c.html">scale_color_hfv_c()</a></code>).</p></li>
+</ul><p>An explicit <code>scale_*()</code> (or a manual <code><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes()</a></code> value) always overrides
 these theme-carried defaults.</p>
     </div>
 

@@ -73,7 +73,7 @@ data</strong>. Every <code>theme_*()</code>,
 <code>*_colors</code>/<code>*_color()</code> export is a thin,
 brand-agnostic wrapper over a single internal registry,
 <code>.brands</code> (see <code>R/brands.R</code>). Adding a new client
-brand means adding <strong>one entry</strong> to that registry — the
+brand means adding <strong>one entry</strong> to that registry. The
 wrappers below it are one-liners you copy-and-rename, not new logic.</p>
 <p>This article walks through how VHA was added as hdatools’ fourth
 brand, as the worked example.</p>
@@ -84,11 +84,12 @@ brand, as the worked example.</p>
 invent or infer them):</p>
 <ul>
 <li>The brand’s hex palette, with a label for each color.</li>
-<li>Rights to bundle the brand’s font(s) — hdatools ships static
+<li>Rights to bundle the brand’s font(s). hdatools ships static
 <code>.ttf</code> files in <code>inst/fonts/</code>, registered offline
-via <code><a href="https://systemfonts.r-lib.org/reference/register_font.html" class="external-link">systemfonts::register_font()</a></code> (from the bundled file,
-never fetched from a font server), so redistribution rights matter, not
-just “the font looks free.”</li>
+via <code><a href="https://systemfonts.r-lib.org/reference/register_font.html" class="external-link">systemfonts::register_font()</a></code> from the bundled file,
+never fetched from a font server. Because hdatools redistributes the
+actual font files, redistribution rights matter — not just whether “the
+font looks free.”</li>
 <li>Any design decisions specific to the brand (base text size,
 output-format size adjustments, line height, title/subtitle margins) if
 the client already has an existing house style to match.</li>
@@ -131,27 +132,37 @@ before <code>R/brands.R</code> was touched.</p>
 <span>    diverging  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>h1 <span class="op">=</span> <span class="fl">196.3</span>, h2 <span class="op">=</span> <span class="fl">67.6</span>, c1 <span class="op">=</span> <span class="fl">70</span>, l1 <span class="op">=</span> <span class="fl">40</span>, l2 <span class="op">=</span> <span class="fl">95</span>, power <span class="op">=</span> <span class="fl">0.90</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>The <code>ramps</code> HCL parameters aren’t hand-picked colors —
+<p>The <code>ramps</code> HCL parameters aren’t hand-picked colors:</p>
+<ul>
+<li>
 <code>h1</code>/<code>h2</code> are the sequential/diverging anchor
-colors’ own HCL hue (compute with
-<code>colorspace::hex2RGB(hex) |&gt; methods::as("polarLUV")</code>);
-<code>c1</code>/<code>l1</code> follow that anchor’s chroma/lightness;
+colors’ own HCL hue. Compute this with
+<code>colorspace::hex2RGB(hex) |&gt; methods::as("polarLUV")</code>.</li>
+<li>
+<code>c1</code>/<code>l1</code> follow that anchor’s
+chroma/lightness.</li>
+<li>
 <code>l2 = 95</code> and the cream light-end hue/chroma are fixed
-constants shared by every brand (<code>R/ramps.R</code>). Render a
-swatch and run a CVD simulation
+constants shared by every brand (<code>R/ramps.R</code>).</li>
+</ul>
+<p>Render a swatch and run a CVD simulation
 (<code><a href="https://colorspace.R-Forge.R-project.org/reference/simulate_cvd.html" class="external-link">colorspace::deutan()</a></code>/<code>protan()</code>/<code>tritan()</code>)
-before committing the params — a hue whose natural lightness is far from
-the dark anchor (VHA’s Yellow, used for the diverging ramp’s second arm)
-can render muddy or lose its identity at the anchor lightness. That’s an
-sRGB gamut limit, not a mistake; document it as a provisional ramp (see
-<code><a href="../reference/scale_color_vha_c.html">scale_color_vha_c()</a></code>) rather than silently shipping a ramp
-that looks wrong.</p>
-<p>If the brand introduces a new font family, bundle its static
-<code>.ttf</code> files under <code>inst/fonts/&lt;family&gt;/</code>
-alongside its license file, add a manifest row to
-<code>inst/fonts/LICENSES.md</code>, and register it in
-<code><a href="../reference/register_hda_fonts.html">register_hda_fonts()</a></code> (<code>R/theme_helpers.R</code>) with
-<code><a href="https://systemfonts.r-lib.org/reference/register_font.html" class="external-link">systemfonts::register_font()</a></code>.</p>
+before committing the params. A hue whose natural lightness is far from
+the dark anchor — VHA’s Yellow, used for the diverging ramp’s second
+arm, is one example — can render muddy or lose its identity at the
+anchor lightness. That’s an sRGB gamut limit, not a mistake. Document it
+as a provisional ramp (see <code><a href="../reference/scale_color_vha_c.html">scale_color_vha_c()</a></code>) rather than
+silently shipping a ramp that looks wrong.</p>
+<p>If the brand introduces a new font family, do the following:</p>
+<ol style="list-style-type: decimal">
+<li>Bundle its static <code>.ttf</code> files under
+<code>inst/fonts/&lt;family&gt;/</code>, alongside its license
+file.</li>
+<li>Add a manifest row to <code>inst/fonts/LICENSES.md</code>.</li>
+<li>Register it in <code><a href="../reference/register_hda_fonts.html">register_hda_fonts()</a></code>
+(<code>R/theme_helpers.R</code>) with
+<code><a href="https://systemfonts.r-lib.org/reference/register_font.html" class="external-link">systemfonts::register_font()</a></code>.</li>
+</ol>
 </div>
 <div class="section level2">
 <h2 id="add-the-one-line-wrapper-exports">3. Add the one-line wrapper exports<a class="anchor" aria-label="anchor" href="#add-the-one-line-wrapper-exports"></a>
@@ -183,19 +194,19 @@ internals (<code>.brand_theme()</code>,
 <code>.scale_brand_discrete()</code>,
 <code>.scale_brand_continuous()</code>,
 <code>.scale_brand_binned()</code>, <code>.ramp_hex()</code>) needed to
-change, or even know VHA exists — they all take <code>brand</code> as a
+change, or even know VHA exists. They all take <code>brand</code> as a
 string and read everything else from <code>.brands[[brand]]</code>. If
 adding a brand ever requires an <code>if (brand == "...")</code> branch
 in one of those internals, that’s a sign the shared builder isn’t
-general enough yet — worth flagging before hand-rolling a brand-specific
+general enough yet. Flag it before hand-rolling a brand-specific
 exception.</p>
 </div>
 <div class="section level2">
 <h2 id="document-and-test">4. Document and test<a class="anchor" aria-label="anchor" href="#document-and-test"></a>
 </h2>
 <p>Run <code><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">devtools::document()</a></code> to pick up the new roxygen
-blocks (<code>NAMESPACE</code> and <code>man/*.Rd</code> are generated —
-never hand-edit them). Mirror the existing per-brand test coverage in
+blocks. <code>NAMESPACE</code> and <code>man/*.Rd</code> are generated —
+never hand-edit them. Mirror the existing per-brand test coverage in
 <code>tests/testthat/</code>: palette identity against the registry,
 theme element identity via <code><a href="https://ggplot2.tidyverse.org/reference/calc_element.html" class="external-link">ggplot2::calc_element()</a></code>, scale
 output via <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot2::ggplot_build()</a></code>, and (if a new font was

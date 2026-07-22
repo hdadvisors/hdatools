@@ -56,18 +56,36 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="hdatools">hdatools<a class="anchor" aria-label="anchor" href="#hdatools"></a>
 </h1></div>
-<p>The <code>hdatools</code> package provides a set of functions and tools for data analysis and visualization.</p>
+<p>hdatools is HDAdvisors’ internal R package for building on-brand charts and reports. It bundles ggplot2 themes, color scales, and analysis helpers for four client brands — HDAdvisors (HDA), HousingForward Virginia (HFV), the Partnership for Housing Affordability (PHA), and VHA. Every report across these projects looks consistent without hand-tuning each plot.</p>
+<p>Each brand gets a matching <code>theme_*()</code> ggplot2 theme, discrete color/fill scales, and continuous sequential/diverging ramps, all checked for color-vision-deficiency accessibility. A handful of analysis helpers round it out: reliability labels from a coefficient-of-variation column, factor recoding with automatic level ordering, and a few small chart-formatting utilities.</p>
+<p>This package is for HDA/HFV teammates building charts in R or Quarto. If you want to help build hdatools itself, see <a href="CONTRIBUTING.html">CONTRIBUTING.md</a>.</p>
 <div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+<h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
+<div class="section level3">
+<h3 id="install">Install<a class="anchor" aria-label="anchor" href="#install"></a>
+</h3>
+<p>hdatools isn’t on CRAN. Install it from GitHub:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/install-deprecated.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"hdadvisors/hdatools"</span><span class="op">)</span></span></code></pre></div>
-<p>hdatools bundles the Lato, Roboto Slab, Open Sans, Poppins, Noto Sans, and Montserrat faces used by its themes and registers them with systemfonts offline the first time the package loads — no network request, no per-session Google Fonts download. To skip registration (for example, to supply your own font setup), set <code>options(hdatools.fonts = FALSE)</code> or the environment variable <code>HDATOOLS_NO_FONTS</code> before loading the package.</p>
-<p>Rendering plots with these fonts requires a systemfonts-aware graphics device. In a Quarto document, add the following to <code>_quarto.yml</code> (the default Cairo device does not consult the systemfonts registry, so without this the bundled fonts won’t appear in rendered output):</p>
+</div>
+<div class="section level3">
+<h3 id="fonts">Fonts<a class="anchor" aria-label="anchor" href="#fonts"></a>
+</h3>
+<p>hdatools bundles six fonts — Lato, Roboto Slab, Open Sans, Poppins, Noto Sans, and Montserrat — used by its themes. It registers them with systemfonts offline the first time you load the package, so there’s no network request and no per-session Google Fonts download.</p>
+<p>To supply your own font setup instead, do one of the following before loading the package:</p>
+<ul>
+<li>Set <code>options(hdatools.fonts = FALSE)</code>
+</li>
+<li>Set the <code>HDATOOLS_NO_FONTS</code> environment variable</li>
+</ul>
+<p>Rendering plots with these fonts requires a systemfonts-aware graphics device. In a Quarto document, add this to <code>_quarto.yml</code>:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">knitr</span><span class="kw">:</span></span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="at">  </span><span class="fu">opts_chunk</span><span class="kw">:</span></span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="at">    </span><span class="fu">dev</span><span class="kw">:</span><span class="at"> </span><span class="st">"ragg_png"</span></span></code></pre></div>
+<p>The default Cairo device does not consult the systemfonts registry. Without this setting, the bundled fonts won’t appear in rendered output.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
@@ -85,7 +103,7 @@
 <li>
 <code><a href="reference/theme_vha.html">theme_vha()</a></code>: VHA-branded ggplot2 theme</li>
 </ul>
-<p>Under ggplot2 &gt;= 4.0, override a theme’s <code>strip.text</code> (e.g. for faceted plots) with <code><a href="https://wilkelab.org/ggtext/reference/element_markdown.html" class="external-link">ggtext::element_markdown()</a></code>, never a raw <code><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">ggplot2::element_text()</a></code> — the themes’ own strip element is a ggtext markdown element, and ggplot2 4.0 only merges theme elements of the same class.</p>
+<p>Under ggplot2 &gt;= 4.0, override a theme’s <code>strip.text</code> (e.g. for faceted plots) with <code><a href="https://wilkelab.org/ggtext/reference/element_markdown.html" class="external-link">ggtext::element_markdown()</a></code>, never a raw <code><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">ggplot2::element_text()</a></code>. The theme’s own strip element is a ggtext markdown element. ggplot2 4.0 only merges theme elements of the same class.</p>
 </div>
 <div class="section level3">
 <h3 id="color-scales">Color Scales<a class="anchor" aria-label="anchor" href="#color-scales"></a>
@@ -205,6 +223,11 @@
 <span>  <span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/hda_plot.png"></p>
 </div>
+<div class="section level2">
+<h2 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
+</h2>
+<p>Want to help build hdatools itself? See <a href="CONTRIBUTING.html">CONTRIBUTING.md</a> for the dev loop, commit/PR conventions, and how to file issues.</p>
+</div>
 </div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
@@ -222,6 +245,12 @@
 </ul>
 </div>
 
+<div class="community">
+<h2 data-toc-skip>Community</h2>
+<ul class="list-unstyled">
+<li><a href="CONTRIBUTING.html">Contributing guide</a></li>
+</ul>
+</div>
 
 <div class="citation">
 <h2 data-toc-skip>Citation</h2>

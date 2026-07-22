@@ -5,8 +5,8 @@ Produces a `<span style='color:#…'>text</span>` tag for use with
 or
 [`ggtext::element_textbox()`](https://wilkelab.org/ggtext/reference/element_textbox.html).
 Color is resolved through
-[`hda_color()`](https://hdadvisors.github.io/hdatools/reference/hda_color.md),
-so invalid names error with the valid list.
+[`hda_color()`](https://hdadvisors.github.io/hdatools/reference/hda_color.md).
+Invalid names error with the valid list.
 
 ## Usage
 
