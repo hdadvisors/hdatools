@@ -16,9 +16,8 @@ wrapped and formatted labels.
 }
 \description{
 This function creates a labeller function for use with ggplot2 facets.
-It wraps long labels to a specified width and formats them as markdown,
-which allows them to be rendered correctly when using ggtext::element_markdown()
-in themes.
+It wraps long labels to a specified width and formats them as markdown.
+This lets them render correctly with \code{ggtext::element_markdown()} in themes.
 }
 \examples{
 \dontrun{

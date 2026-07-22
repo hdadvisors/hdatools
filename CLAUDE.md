@@ -6,11 +6,12 @@ functions for HDAdvisors / HousingForward Virginia projects. Proprietary
 
 ## Running R (read this first)
 
-Run R via the `Rscript` on the caller's `PATH` — assume it resolves to a working
-R install. **Don't hard-code an install path or version anywhere**; those differ
-across machines and change on every R upgrade. If `Rscript` isn't on `PATH`,
-don't guess where R lives — stop and tell the user, and point them to add R's
-`bin` directory to `PATH` (or to supply the path to their `Rscript`).
+Run R via the `Rscript` on the caller's `PATH`. Assume it resolves to a working
+R install. **Don't hard-code an install path or version anywhere.** Install
+paths and versions differ across machines and change on every R upgrade. If
+`Rscript` isn't on `PATH`, don't guess where R lives. Stop and tell the user.
+Point them to add R's `bin` directory to `PATH`, or to supply the path to
+their `Rscript`.
 
 **Claude Code on the web / cloud sessions provision R automatically.** A
 `SessionStart` hook (`.claude/hooks/session-start.sh` + `install-r-deps.R`,
@@ -19,16 +20,16 @@ compiled-package system libs, and the full R dev toolchain (devtools,
 roxygen2, testthat, pkgdown, urlchecker, spelling, plus DESCRIPTION's own
 Imports/Suggests) the first time a cloud session touches this repo. It needs
 `cloud.r-project.org` allowlisted in the environment's network policy (Custom
-network access → Allowed domains) — without it, the hook installs R itself
-fine but every package install fails. If `Rscript` still isn't on `PATH` in a
-cloud session, check the hook's output before concluding R is unavailable;
-the "stop and tell the user" rule above is for local sessions. Installs build
-from source (no binary mirror is reachable through the network policy), so
-the first cold container takes a while — expect the result to be cached in
-later sessions. None of this applies locally — Jonathan's machine manages its
+network access → Allowed domains). Without it, the hook installs R itself
+fine, but every package install fails. If `Rscript` still isn't on `PATH` in a
+cloud session, check the hook's output before concluding R is unavailable.
+The "stop and tell the user" rule above is for local sessions. Installs build
+from source, since no binary mirror is reachable through the network policy,
+so the first cold container takes a while. Expect the result to be cached in
+later sessions. None of this applies locally. Jonathan's machine manages its
 own R install per the rules above.
 
-**Never run R inline** (`Rscript -e "..."`) — Windows shell quoting mangles it.
+**Never run R inline** (`Rscript -e "..."`). Windows shell quoting mangles it.
 Always write the R code to a temp file and execute that file:
 
 ```bash
@@ -36,7 +37,7 @@ Rscript /path/to/script.R 2>&1
 ```
 
 Start each script with `setwd()` pointing at this repo's root (the folder that
-contains `DESCRIPTION`) so `devtools`/`pkgdown` find the package.
+contains `DESCRIPTION`). This lets `devtools`/`pkgdown` find the package.
 
 DESCRIPTION's Imports/Suggests plus devtools, roxygen2 (matching
 `Config/roxygen2/version`), and pkgdown must all be installed.
@@ -50,23 +51,23 @@ Run these in order after changing R source or roxygen comments:
 3. `devtools::check()` — `R CMD check`. Target: **0 errors, 0 warnings**. The
    **only** accepted NOTE is the proprietary-license one
    (`Non-standard license specification: file LICENSE`). Any other NOTE is a
-   regression — investigate it. In a cloud session, expect two additional
+   regression. Investigate it. In a cloud session, expect two additional
    NOTEs that aren't regressions: installed package size (the bundled fonts
    are 4.8Mb) and "unable to verify current time" (the future-timestamp check
    needs a network host this environment's policy blocks). Anything beyond
    those three is worth investigating same as locally.
 4. `pkgdown::build_site()` — rebuilds the site into `docs/`. Two gotchas when
    running via standalone Rscript (no RStudio):
-   - pkgdown/rmarkdown need Pandoc, which a bare `Rscript` may not find. If a build
+   - pkgdown/rmarkdown need Pandoc. A bare `Rscript` may not find it. If a build
      fails with "Pandoc not available," point R at a bundled copy via
-     `Sys.setenv(RSTUDIO_PANDOC = <dir>)` — Quarto and RStudio each ship one in a
+     `Sys.setenv(RSTUDIO_PANDOC = <dir>)`. Quarto and RStudio each ship one in a
      `tools` directory. Locate the copy on the current machine rather than
-     assuming a path. (Cloud sessions get a system `pandoc` from the
-     SessionStart hook, already on `PATH` — this workaround is for local
-     sessions without RStudio/Quarto installed.)
+     assuming a path. Cloud sessions get a system `pandoc` from the
+     SessionStart hook, already on `PATH`. This workaround is for local
+     sessions without RStudio/Quarto installed.
    - `build_site()` re-knits every article in `vignettes/articles/`. As of
-     0.5.0 `branded-themes.Rmd` uses a small bundled data table instead of a
-     live `tidycensus::get_acs()` call, so it no longer needs a Census API key
+     0.5.0, `branded-themes.Rmd` uses a small bundled data table instead of a
+     live `tidycensus::get_acs()` call. It no longer needs a Census API key
      or network to build. For faster doc/theme iteration you can still rebuild
      only what changed:
      `init_site()` + `build_home()` + `build_reference()` + `build_news()` +
@@ -76,11 +77,11 @@ Run these in order after changing R source or roxygen comments:
 
 - `NAMESPACE` and everything under `man/` are generated by roxygen2. Edit the
   roxygen comments above the function and re-run `devtools::document()`.
-- Everything under `docs/` is generated by pkgdown. Never hand-edit it; change
-  the source (roxygen, `README.md`, `_pkgdown.yml`, articles) and rebuild.
+- Everything under `docs/` is generated by pkgdown. Never hand-edit it.
+  Change the source (roxygen, `README.md`, `_pkgdown.yml`, articles) and rebuild.
 - **Roxygen markdown mode is on** (`Roxygen: list(markdown = TRUE)` in
   DESCRIPTION). Write Markdown in roxygen comments (`**bold**`, `` `code` ``,
-  `[text](url)`); it is converted to Rd markup on `document()`. Don't hand-write
+  `[text](url)`). It is converted to Rd markup on `document()`. Don't hand-write
   `\strong{}`/`\code{}`.
 
 ## Testing conventions
@@ -116,7 +117,7 @@ Run these in order after changing R source or roxygen comments:
 9. Commit messages: **no Claude/Anthropic co-author line.**
 
 Consumer rollout (pinned repos: pha-update-2026, fhfh, faar) happens in those
-repos' own sessions — bump the pin, `renv::snapshot()`, re-render, compare. Never
+repos' own sessions: bump the pin, `renv::snapshot()`, re-render, compare. Never
 force a consumer bump as a drive-by. See [`plans/consumer-rollout.md`](plans/consumer-rollout.md)
 for the reusable procedure.
 
@@ -130,15 +131,15 @@ for the reusable procedure.
 - `r-package-development` — the devtools/roxygen2/testthat loop.
 - `testing-r-packages` — testthat 3e conventions, fixtures, mocking, snapshots.
 
-They assume R is on PATH with inline `Rscript -e`; use the temp-file convention
+They assume R is on PATH with inline `Rscript -e`. Use the temp-file convention
 above instead.
 
 ## Contributing and dev process
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the getting-started guide,
-versioning convention, release-when-ready flow, NEWS/test/docs rules, and how
-to file issues. The release checklist below is the authoritative step list;
-CONTRIBUTING.md references it.
+commit message convention, versioning convention, release-when-ready flow,
+NEWS/test/docs rules, and how to file issues. The release checklist below is
+the authoritative step list; CONTRIBUTING.md references it.
 
 ## Planning docs
 

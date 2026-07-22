@@ -192,15 +192,15 @@ scale_fill_vha <- function(direction = 1, repeat_pal = FALSE, ...) {
 #'
 #' @section Diverging palette usage: 7-class diverging maps built from these
 #'   ramps lose sign distinction in their innermost class pair under
-#'   protanopia (structural to the shared cream center) — always pair a
-#'   `palette = "diverging"` map with a legend or direct labels. See
+#'   protanopia. This is structural to the shared cream center. Always pair
+#'   a `palette = "diverging"` map with a legend or direct labels. See
 #'   `plans/DECISIONS.md` (2026-07-18).
 #'
 #' @section HDA diverging is provisional: `r lifecycle::badge("experimental")`
 #'   HDA's diverging ramp (Blue vs Coral) is a near-twin of PHA's (Dark Blue
-#'   vs Red) and is pending a follow-up Ramp Lab pass to differentiate it
+#'   vs Red). It's pending a follow-up Ramp Lab pass to differentiate it
 #'   before final adoption (see `plans/DECISIONS.md`, 2026-07-18). It ships
-#'   now so the scale matrix is complete; treat it as subject to change.
+#'   now so the scale matrix is complete. Treat it as subject to change.
 #'
 #' @param palette One of `"sequential"` (default) or `"diverging"`
 #' @param direction For `palette = "sequential"`, `1` (default) maps higher
@@ -233,15 +233,15 @@ scale_colour_hda_c <- scale_color_hda_c
 #'
 #' @section Diverging palette usage: 7-class diverging maps built from these
 #'   ramps lose sign distinction in their innermost class pair under
-#'   protanopia (structural to the shared cream center) — always pair a
-#'   `palette = "diverging"` map with a legend or direct labels. See
+#'   protanopia. This is structural to the shared cream center. Always pair
+#'   a `palette = "diverging"` map with a legend or direct labels. See
 #'   `plans/DECISIONS.md` (2026-07-18).
 #'
 #' @section HDA diverging is provisional: `r lifecycle::badge("experimental")`
 #'   HDA's diverging ramp (Blue vs Coral) is a near-twin of PHA's (Dark Blue
-#'   vs Red) and is pending a follow-up Ramp Lab pass to differentiate it
+#'   vs Red). It's pending a follow-up Ramp Lab pass to differentiate it
 #'   before final adoption (see `plans/DECISIONS.md`, 2026-07-18). It ships
-#'   now so the scale matrix is complete; treat it as subject to change.
+#'   now so the scale matrix is complete. Treat it as subject to change.
 #'
 #' @param palette One of `"sequential"` (default) or `"diverging"`
 #' @param direction For `palette = "sequential"`, `1` (default) maps higher
@@ -271,15 +271,15 @@ scale_fill_hda_c <- function(palette = c("sequential", "diverging"),
 #'
 #' @section Diverging palette usage: 7-class diverging maps built from these
 #'   ramps lose sign distinction in their innermost class pair under
-#'   protanopia (structural to the shared cream center) — always pair a
-#'   `palette = "diverging"` map with a legend or direct labels. See
+#'   protanopia. This is structural to the shared cream center. Always pair
+#'   a `palette = "diverging"` map with a legend or direct labels. See
 #'   `plans/DECISIONS.md` (2026-07-18).
 #'
 #' @section HDA diverging is provisional: `r lifecycle::badge("experimental")`
 #'   HDA's diverging ramp (Blue vs Coral) is a near-twin of PHA's (Dark Blue
-#'   vs Red) and is pending a follow-up Ramp Lab pass to differentiate it
+#'   vs Red). It's pending a follow-up Ramp Lab pass to differentiate it
 #'   before final adoption (see `plans/DECISIONS.md`, 2026-07-18). It ships
-#'   now so the scale matrix is complete; treat it as subject to change.
+#'   now so the scale matrix is complete. Treat it as subject to change.
 #'
 #' @param palette One of `"sequential"` (default) or `"diverging"`
 #' @param direction For `palette = "sequential"`, `1` (default) maps higher
@@ -315,15 +315,15 @@ scale_colour_hda_b <- scale_color_hda_b
 #'
 #' @section Diverging palette usage: 7-class diverging maps built from these
 #'   ramps lose sign distinction in their innermost class pair under
-#'   protanopia (structural to the shared cream center) — always pair a
-#'   `palette = "diverging"` map with a legend or direct labels. See
+#'   protanopia. This is structural to the shared cream center. Always pair
+#'   a `palette = "diverging"` map with a legend or direct labels. See
 #'   `plans/DECISIONS.md` (2026-07-18).
 #'
 #' @section HDA diverging is provisional: `r lifecycle::badge("experimental")`
 #'   HDA's diverging ramp (Blue vs Coral) is a near-twin of PHA's (Dark Blue
-#'   vs Red) and is pending a follow-up Ramp Lab pass to differentiate it
+#'   vs Red). It's pending a follow-up Ramp Lab pass to differentiate it
 #'   before final adoption (see `plans/DECISIONS.md`, 2026-07-18). It ships
-#'   now so the scale matrix is complete; treat it as subject to change.
+#'   now so the scale matrix is complete. Treat it as subject to change.
 #'
 #' @param palette One of `"sequential"` (default) or `"diverging"`
 #' @param direction For `palette = "sequential"`, `1` (default) maps higher
@@ -354,8 +354,8 @@ scale_fill_hda_b <- function(palette = c("sequential", "diverging"),
 #'
 #' @section Diverging palette usage: 7-class diverging maps built from these
 #'   ramps lose sign distinction in their innermost class pair under
-#'   protanopia (structural to the shared cream center) — always pair a
-#'   `palette = "diverging"` map with a legend or direct labels. See
+#'   protanopia. This is structural to the shared cream center. Always pair
+#'   a `palette = "diverging"` map with a legend or direct labels. See
 #'   `plans/DECISIONS.md` (2026-07-18).
 #'
 #' @param palette One of `"sequential"` (default) or `"diverging"`
@@ -389,8 +389,8 @@ scale_colour_hfv_c <- scale_color_hfv_c
 #'
 #' @section Diverging palette usage: 7-class diverging maps built from these
 #'   ramps lose sign distinction in their innermost class pair under
-#'   protanopia (structural to the shared cream center) — always pair a
-#'   `palette = "diverging"` map with a legend or direct labels. See
+#'   protanopia. This is structural to the shared cream center. Always pair
+#'   a `palette = "diverging"` map with a legend or direct labels. See
 #'   `plans/DECISIONS.md` (2026-07-18).
 #'
 #' @param palette One of `"sequential"` (default) or `"diverging"`
@@ -421,8 +421,8 @@ scale_fill_hfv_c <- function(palette = c("sequential", "diverging"),
 #'
 #' @section Diverging palette usage: 7-class diverging maps built from these
 #'   ramps lose sign distinction in their innermost class pair under
-#'   protanopia (structural to the shared cream center) — always pair a
-#'   `palette = "diverging"` map with a legend or direct labels. See
+#'   protanopia. This is structural to the shared cream center. Always pair
+#'   a `palette = "diverging"` map with a legend or direct labels. See
 #'   `plans/DECISIONS.md` (2026-07-18).
 #'
 #' @param palette One of `"sequential"` (default) or `"diverging"`
@@ -459,8 +459,8 @@ scale_colour_hfv_b <- scale_color_hfv_b
 #'
 #' @section Diverging palette usage: 7-class diverging maps built from these
 #'   ramps lose sign distinction in their innermost class pair under
-#'   protanopia (structural to the shared cream center) — always pair a
-#'   `palette = "diverging"` map with a legend or direct labels. See
+#'   protanopia. This is structural to the shared cream center. Always pair
+#'   a `palette = "diverging"` map with a legend or direct labels. See
 #'   `plans/DECISIONS.md` (2026-07-18).
 #'
 #' @param palette One of `"sequential"` (default) or `"diverging"`
@@ -492,8 +492,8 @@ scale_fill_hfv_b <- function(palette = c("sequential", "diverging"),
 #'
 #' @section Diverging palette usage: 7-class diverging maps built from these
 #'   ramps lose sign distinction in their innermost class pair under
-#'   protanopia (structural to the shared cream center) — always pair a
-#'   `palette = "diverging"` map with a legend or direct labels. See
+#'   protanopia. This is structural to the shared cream center. Always pair
+#'   a `palette = "diverging"` map with a legend or direct labels. See
 #'   `plans/DECISIONS.md` (2026-07-18).
 #'
 #' @param palette One of `"sequential"` (default) or `"diverging"`
@@ -527,8 +527,8 @@ scale_colour_pha_c <- scale_color_pha_c
 #'
 #' @section Diverging palette usage: 7-class diverging maps built from these
 #'   ramps lose sign distinction in their innermost class pair under
-#'   protanopia (structural to the shared cream center) — always pair a
-#'   `palette = "diverging"` map with a legend or direct labels. See
+#'   protanopia. This is structural to the shared cream center. Always pair
+#'   a `palette = "diverging"` map with a legend or direct labels. See
 #'   `plans/DECISIONS.md` (2026-07-18).
 #'
 #' @param palette One of `"sequential"` (default) or `"diverging"`
@@ -559,8 +559,8 @@ scale_fill_pha_c <- function(palette = c("sequential", "diverging"),
 #'
 #' @section Diverging palette usage: 7-class diverging maps built from these
 #'   ramps lose sign distinction in their innermost class pair under
-#'   protanopia (structural to the shared cream center) — always pair a
-#'   `palette = "diverging"` map with a legend or direct labels. See
+#'   protanopia. This is structural to the shared cream center. Always pair
+#'   a `palette = "diverging"` map with a legend or direct labels. See
 #'   `plans/DECISIONS.md` (2026-07-18).
 #'
 #' @param palette One of `"sequential"` (default) or `"diverging"`
@@ -597,8 +597,8 @@ scale_colour_pha_b <- scale_color_pha_b
 #'
 #' @section Diverging palette usage: 7-class diverging maps built from these
 #'   ramps lose sign distinction in their innermost class pair under
-#'   protanopia (structural to the shared cream center) — always pair a
-#'   `palette = "diverging"` map with a legend or direct labels. See
+#'   protanopia. This is structural to the shared cream center. Always pair
+#'   a `palette = "diverging"` map with a legend or direct labels. See
 #'   `plans/DECISIONS.md` (2026-07-18).
 #'
 #' @param palette One of `"sequential"` (default) or `"diverging"`
@@ -629,11 +629,11 @@ scale_fill_pha_b <- function(palette = c("sequential", "diverging"),
 #' @section Diverging ramp is provisional: `r lifecycle::badge("experimental")`
 #'   VHA's diverging ramp pairs Dark Turq against Yellow, the palette's only
 #'   warm hue. Yellow's natural HCL lightness is too high to survive as a
-#'   dark, saturated anchor, so that arm renders golden/olive rather than
-#'   bright yellow — a sRGB gamut limit, not a tuning slip. Still monotonic
-#'   and distinguishable under protanopia/deuteranopia/tritanopia simulation,
-#'   but — like HDA's diverging ramp — a candidate for a follow-up Ramp Lab
-#'   pass (`plans/DECISIONS.md`).
+#'   dark, saturated anchor. That arm renders golden/olive rather than
+#'   bright yellow. This is a sRGB gamut limit, not a tuning slip. It is
+#'   still monotonic and distinguishable under protanopia, deuteranopia, and
+#'   tritanopia simulation. Like HDA's diverging ramp, it's a candidate for
+#'   a follow-up Ramp Lab pass (`plans/DECISIONS.md`).
 #'
 #' @param palette One of `"sequential"` (default) or `"diverging"`
 #' @param direction For `palette = "sequential"`, `1` (default) maps higher
@@ -665,11 +665,11 @@ scale_colour_vha_c <- scale_color_vha_c
 #' @section Diverging ramp is provisional: `r lifecycle::badge("experimental")`
 #'   VHA's diverging ramp pairs Dark Turq against Yellow, the palette's only
 #'   warm hue. Yellow's natural HCL lightness is too high to survive as a
-#'   dark, saturated anchor, so that arm renders golden/olive rather than
-#'   bright yellow — a sRGB gamut limit, not a tuning slip. Still monotonic
-#'   and distinguishable under protanopia/deuteranopia/tritanopia simulation,
-#'   but — like HDA's diverging ramp — a candidate for a follow-up Ramp Lab
-#'   pass (`plans/DECISIONS.md`).
+#'   dark, saturated anchor. That arm renders golden/olive rather than
+#'   bright yellow. This is a sRGB gamut limit, not a tuning slip. It is
+#'   still monotonic and distinguishable under protanopia, deuteranopia, and
+#'   tritanopia simulation. Like HDA's diverging ramp, it's a candidate for
+#'   a follow-up Ramp Lab pass (`plans/DECISIONS.md`).
 #'
 #' @param palette One of `"sequential"` (default) or `"diverging"`
 #' @param direction For `palette = "sequential"`, `1` (default) maps higher

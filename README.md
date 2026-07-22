@@ -1,31 +1,56 @@
 # hdatools
 
-The `hdatools` package provides a set of functions and tools for data analysis and visualization.
+hdatools is HDAdvisors' internal R package for building on-brand charts and
+reports. It bundles ggplot2 themes, color scales, and analysis helpers for
+four client brands — HDAdvisors (HDA), HousingForward Virginia (HFV), the
+Partnership for Housing Affordability (PHA), and VHA. Every report across
+these projects looks consistent without hand-tuning each plot.
 
-## Installation
+Each brand gets a matching `theme_*()` ggplot2 theme, discrete color/fill
+scales, and continuous sequential/diverging ramps, all checked for
+color-vision-deficiency accessibility. A handful of analysis helpers round
+it out: reliability labels from a coefficient-of-variation column, factor
+recoding with automatic level ordering, and a few small chart-formatting
+utilities.
+
+This package is for HDA/HFV teammates building charts in R or Quarto. If you
+want to help build hdatools itself, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Quick start
+
+### Install
+
+hdatools isn't on CRAN. Install it from GitHub:
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("hdadvisors/hdatools")
 ```
 
-hdatools bundles the Lato, Roboto Slab, Open Sans, Poppins, Noto Sans, and
-Montserrat faces used by its themes and registers them with systemfonts offline the
-first time the package loads — no network request, no per-session Google
-Fonts download. To skip registration (for example, to supply your own font
-setup), set `options(hdatools.fonts = FALSE)` or the environment variable
-`HDATOOLS_NO_FONTS` before loading the package.
+### Fonts
+
+hdatools bundles six fonts — Lato, Roboto Slab, Open Sans, Poppins, Noto
+Sans, and Montserrat — used by its themes. It registers them with
+systemfonts offline the first time you load the package, so there's no
+network request and no per-session Google Fonts download.
+
+To supply your own font setup instead, do one of the following before
+loading the package:
+
+- Set `options(hdatools.fonts = FALSE)`
+- Set the `HDATOOLS_NO_FONTS` environment variable
 
 Rendering plots with these fonts requires a systemfonts-aware graphics
-device. In a Quarto document, add the following to `_quarto.yml` (the default
-Cairo device does not consult the systemfonts registry, so without this the
-bundled fonts won't appear in rendered output):
+device. In a Quarto document, add this to `_quarto.yml`:
 
 ```yaml
 knitr:
   opts_chunk:
     dev: "ragg_png"
 ```
+
+The default Cairo device does not consult the systemfonts registry. Without
+this setting, the bundled fonts won't appear in rendered output.
 
 ## Features
 
@@ -38,9 +63,8 @@ knitr:
 
 Under ggplot2 >= 4.0, override a theme's `strip.text` (e.g. for faceted
 plots) with `ggtext::element_markdown()`, never a raw
-`ggplot2::element_text()` — the themes' own strip element is a ggtext
-markdown element, and ggplot2 4.0 only merges theme elements of the same
-class.
+`ggplot2::element_text()`. The theme's own strip element is a ggtext
+markdown element. ggplot2 4.0 only merges theme elements of the same class.
 
 ### Color Scales
 
@@ -129,3 +153,8 @@ data_with_factor <- data |>
 ```
 
 ![](man/figures/hda_plot.png)
+
+## Contributing
+
+Want to help build hdatools itself? See [CONTRIBUTING.md](CONTRIBUTING.md)
+for the dev loop, commit/PR conventions, and how to file issues.

@@ -12,7 +12,7 @@
 #'
 #' Produces a `<span style='color:#…'>text</span>` tag for use with
 #' [ggtext::element_markdown()] or [ggtext::element_textbox()]. Color is
-#' resolved through [hda_color()], so invalid names error with the valid list.
+#' resolved through [hda_color()]. Invalid names error with the valid list.
 #'
 #' @param text Character string to wrap.
 #' @param color A valid HDA color name (e.g. `"Blue"`, `"Sea Green"`).
@@ -31,7 +31,7 @@ hda_span <- .brand_span(hda_color)
 #'
 #' Produces a `<span style='color:#…'>text</span>` tag for use with
 #' [ggtext::element_markdown()] or [ggtext::element_textbox()]. Color is
-#' resolved through [hfv_color()], so invalid names error with the valid list.
+#' resolved through [hfv_color()]. Invalid names error with the valid list.
 #'
 #' @param text Character string to wrap.
 #' @param color A valid HFV color name (e.g. `"Shadow"`, `"Sky"`).
@@ -50,7 +50,7 @@ hfv_span <- .brand_span(hfv_color)
 #'
 #' Produces a `<span style='color:#…'>text</span>` tag for use with
 #' [ggtext::element_markdown()] or [ggtext::element_textbox()]. Color is
-#' resolved through [pha_color()], so invalid names error with the valid list.
+#' resolved through [pha_color()]. Invalid names error with the valid list.
 #'
 #' @param text Character string to wrap.
 #' @param color A valid PHA color name (e.g. `"Green"`, `"Dark Blue"`).
@@ -69,7 +69,7 @@ pha_span <- .brand_span(pha_color)
 #'
 #' Produces a `<span style='color:#…'>text</span>` tag for use with
 #' [ggtext::element_markdown()] or [ggtext::element_textbox()]. Color is
-#' resolved through [vha_color()], so invalid names error with the valid list.
+#' resolved through [vha_color()]. Invalid names error with the valid list.
 #'
 #' @param text Character string to wrap.
 #' @param color A valid VHA color name (e.g. `"Dark Turq"`, `"Yellow"`).

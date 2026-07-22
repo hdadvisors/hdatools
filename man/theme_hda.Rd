@@ -34,16 +34,21 @@ Use an HDAdvisors-branded ggplot2 theme
 }
 \details{
 When overriding strip text under ggplot2 >= 4.0, use
-\code{ggtext::element_markdown()}, never a raw \code{ggplot2::element_text()}: the
-branded strip element is a ggtext markdown element, and ggplot2 4.0 only
+\code{ggtext::element_markdown()}, never a raw \code{ggplot2::element_text()}. The
+branded strip element is a ggtext markdown element. ggplot2 4.0 only
 merges theme elements of the same class.
 
 The theme alone carries HDA's brand identity into an otherwise
-unbranded plot: bar/column fills, point colors, and line colors default
-to \code{hda_colors["Blue"]} (via \code{ggplot2::element_geom()}), a discrete
-\code{aes(colour =)}/\code{aes(fill =)} mapping cycles through the full HDA
-palette, and a continuous mapping uses the HDA sequential ramp
-(see \code{\link[=scale_color_hda_c]{scale_color_hda_c()}}) — all with no \verb{scale_*()} call required.
+unbranded plot, with no \verb{scale_*()} call required:
+\itemize{
+\item Bar/column fills, point colors, and line colors default to
+\code{hda_colors["Blue"]} (via \code{ggplot2::element_geom()}).
+\item A discrete \code{aes(colour =)}/\code{aes(fill =)} mapping cycles through the
+full HDA palette.
+\item A continuous mapping uses the HDA sequential ramp (see
+\code{\link[=scale_color_hda_c]{scale_color_hda_c()}}).
+}
+
 An explicit \verb{scale_*()} (or a manual \code{aes()} value) always overrides
 these theme-carried defaults.
 }

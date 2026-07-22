@@ -5,5 +5,6 @@
 ^vignettes$
 ^plans$
 ^CLAUDE\.md$
+^CONTRIBUTING\.md$
 ^\.claude$
 ^\.github$

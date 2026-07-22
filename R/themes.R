@@ -169,16 +169,20 @@
 #' @param ... Additional arguments passed to ggplot2::theme()
 #'
 #' @details When overriding strip text under ggplot2 >= 4.0, use
-#'   `ggtext::element_markdown()`, never a raw `ggplot2::element_text()`: the
-#'   branded strip element is a ggtext markdown element, and ggplot2 4.0 only
+#'   `ggtext::element_markdown()`, never a raw `ggplot2::element_text()`. The
+#'   branded strip element is a ggtext markdown element. ggplot2 4.0 only
 #'   merges theme elements of the same class.
 #'
 #'   The theme alone carries HDA's brand identity into an otherwise
-#'   unbranded plot: bar/column fills, point colors, and line colors default
-#'   to `hda_colors["Blue"]` (via `ggplot2::element_geom()`), a discrete
-#'   `aes(colour =)`/`aes(fill =)` mapping cycles through the full HDA
-#'   palette, and a continuous mapping uses the HDA sequential ramp
-#'   (see [scale_color_hda_c()]) — all with no `scale_*()` call required.
+#'   unbranded plot, with no `scale_*()` call required:
+#'
+#'   - Bar/column fills, point colors, and line colors default to
+#'     `hda_colors["Blue"]` (via `ggplot2::element_geom()`).
+#'   - A discrete `aes(colour =)`/`aes(fill =)` mapping cycles through the
+#'     full HDA palette.
+#'   - A continuous mapping uses the HDA sequential ramp (see
+#'     [scale_color_hda_c()]).
+#'
 #'   An explicit `scale_*()` (or a manual `aes()` value) always overrides
 #'   these theme-carried defaults.
 #'
@@ -217,16 +221,20 @@ theme_hda <- function(
 #' @param ... Additional arguments passed to ggplot2::theme()
 #'
 #' @details When overriding strip text under ggplot2 >= 4.0, use
-#'   `ggtext::element_markdown()`, never a raw `ggplot2::element_text()`: the
-#'   branded strip element is a ggtext markdown element, and ggplot2 4.0 only
+#'   `ggtext::element_markdown()`, never a raw `ggplot2::element_text()`. The
+#'   branded strip element is a ggtext markdown element. ggplot2 4.0 only
 #'   merges theme elements of the same class.
 #'
 #'   The theme alone carries HFV's brand identity into an otherwise
-#'   unbranded plot: bar/column fills, point colors, and line colors default
-#'   to `hfv_colors["Shadow"]` (via `ggplot2::element_geom()`), a discrete
-#'   `aes(colour =)`/`aes(fill =)` mapping cycles through the full HFV
-#'   palette, and a continuous mapping uses the HFV sequential ramp
-#'   (see [scale_color_hfv_c()]) — all with no `scale_*()` call required.
+#'   unbranded plot, with no `scale_*()` call required:
+#'
+#'   - Bar/column fills, point colors, and line colors default to
+#'     `hfv_colors["Shadow"]` (via `ggplot2::element_geom()`).
+#'   - A discrete `aes(colour =)`/`aes(fill =)` mapping cycles through the
+#'     full HFV palette.
+#'   - A continuous mapping uses the HFV sequential ramp (see
+#'     [scale_color_hfv_c()]).
+#'
 #'   An explicit `scale_*()` (or a manual `aes()` value) always overrides
 #'   these theme-carried defaults.
 #'
@@ -264,16 +272,20 @@ theme_hfv <- function(
 #' @param ... Additional arguments passed to ggplot2::theme()
 #'
 #' @details When overriding strip text under ggplot2 >= 4.0, use
-#'   `ggtext::element_markdown()`, never a raw `ggplot2::element_text()`: the
-#'   branded strip element is a ggtext markdown element, and ggplot2 4.0 only
+#'   `ggtext::element_markdown()`, never a raw `ggplot2::element_text()`. The
+#'   branded strip element is a ggtext markdown element. ggplot2 4.0 only
 #'   merges theme elements of the same class.
 #'
 #'   The theme alone carries PHA's brand identity into an otherwise
-#'   unbranded plot: bar/column fills, point colors, and line colors default
-#'   to `pha_colors["Green"]` (via `ggplot2::element_geom()`), a discrete
-#'   `aes(colour =)`/`aes(fill =)` mapping cycles through the full PHA
-#'   palette, and a continuous mapping uses the PHA sequential ramp
-#'   (see [scale_color_pha_c()]) — all with no `scale_*()` call required.
+#'   unbranded plot, with no `scale_*()` call required:
+#'
+#'   - Bar/column fills, point colors, and line colors default to
+#'     `pha_colors["Green"]` (via `ggplot2::element_geom()`).
+#'   - A discrete `aes(colour =)`/`aes(fill =)` mapping cycles through the
+#'     full PHA palette.
+#'   - A continuous mapping uses the PHA sequential ramp (see
+#'     [scale_color_pha_c()]).
+#'
 #'   An explicit `scale_*()` (or a manual `aes()` value) always overrides
 #'   these theme-carried defaults.
 #'
@@ -311,16 +323,20 @@ theme_pha <- function(
 #' @param ... Additional arguments passed to ggplot2::theme()
 #'
 #' @details When overriding strip text under ggplot2 >= 4.0, use
-#'   `ggtext::element_markdown()`, never a raw `ggplot2::element_text()`: the
-#'   branded strip element is a ggtext markdown element, and ggplot2 4.0 only
+#'   `ggtext::element_markdown()`, never a raw `ggplot2::element_text()`. The
+#'   branded strip element is a ggtext markdown element. ggplot2 4.0 only
 #'   merges theme elements of the same class.
 #'
 #'   The theme alone carries VHA's brand identity into an otherwise
-#'   unbranded plot: bar/column fills, point colors, and line colors default
-#'   to `vha_colors["Dark Turq"]` (via `ggplot2::element_geom()`), a discrete
-#'   `aes(colour =)`/`aes(fill =)` mapping cycles through the full VHA
-#'   palette, and a continuous mapping uses the VHA sequential ramp
-#'   (see [scale_color_vha_c()]) — all with no `scale_*()` call required.
+#'   unbranded plot, with no `scale_*()` call required:
+#'
+#'   - Bar/column fills, point colors, and line colors default to
+#'     `vha_colors["Dark Turq"]` (via `ggplot2::element_geom()`).
+#'   - A discrete `aes(colour =)`/`aes(fill =)` mapping cycles through the
+#'     full VHA palette.
+#'   - A continuous mapping uses the VHA sequential ramp (see
+#'     [scale_color_vha_c()]).
+#'
 #'   An explicit `scale_*()` (or a manual `aes()` value) always overrides
 #'   these theme-carried defaults.
 #'

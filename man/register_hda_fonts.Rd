@@ -8,8 +8,8 @@ register_hda_fonts(quiet = FALSE)
 }
 \arguments{
 \item{quiet}{If \code{TRUE}, suppresses the message emitted when registering a
-family unexpectedly fails (a name collision with an installed system
-font is never reported, since it is not a failure). Registration issues
+family unexpectedly fails. A name collision with an installed system
+font is not a failure, so it is never reported. Registration issues
 are non-fatal: hdatools falls back to whatever fonts are already
 available on the system.}
 }
@@ -24,20 +24,20 @@ Registers the font faces bundled in \verb{inst/fonts/} (Lato and Roboto Slab for
 \code{theme_pha()}, Montserrat for \code{theme_vha()}) with \pkg{systemfonts}, making
 them available by name to \pkg{ragg} graphics devices (and any other
 systemfonts-aware device). Everything is read from files installed with
-the package, so this never makes a network request.
+the package. This never makes a network request.
 }
 \details{
-Rendering with these fonts requires a systemfonts-aware device — for
-knitr/Quarto output, set \code{dev: "ragg_png"} (see \code{README.md}); the default
+Rendering with these fonts requires a systemfonts-aware device. For
+knitr/Quarto output, set \code{dev: "ragg_png"} (see \code{README.md}). The default
 Cairo device does not consult the systemfonts registry.
 
 Registration can be skipped by setting \code{options(hdatools.fonts = FALSE)}
-or the environment variable \code{HDATOOLS_NO_FONTS} to any non-empty value —
-useful if a consumer wants to supply its own font setup.
+or the environment variable \code{HDATOOLS_NO_FONTS} to any non-empty value.
+This is useful if a consumer wants to supply its own font setup.
 
 Each bundled family is registered independently. \code{systemfonts::register_font()}
 refuses to register a name that already matches an installed system font
-(e.g. Open Sans ships with several common apps) — when that happens, this
-function leaves that one family alone (the system copy resolves under the
-same name anyway) and still registers the rest.
+(e.g. Open Sans ships with several common apps). When that happens, this
+function leaves that one family alone and still registers the rest. The
+system copy resolves under the same name anyway.
 }

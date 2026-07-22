@@ -17,8 +17,8 @@ brands side by side.
 
 Let's get some data. This is median household income for three Richmond-area
 localities, from the 2017-2021 5-year American Community Survey (variable
-`B19013_001`) — bundled here as a static table so this article builds without
-a Census API key or network access:
+`B19013_001`). It's bundled here as a static table, so this article builds
+without a Census API key or network access:
 
 ```{r get-data}
 
@@ -33,8 +33,8 @@ rva_inc <- data.frame(
 
 ```
 
-Each plot below differs only in its `scale_fill_*()` and `theme_*()` call —
-everything else is identical.
+Each plot below differs only in its `scale_fill_*()` and `theme_*()` call.
+Everything else is identical.
 
 First, an HDAdvisors-branded plot:
 
@@ -109,7 +109,7 @@ ggplot(rva_inc, aes(x = estimate, y = reorder(NAME, estimate), fill = NAME)) +
 ```
 
 Under ggplot2 >= 4.0, a bare `theme_*()` with no `scale_*()` call also brands
-the plot, via the theme-carried palette — the `scale_fill_*()` line above is
+the plot, via the theme-carried palette. The `scale_fill_*()` line above is
 optional when the brand's default palette order is what you want:
 
 ```{r theme-only}

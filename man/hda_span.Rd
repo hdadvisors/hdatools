@@ -17,7 +17,7 @@ A character string containing the HTML span tag.
 \description{
 Produces a \verb{<span style='color:#…'>text</span>} tag for use with
 \code{\link[ggtext:element_markdown]{ggtext::element_markdown()}} or \code{\link[ggtext:element_textbox]{ggtext::element_textbox()}}. Color is
-resolved through \code{\link[=hda_color]{hda_color()}}, so invalid names error with the valid list.
+resolved through \code{\link[=hda_color]{hda_color()}}. Invalid names error with the valid list.
 }
 \examples{
 hda_span("Housing Data Advisors", "Blue")
