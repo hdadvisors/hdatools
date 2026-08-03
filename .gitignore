@@ -8,3 +8,4 @@ __pycache__/
 # development dashboard (generated)
 plans/dashboard/dashboard.html
 plans/dashboard/gh-cache.json
+.claude/settings.local.json
