@@ -83,6 +83,13 @@
 #' @param direction If -1, reverse the scale (defaults to 1)
 #' @param repeat_pal If TRUE, repeat the palette enough times to account for all discrete values
 #' @param ... Additional arguments passed to ggplot2::discrete_scale()
+#' @return A [ggplot2::discrete_scale()] object.
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(wt, mpg, color = factor(cyl))) +
+#'   geom_point() +
+#'   scale_color_hda()
+#'
 #' @export
 scale_color_hda <- function(direction = 1, repeat_pal = FALSE, ...) {
   .scale_brand_discrete("colour", "hda", direction, repeat_pal, ...)
@@ -97,6 +104,13 @@ scale_colour_hda <- scale_color_hda
 #' @param direction If -1, reverse the scale (defaults to 1)
 #' @param repeat_pal If TRUE, repeat the palette enough times to account for all discrete values
 #' @param ... Additional arguments passed to ggplot2::discrete_scale()
+#' @return A [ggplot2::discrete_scale()] object.
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(wt, mpg, color = factor(cyl))) +
+#'   geom_point() +
+#'   scale_color_hfv()
+#'
 #' @export
 scale_color_hfv <- function(direction = 1, repeat_pal = FALSE, ...) {
   .scale_brand_discrete("colour", "hfv", direction, repeat_pal, ...)
@@ -111,6 +125,13 @@ scale_colour_hfv <- scale_color_hfv
 #' @param direction If -1, reverse the scale (defaults to 1)
 #' @param repeat_pal If TRUE, repeat the palette enough times to account for all discrete values
 #' @param ... Additional arguments passed to ggplot2::discrete_scale()
+#' @return A [ggplot2::discrete_scale()] object.
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(wt, mpg, color = factor(cyl))) +
+#'   geom_point() +
+#'   scale_color_pha()
+#'
 #' @export
 scale_color_pha <- function(direction = 1, repeat_pal = FALSE, ...) {
   .scale_brand_discrete("colour", "pha", direction, repeat_pal, ...)
@@ -125,6 +146,13 @@ scale_colour_pha <- scale_color_pha
 #' @param direction If -1, reverse the scale (defaults to 1)
 #' @param repeat_pal If TRUE, repeat the palette enough times to account for all discrete values
 #' @param ... Additional arguments passed to ggplot2::discrete_scale()
+#' @return A [ggplot2::discrete_scale()] object.
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(factor(cyl), fill = factor(cyl))) +
+#'   geom_bar() +
+#'   scale_fill_hda()
+#'
 #' @export
 scale_fill_hda <- function(direction = 1, repeat_pal = FALSE, ...) {
   .scale_brand_discrete("fill", "hda", direction, repeat_pal, ...)
@@ -135,6 +163,13 @@ scale_fill_hda <- function(direction = 1, repeat_pal = FALSE, ...) {
 #' @param direction If -1, reverse the scale (defaults to 1)
 #' @param repeat_pal If TRUE, repeat the palette enough times to account for all discrete values
 #' @param ... Additional arguments passed to ggplot2::discrete_scale()
+#' @return A [ggplot2::discrete_scale()] object.
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(factor(cyl), fill = factor(cyl))) +
+#'   geom_bar() +
+#'   scale_fill_hfv()
+#'
 #' @export
 scale_fill_hfv <- function(direction = 1, repeat_pal = FALSE, ...) {
   .scale_brand_discrete("fill", "hfv", direction, repeat_pal, ...)
@@ -145,6 +180,13 @@ scale_fill_hfv <- function(direction = 1, repeat_pal = FALSE, ...) {
 #' @param direction If -1, reverse the scale (defaults to 1)
 #' @param repeat_pal If TRUE, repeat the palette enough times to account for all discrete values
 #' @param ... Additional arguments passed to ggplot2::discrete_scale()
+#' @return A [ggplot2::discrete_scale()] object.
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(factor(cyl), fill = factor(cyl))) +
+#'   geom_bar() +
+#'   scale_fill_pha()
+#'
 #' @export
 scale_fill_pha <- function(direction = 1, repeat_pal = FALSE, ...) {
   .scale_brand_discrete("fill", "pha", direction, repeat_pal, ...)
@@ -155,6 +197,13 @@ scale_fill_pha <- function(direction = 1, repeat_pal = FALSE, ...) {
 #' @param direction If -1, reverse the scale (defaults to 1)
 #' @param repeat_pal If TRUE, repeat the palette enough times to account for all discrete values
 #' @param ... Additional arguments passed to ggplot2::discrete_scale()
+#' @return A [ggplot2::discrete_scale()] object.
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(wt, mpg, color = factor(cyl))) +
+#'   geom_point() +
+#'   scale_color_vha()
+#'
 #' @export
 scale_color_vha <- function(direction = 1, repeat_pal = FALSE, ...) {
   .scale_brand_discrete("colour", "vha", direction, repeat_pal, ...)
@@ -169,6 +218,13 @@ scale_colour_vha <- scale_color_vha
 #' @param direction If -1, reverse the scale (defaults to 1)
 #' @param repeat_pal If TRUE, repeat the palette enough times to account for all discrete values
 #' @param ... Additional arguments passed to ggplot2::discrete_scale()
+#' @return A [ggplot2::discrete_scale()] object.
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(factor(cyl), fill = factor(cyl))) +
+#'   geom_bar() +
+#'   scale_fill_vha()
+#'
 #' @export
 scale_fill_vha <- function(direction = 1, repeat_pal = FALSE, ...) {
   .scale_brand_discrete("fill", "vha", direction, repeat_pal, ...)
@@ -211,6 +267,13 @@ scale_fill_vha <- function(direction = 1, repeat_pal = FALSE, ...) {
 #' @param na.value Default color for NA values (#cfcfd0, HDA Light Gray)
 #' @param guide Legend representation for scale
 #' @param ... Other arguments passed on to `ggplot2::continuous_scale()`
+#' @return A [ggplot2::continuous_scale()] object.
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(wt, mpg, color = disp)) +
+#'   geom_point() +
+#'   scale_color_hda_c()
+#'
 #' @export
 scale_color_hda_c <- function(palette = c("sequential", "diverging"),
                                direction = 1,
@@ -252,6 +315,13 @@ scale_colour_hda_c <- scale_color_hda_c
 #' @param na.value Default color for NA values (#cfcfd0, HDA Light Gray)
 #' @param guide Legend representation for scale
 #' @param ... Other arguments passed on to `ggplot2::continuous_scale()`
+#' @return A [ggplot2::continuous_scale()] object.
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(wt, mpg, fill = disp)) +
+#'   geom_point(shape = 21) +
+#'   scale_fill_hda_c()
+#'
 #' @export
 scale_fill_hda_c <- function(palette = c("sequential", "diverging"),
                               direction = 1,
@@ -291,6 +361,13 @@ scale_fill_hda_c <- function(palette = c("sequential", "diverging"),
 #' @param guide Legend representation for scale
 #' @param n.breaks Number of classes; defaults to 7 (see above)
 #' @param ... Other arguments passed on to `ggplot2::binned_scale()`
+#' @return A [ggplot2::binned_scale()] object.
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(wt, mpg, color = disp)) +
+#'   geom_point() +
+#'   scale_color_hda_b()
+#'
 #' @export
 scale_color_hda_b <- function(palette = c("sequential", "diverging"),
                                direction = 1,
@@ -335,6 +412,13 @@ scale_colour_hda_b <- scale_color_hda_b
 #' @param guide Legend representation for scale
 #' @param n.breaks Number of classes; defaults to 7 (see above)
 #' @param ... Other arguments passed on to `ggplot2::binned_scale()`
+#' @return A [ggplot2::binned_scale()] object.
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(wt, mpg, fill = disp)) +
+#'   geom_point(shape = 21) +
+#'   scale_fill_hda_b()
+#'
 #' @export
 scale_fill_hda_b <- function(palette = c("sequential", "diverging"),
                               direction = 1,
@@ -367,6 +451,13 @@ scale_fill_hda_b <- function(palette = c("sequential", "diverging"),
 #' @param na.value Default color for NA values (#d6dadd, HFV Light Gray)
 #' @param guide Legend representation for scale
 #' @param ... Other arguments passed on to `ggplot2::continuous_scale()`
+#' @return A [ggplot2::continuous_scale()] object.
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(wt, mpg, color = disp)) +
+#'   geom_point() +
+#'   scale_color_hfv_c()
+#'
 #' @export
 scale_color_hfv_c <- function(palette = c("sequential", "diverging"),
                                direction = 1,
@@ -402,6 +493,13 @@ scale_colour_hfv_c <- scale_color_hfv_c
 #' @param na.value Default color for NA values (#d6dadd, HFV Light Gray)
 #' @param guide Legend representation for scale
 #' @param ... Other arguments passed on to `ggplot2::continuous_scale()`
+#' @return A [ggplot2::continuous_scale()] object.
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(wt, mpg, fill = disp)) +
+#'   geom_point(shape = 21) +
+#'   scale_fill_hfv_c()
+#'
 #' @export
 scale_fill_hfv_c <- function(palette = c("sequential", "diverging"),
                               direction = 1,
@@ -435,6 +533,13 @@ scale_fill_hfv_c <- function(palette = c("sequential", "diverging"),
 #' @param guide Legend representation for scale
 #' @param n.breaks Number of classes; defaults to 7 (see above)
 #' @param ... Other arguments passed on to `ggplot2::binned_scale()`
+#' @return A [ggplot2::binned_scale()] object.
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(wt, mpg, color = disp)) +
+#'   geom_point() +
+#'   scale_color_hfv_b()
+#'
 #' @export
 scale_color_hfv_b <- function(palette = c("sequential", "diverging"),
                                direction = 1,
@@ -473,6 +578,13 @@ scale_colour_hfv_b <- scale_color_hfv_b
 #' @param guide Legend representation for scale
 #' @param n.breaks Number of classes; defaults to 7 (see above)
 #' @param ... Other arguments passed on to `ggplot2::binned_scale()`
+#' @return A [ggplot2::binned_scale()] object.
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(wt, mpg, fill = disp)) +
+#'   geom_point(shape = 21) +
+#'   scale_fill_hfv_b()
+#'
 #' @export
 scale_fill_hfv_b <- function(palette = c("sequential", "diverging"),
                               direction = 1,
@@ -505,6 +617,13 @@ scale_fill_hfv_b <- function(palette = c("sequential", "diverging"),
 #' @param na.value Default color for NA values (#e2e4e3, PHA Light Gray)
 #' @param guide Legend representation for scale
 #' @param ... Other arguments passed on to `ggplot2::continuous_scale()`
+#' @return A [ggplot2::continuous_scale()] object.
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(wt, mpg, color = disp)) +
+#'   geom_point() +
+#'   scale_color_pha_c()
+#'
 #' @export
 scale_color_pha_c <- function(palette = c("sequential", "diverging"),
                                direction = 1,
@@ -540,6 +659,13 @@ scale_colour_pha_c <- scale_color_pha_c
 #' @param na.value Default color for NA values (#e2e4e3, PHA Light Gray)
 #' @param guide Legend representation for scale
 #' @param ... Other arguments passed on to `ggplot2::continuous_scale()`
+#' @return A [ggplot2::continuous_scale()] object.
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(wt, mpg, fill = disp)) +
+#'   geom_point(shape = 21) +
+#'   scale_fill_pha_c()
+#'
 #' @export
 scale_fill_pha_c <- function(palette = c("sequential", "diverging"),
                               direction = 1,
@@ -573,6 +699,13 @@ scale_fill_pha_c <- function(palette = c("sequential", "diverging"),
 #' @param guide Legend representation for scale
 #' @param n.breaks Number of classes; defaults to 7 (see above)
 #' @param ... Other arguments passed on to `ggplot2::binned_scale()`
+#' @return A [ggplot2::binned_scale()] object.
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(wt, mpg, color = disp)) +
+#'   geom_point() +
+#'   scale_color_pha_b()
+#'
 #' @export
 scale_color_pha_b <- function(palette = c("sequential", "diverging"),
                                direction = 1,
@@ -611,6 +744,13 @@ scale_colour_pha_b <- scale_color_pha_b
 #' @param guide Legend representation for scale
 #' @param n.breaks Number of classes; defaults to 7 (see above)
 #' @param ... Other arguments passed on to `ggplot2::binned_scale()`
+#' @return A [ggplot2::binned_scale()] object.
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(wt, mpg, fill = disp)) +
+#'   geom_point(shape = 21) +
+#'   scale_fill_pha_b()
+#'
 #' @export
 scale_fill_pha_b <- function(palette = c("sequential", "diverging"),
                               direction = 1,
@@ -644,6 +784,13 @@ scale_fill_pha_b <- function(palette = c("sequential", "diverging"),
 #' @param na.value Default color for NA values (#d6dbdb, VHA Light Gray)
 #' @param guide Legend representation for scale
 #' @param ... Other arguments passed on to `ggplot2::continuous_scale()`
+#' @return A [ggplot2::continuous_scale()] object.
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(wt, mpg, color = disp)) +
+#'   geom_point() +
+#'   scale_color_vha_c()
+#'
 #' @export
 scale_color_vha_c <- function(palette = c("sequential", "diverging"),
                                direction = 1,
@@ -680,6 +827,13 @@ scale_colour_vha_c <- scale_color_vha_c
 #' @param na.value Default color for NA values (#d6dbdb, VHA Light Gray)
 #' @param guide Legend representation for scale
 #' @param ... Other arguments passed on to `ggplot2::continuous_scale()`
+#' @return A [ggplot2::continuous_scale()] object.
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(wt, mpg, fill = disp)) +
+#'   geom_point(shape = 21) +
+#'   scale_fill_vha_c()
+#'
 #' @export
 scale_fill_vha_c <- function(palette = c("sequential", "diverging"),
                               direction = 1,
@@ -708,6 +862,13 @@ scale_fill_vha_c <- function(palette = c("sequential", "diverging"),
 #' @param guide Legend representation for scale
 #' @param n.breaks Number of classes; defaults to 7
 #' @param ... Other arguments passed on to `ggplot2::binned_scale()`
+#' @return A [ggplot2::binned_scale()] object.
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(wt, mpg, color = disp)) +
+#'   geom_point() +
+#'   scale_color_vha_b()
+#'
 #' @export
 scale_color_vha_b <- function(palette = c("sequential", "diverging"),
                                direction = 1,
@@ -741,6 +902,13 @@ scale_colour_vha_b <- scale_color_vha_b
 #' @param guide Legend representation for scale
 #' @param n.breaks Number of classes; defaults to 7
 #' @param ... Other arguments passed on to `ggplot2::binned_scale()`
+#' @return A [ggplot2::binned_scale()] object.
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(wt, mpg, fill = disp)) +
+#'   geom_point(shape = 21) +
+#'   scale_fill_vha_b()
+#'
 #' @export
 scale_fill_vha_b <- function(palette = c("sequential", "diverging"),
                               direction = 1,

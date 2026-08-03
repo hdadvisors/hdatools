@@ -182,6 +182,13 @@
 #'   An explicit `scale_*()` (or a manual `aes()` value) always overrides
 #'   these theme-carried defaults.
 #'
+#' @return A [ggplot2::theme()] object.
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(wt, mpg, color = factor(cyl))) +
+#'   geom_point() +
+#'   theme_hda(base_family = "")
+#'
 #' @export
 theme_hda <- function(
     base_size = 14,
@@ -230,6 +237,13 @@ theme_hda <- function(
 #'   An explicit `scale_*()` (or a manual `aes()` value) always overrides
 #'   these theme-carried defaults.
 #'
+#' @return A [ggplot2::theme()] object.
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(wt, mpg, color = factor(cyl))) +
+#'   geom_point() +
+#'   theme_hfv(base_family = "")
+#'
 #' @export
 theme_hfv <- function(
     base_size = 14,
@@ -277,6 +291,13 @@ theme_hfv <- function(
 #'   An explicit `scale_*()` (or a manual `aes()` value) always overrides
 #'   these theme-carried defaults.
 #'
+#' @return A [ggplot2::theme()] object.
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(wt, mpg, color = factor(cyl))) +
+#'   geom_point() +
+#'   theme_pha(base_family = "")
+#'
 #' @export
 theme_pha <- function(
     base_size = 10,
@@ -323,6 +344,13 @@ theme_pha <- function(
 #'   (see [scale_color_vha_c()]) — all with no `scale_*()` call required.
 #'   An explicit `scale_*()` (or a manual `aes()` value) always overrides
 #'   these theme-carried defaults.
+#'
+#' @return A [ggplot2::theme()] object.
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(wt, mpg, color = factor(cyl))) +
+#'   geom_point() +
+#'   theme_vha(base_family = "")
 #'
 #' @export
 theme_vha <- function(

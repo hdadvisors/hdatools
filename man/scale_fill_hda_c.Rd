@@ -27,6 +27,9 @@ review; \code{-1} swaps which arm represents low vs. high.}
 
 \item{...}{Other arguments passed on to \code{ggplot2::continuous_scale()}}
 }
+\value{
+A \code{\link[ggplot2:continuous_scale]{ggplot2::continuous_scale()}} object.
+}
 \description{
 A sequential or diverging \code{colorspace} HCL ramp, tuned and CVD-checked
 against protanopia, deuteranopia, and tritanopia in the Ramp Lab review
@@ -48,3 +51,10 @@ before final adoption (see \code{plans/DECISIONS.md}, 2026-07-18). It ships
 now so the scale matrix is complete; treat it as subject to change.
 }
 
+\examples{
+library(ggplot2)
+ggplot(mtcars, aes(wt, mpg, fill = disp)) +
+  geom_point(shape = 21) +
+  scale_fill_hda_c()
+
+}

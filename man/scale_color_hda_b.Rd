@@ -40,6 +40,9 @@ review; \code{-1} swaps which arm represents low vs. high.}
 
 \item{...}{Other arguments passed on to \code{ggplot2::binned_scale()}}
 }
+\value{
+A \code{\link[ggplot2:binned_scale]{ggplot2::binned_scale()}} object.
+}
 \description{
 The same sequential/diverging \code{colorspace} HCL ramps as
 \code{\link[=scale_color_hda_c]{scale_color_hda_c()}}, discretized into classes. Defaults to 7 classes,
@@ -62,3 +65,10 @@ before final adoption (see \code{plans/DECISIONS.md}, 2026-07-18). It ships
 now so the scale matrix is complete; treat it as subject to change.
 }
 
+\examples{
+library(ggplot2)
+ggplot(mtcars, aes(wt, mpg, color = disp)) +
+  geom_point() +
+  scale_color_hda_b()
+
+}

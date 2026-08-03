@@ -16,6 +16,16 @@ scale_colour_hda(direction = 1, repeat_pal = FALSE, ...)
 
 \item{...}{Additional arguments passed to ggplot2::discrete_scale()}
 }
+\value{
+A \code{\link[ggplot2:discrete_scale]{ggplot2::discrete_scale()}} object.
+}
 \description{
 HDA-branded discrete color scale
+}
+\examples{
+library(ggplot2)
+ggplot(mtcars, aes(wt, mpg, color = factor(cyl))) +
+  geom_point() +
+  scale_color_hda()
+
 }

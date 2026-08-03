@@ -142,6 +142,7 @@ CONTRIBUTING.md references it.
 
 ## Planning docs
 
-`plans/` holds working notes and is build-ignored (`^plans$` in `.Rbuildignore`).
-Executed plans move to `plans/archive/` with a short completion header; their
-content is left intact for history.
+`plans/` is build-ignored (`^plans$` in `.Rbuildignore`) and contains two kinds of content:
+
+- **Durable reference docs** — `DECISIONS.md` (append-only log of settled design decisions) and `consumer-rollout.md` (reusable release rollout procedure). Both are actively referenced from CONTRIBUTING.md and this file; don't archive them.
+- **Working notes** — everything else. Executed phase plans move to `plans/archive/` with a short completion header; their content is left intact for history.

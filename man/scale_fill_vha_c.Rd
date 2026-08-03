@@ -27,6 +27,9 @@ low vs. high.}
 
 \item{...}{Other arguments passed on to \code{ggplot2::continuous_scale()}}
 }
+\value{
+A \code{\link[ggplot2:continuous_scale]{ggplot2::continuous_scale()}} object.
+}
 \description{
 A sequential or diverging \code{colorspace} HCL ramp.
 }
@@ -41,3 +44,10 @@ but — like HDA's diverging ramp — a candidate for a follow-up Ramp Lab
 pass (\code{plans/DECISIONS.md}).
 }
 
+\examples{
+library(ggplot2)
+ggplot(mtcars, aes(wt, mpg, fill = disp)) +
+  geom_point(shape = 21) +
+  scale_fill_vha_c()
+
+}

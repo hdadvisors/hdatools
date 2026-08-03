@@ -29,6 +29,9 @@ theme_vha(
 
 \item{...}{Additional arguments passed to ggplot2::theme()}
 }
+\value{
+A \code{\link[ggplot2:theme]{ggplot2::theme()}} object.
+}
 \description{
 Use a VHA-branded ggplot2 theme
 }
@@ -46,4 +49,11 @@ palette, and a continuous mapping uses the VHA sequential ramp
 (see \code{\link[=scale_color_vha_c]{scale_color_vha_c()}}) — all with no \verb{scale_*()} call required.
 An explicit \verb{scale_*()} (or a manual \code{aes()} value) always overrides
 these theme-carried defaults.
+}
+\examples{
+library(ggplot2)
+ggplot(mtcars, aes(wt, mpg, color = factor(cyl))) +
+  geom_point() +
+  theme_vha(base_family = "")
+
 }

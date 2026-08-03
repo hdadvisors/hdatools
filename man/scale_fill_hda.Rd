@@ -13,6 +13,16 @@ scale_fill_hda(direction = 1, repeat_pal = FALSE, ...)
 
 \item{...}{Additional arguments passed to ggplot2::discrete_scale()}
 }
+\value{
+A \code{\link[ggplot2:discrete_scale]{ggplot2::discrete_scale()}} object.
+}
 \description{
 HDA-branded discrete fill scale
+}
+\examples{
+library(ggplot2)
+ggplot(mtcars, aes(factor(cyl), fill = factor(cyl))) +
+  geom_bar() +
+  scale_fill_hda()
+
 }

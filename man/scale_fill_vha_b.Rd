@@ -30,6 +30,9 @@ low vs. high.}
 
 \item{...}{Other arguments passed on to \code{ggplot2::binned_scale()}}
 }
+\value{
+A \code{\link[ggplot2:binned_scale]{ggplot2::binned_scale()}} object.
+}
 \description{
 The same sequential/diverging \code{colorspace} HCL ramps as
 \code{\link[=scale_fill_vha_c]{scale_fill_vha_c()}}, discretized into classes. Defaults to 7 classes.
@@ -39,3 +42,10 @@ The same sequential/diverging \code{colorspace} HCL ramps as
 See \code{\link[=scale_color_vha_c]{scale_color_vha_c()}} for the Yellow-arm gamut caveat.
 }
 
+\examples{
+library(ggplot2)
+ggplot(mtcars, aes(wt, mpg, fill = disp)) +
+  geom_point(shape = 21) +
+  scale_fill_vha_b()
+
+}
