@@ -3,9 +3,9 @@
 Registers the font faces bundled in `inst/fonts/` (Lato and Roboto Slab
 for
 [`theme_hda()`](https://hdadvisors.github.io/hdatools/reference/theme_hda.md),
-Open Sans and Poppins for
+Open Sans for
 [`theme_hfv()`](https://hdadvisors.github.io/hdatools/reference/theme_hfv.md),
-Noto Sans for
+Raleway and Mulish for
 [`theme_pha()`](https://hdadvisors.github.io/hdatools/reference/theme_pha.md),
 Montserrat for
 [`theme_vha()`](https://hdadvisors.github.io/hdatools/reference/theme_vha.md))

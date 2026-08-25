@@ -46,6 +46,12 @@ theme_hda(
 
   Additional arguments passed to ggplot2::theme()
 
+## Value
+
+A
+[`ggplot2::theme()`](https://ggplot2.tidyverse.org/reference/theme.html)
+object.
+
 ## Details
 
 When overriding strip text under ggplot2 \>= 4.0, use
@@ -65,3 +71,13 @@ HDA palette, and a continuous mapping uses the HDA sequential ramp (see
 — all with no `scale_*()` call required. An explicit `scale_*()` (or a
 manual [`aes()`](https://ggplot2.tidyverse.org/reference/aes.html)
 value) always overrides these theme-carried defaults.
+
+## Examples
+
+``` r
+library(ggplot2)
+ggplot(mtcars, aes(wt, mpg, color = factor(cyl))) +
+  geom_point() +
+  theme_hda(base_family = "")
+
+```

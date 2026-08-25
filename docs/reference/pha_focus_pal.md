@@ -18,7 +18,7 @@ pha_focus_pal(color, n = 5)
 
 - color:
 
-  A valid PHA color name (e.g. `"Green"`, `"Orange"`).
+  A valid PHA color name (e.g. `"Orange"`, `"Teal"`).
 
 - n:
 
@@ -38,6 +38,6 @@ An unnamed character vector of length `n`.
 ## Examples
 
 ``` r
-pha_focus_pal("Green", n = 4)
-#> [1] "#5bab8e" "#e2e4e3" "#e2e4e3" "#e2e4e3"
+pha_focus_pal("Orange", n = 4)
+#> [1] "#f39152" "#e2e4e3" "#e2e4e3" "#e2e4e3"
 ```

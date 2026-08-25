@@ -57,8 +57,24 @@ scale_colour_vha_b(
   Other arguments passed on to
   [`ggplot2::binned_scale()`](https://ggplot2.tidyverse.org/reference/binned_scale.html)
 
+## Value
+
+A
+[`ggplot2::binned_scale()`](https://ggplot2.tidyverse.org/reference/binned_scale.html)
+object.
+
 ## Diverging ramp is provisional
 
 **\[experimental\]** See
 [`scale_color_vha_c()`](https://hdadvisors.github.io/hdatools/reference/scale_color_vha_c.md)
 for the Yellow-arm gamut caveat.
+
+## Examples
+
+``` r
+library(ggplot2)
+ggplot(mtcars, aes(wt, mpg, color = disp)) +
+  geom_point() +
+  scale_color_vha_b()
+
+```

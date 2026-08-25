@@ -2,13 +2,20 @@
 
 A named character vector of the six PHA brand colors, taken directly
 from the internal `.brands` registry. Names are the canonical color
-labels (e.g. `"Green"`, `"Orange"`).
+labels (e.g. `"Orange"`, `"Teal"`).
 
 ## Usage
 
 ``` r
 pha_colors
 ```
+
+## Details
+
+The first four — `"Orange"`, `"Teal"`, `"Blue"`, `"Navy"` — are PHA's
+own guide colors, so a chart with four or fewer categories uses only
+sanctioned brand colors. `"Orange Deep"` and `"Teal Light"` are tints
+derived from the first two and appear only at five and six categories.
 
 ## See also
 
@@ -23,7 +30,7 @@ pha_colors
 pha_colors
 #>      Green Light Blue     Orange        Red     Purple  Dark Blue 
 #>  "#5bab8e"  "#a6cccc"  "#f39152"  "#be451c"  "#a5add0"  "#2b6b9c" 
-pha_colors["Green"]
-#>     Green 
-#> "#5bab8e" 
+pha_colors["Orange"]
+#>    Orange 
+#> "#f39152" 
 ```

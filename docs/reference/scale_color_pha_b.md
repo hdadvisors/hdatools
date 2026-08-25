@@ -59,9 +59,25 @@ scale_colour_pha_b(
   Other arguments passed on to
   [`ggplot2::binned_scale()`](https://ggplot2.tidyverse.org/reference/binned_scale.html)
 
+## Value
+
+A
+[`ggplot2::binned_scale()`](https://ggplot2.tidyverse.org/reference/binned_scale.html)
+object.
+
 ## Diverging palette usage
 
 7-class diverging maps built from these ramps lose sign distinction in
 their innermost class pair under protanopia (structural to the shared
 cream center) — always pair a `palette = "diverging"` map with a legend
 or direct labels. See `plans/DECISIONS.md` (2026-07-18).
+
+## Examples
+
+``` r
+library(ggplot2)
+ggplot(mtcars, aes(wt, mpg, color = disp)) +
+  geom_point() +
+  scale_color_pha_b()
+
+```

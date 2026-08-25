@@ -19,10 +19,9 @@ invent or infer them):
 - The brand’s hex palette, with a label for each color.
 - Rights to bundle the brand’s font(s) — hdatools ships static `.ttf`
   files in `inst/fonts/`, registered offline via
-  [`sysfonts::font_add()`](https://rdrr.io/pkg/sysfonts/man/font_add.html)
-  (never a network fetch like
-  [`sysfonts::font_add_google()`](https://rdrr.io/pkg/sysfonts/man/font_add_google.html)),
-  so redistribution rights matter, not just “the font looks free.”
+  [`systemfonts::register_font()`](https://systemfonts.r-lib.org/reference/register_font.html)
+  (from the bundled file, never fetched from a font server), so
+  redistribution rights matter, not just “the font looks free.”
 - Any design decisions specific to the brand (base text size,
   output-format size adjustments, line height, title/subtitle margins)
   if the client already has an existing house style to match.
@@ -87,7 +86,7 @@ files under `inst/fonts/<family>/` alongside its license file, add a
 manifest row to `inst/fonts/LICENSES.md`, and register it in
 [`register_hda_fonts()`](https://hdadvisors.github.io/hdatools/reference/register_hda_fonts.md)
 (`R/theme_helpers.R`) with
-[`sysfonts::font_add()`](https://rdrr.io/pkg/sysfonts/man/font_add.html).
+[`systemfonts::register_font()`](https://systemfonts.r-lib.org/reference/register_font.html).
 
 ## 3. Add the one-line wrapper exports
 

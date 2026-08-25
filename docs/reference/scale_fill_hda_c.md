@@ -43,6 +43,12 @@ scale_fill_hda_c(
   Other arguments passed on to
   [`ggplot2::continuous_scale()`](https://ggplot2.tidyverse.org/reference/continuous_scale.html)
 
+## Value
+
+A
+[`ggplot2::continuous_scale()`](https://ggplot2.tidyverse.org/reference/continuous_scale.html)
+object.
+
 ## Diverging palette usage
 
 7-class diverging maps built from these ramps lose sign distinction in
@@ -52,8 +58,19 @@ or direct labels. See `plans/DECISIONS.md` (2026-07-18).
 
 ## HDA diverging is provisional
 
-**\[experimental\]** HDA's diverging ramp (Blue vs Coral) is a near-twin
-of PHA's (Dark Blue vs Red) and is pending a follow-up Ramp Lab pass to
-differentiate it before final adoption (see `plans/DECISIONS.md`,
-2026-07-18). It ships now so the scale matrix is complete; treat it as
-subject to change.
+**\[experimental\]** HDA's diverging ramp (Blue vs Coral) is pending a
+follow-up Ramp Lab pass before final adoption (see `plans/DECISIONS.md`,
+2026-07-18). PHA's 2026 rebrand moved its diverging arms to Blue vs
+Orange, which widened the cool-arm gap between the two brands from 16 to
+32 degrees, but the HDA pass is still open on its own terms. It ships
+now so the scale matrix is complete; treat it as subject to change.
+
+## Examples
+
+``` r
+library(ggplot2)
+ggplot(mtcars, aes(wt, mpg, fill = disp)) +
+  geom_point(shape = 21) +
+  scale_fill_hda_c()
+
+```

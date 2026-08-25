@@ -74,11 +74,14 @@ Run these in order after changing R source or roxygen comments:
       get a system `pandoc` from the SessionStart hook, already on
       `PATH` — this workaround is for local sessions without
       RStudio/Quarto installed.)
-    - `build_site()` re-knits `vignettes/articles/branded-themes.Rmd`,
-      which needs tidycensus + a Census API key + network and will fail
-      offline. For doc/theme changes, rebuild only what changed instead:
-      `init_site()` + `build_home()` + `build_reference()` +
-      `build_news()`.
+    - `build_site()` re-knits every article in `vignettes/articles/`. As
+      of 0.5.0 `branded-themes.Rmd` uses a small bundled data table
+      instead of a live
+      [`tidycensus::get_acs()`](https://walker-data.com/tidycensus/reference/get_acs.html)
+      call, so it no longer needs a Census API key or network to build.
+      For faster doc/theme iteration you can still rebuild only what
+      changed: `init_site()` + `build_home()` + `build_reference()` +
+      `build_news()` + `build_articles()`.
 
 ## Generated files — never hand-edit
 
@@ -136,7 +139,9 @@ Run these in order after changing R source or roxygen comments:
 Consumer rollout (pinned repos: pha-update-2026, fhfh, faar) happens in
 those repos’ own sessions — bump the pin,
 [`renv::snapshot()`](https://rstudio.github.io/renv/reference/snapshot.html),
-re-render, compare. Never force a consumer bump as a drive-by.
+re-render, compare. Never force a consumer bump as a drive-by. See
+[`plans/consumer-rollout.md`](https://hdadvisors.github.io/hdatools/plans/consumer-rollout.md)
+for the reusable procedure.
 
 ## Skills
 
@@ -153,22 +158,24 @@ re-render, compare. Never force a consumer bump as a drive-by.
 They assume R is on PATH with inline `Rscript -e`; use the temp-file
 convention above instead.
 
-## Development dashboard
+## Contributing and dev process
 
-A local HTML dashboard at `plans/dashboard/` tracks phases,
-branches/PRs, decisions, and release state, generated from ROADMAP.md,
-DECISIONS.md, the phase plans, NEWS.md, DESCRIPTION, and live git/gh
-data. **Re-run the generator after any commit that changes project
-state** (phase status, NEWS, DESCRIPTION, branch/PR changes):
-`python plans/dashboard/generate_dashboard.py`, or double-click
-`plans\dashboard\update-dashboard.bat` to regenerate and open it.
-`dashboard.html` and `gh-cache.json` are gitignored (generated, not
-committed). The plan docs are the source of truth — when the dashboard
-shows consistency warnings, fix the docs by hand; never treat the
-dashboard itself as authoritative.
+See
+[`CONTRIBUTING.md`](https://hdadvisors.github.io/hdatools/CONTRIBUTING.md)
+for the getting-started guide, versioning convention, release-when-ready
+flow, NEWS/test/docs rules, and how to file issues. The release
+checklist below is the authoritative step list; CONTRIBUTING.md
+references it.
 
 ## Planning docs
 
-`plans/` holds working notes and is build-ignored (`^plans$` in
-`.Rbuildignore`). Executed plans move to `plans/archive/` with a short
-completion header; their content is left intact for history.
+`plans/` is build-ignored (`^plans$` in `.Rbuildignore`) and contains
+two kinds of content:
+
+- **Durable reference docs** — `DECISIONS.md` (append-only log of
+  settled design decisions) and `consumer-rollout.md` (reusable release
+  rollout procedure). Both are actively referenced from CONTRIBUTING.md
+  and this file; don’t archive them.
+- **Working notes** — everything else. Executed phase plans move to
+  `plans/archive/` with a short completion header; their content is left
+  intact for history.
