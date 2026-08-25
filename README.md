@@ -9,8 +9,9 @@ The `hdatools` package provides a set of functions and tools for data analysis a
 devtools::install_github("hdadvisors/hdatools")
 ```
 
-hdatools bundles the Lato, Roboto Slab, Open Sans, Poppins, Noto Sans, and
-Montserrat faces used by its themes and registers them with systemfonts offline the
+hdatools bundles the Lato, Roboto Slab, Open Sans, Poppins, Noto Sans,
+Montserrat, Raleway, and Mulish faces used by its themes and registers them with
+systemfonts offline the
 first time the package loads — no network request, no per-session Google
 Fonts download. To skip registration (for example, to supply your own font
 setup), set `options(hdatools.fonts = FALSE)` or the environment variable

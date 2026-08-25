@@ -394,15 +394,15 @@ const CANDIDATES =
         "warnings": []
       },
       {
-        "id": "hfv-seq-leaf-experimental-hfv-secondary-cream-standard",
+        "id": "hfv-seq-leaf-cream-standard",
         "brand": "hfv",
         "type": "sequential",
-        "anchorLabel": "Leaf (experimental HFV secondary) -> cream",
+        "anchorLabel": "Leaf -> cream",
         "inspiration": {
-          "dark": "Leaf (experimental HFV secondary)",
+          "dark": "Leaf",
           "light": "shared cream (H~80, C~10)"
         },
-        "nudgeNote": "Off Leaf (experimental HFV secondary): hue +0° (source 118° -> final 118°), chroma 73 -> 65 (dark end), luminance 67 -> 28 (dark end); light end anchors to a shared cream tone (H~80, C~10) at L~95, not this color's own hue.",
+        "nudgeNote": "Off Leaf: hue +0° (source 118° -> final 118°), chroma 73 -> 65 (dark end), luminance 67 -> 28 (dark end); light end anchors to a shared cream tone (H~80, C~10) at L~95, not this color's own hue.",
         "variant": "standard",
         "variantLabel": "Standard (linear HCL sweep)",
         "params": {
@@ -421,15 +421,15 @@ const CANDIDATES =
         "warnings": []
       },
       {
-        "id": "hfv-seq-leaf-experimental-hfv-secondary-cream-wide_contrast",
+        "id": "hfv-seq-leaf-cream-wide_contrast",
         "brand": "hfv",
         "type": "sequential",
-        "anchorLabel": "Leaf (experimental HFV secondary) -> cream",
+        "anchorLabel": "Leaf -> cream",
         "inspiration": {
-          "dark": "Leaf (experimental HFV secondary)",
+          "dark": "Leaf",
           "light": "shared cream (H~80, C~10)"
         },
-        "nudgeNote": "Off Leaf (experimental HFV secondary): hue +0° (source 118° -> final 118°), chroma 73 -> 65 (dark end), luminance 67 -> 28 (dark end); light end anchors to a shared cream tone (H~80, C~10) at L~95, not this color's own hue.",
+        "nudgeNote": "Off Leaf: hue +0° (source 118° -> final 118°), chroma 73 -> 65 (dark end), luminance 67 -> 28 (dark end); light end anchors to a shared cream tone (H~80, C~10) at L~95, not this color's own hue.",
         "variant": "wide_contrast",
         "variantLabel": "Wide-contrast (deeper dark end, punchier chroma, eased curve)",
         "params": {
@@ -560,15 +560,15 @@ const CANDIDATES =
         "warnings": []
       },
       {
-        "id": "hfv-div-leaf-experimental-hfv-secondary-vs-berry-standard",
+        "id": "hfv-div-leaf-vs-berry-standard",
         "brand": "hfv",
         "type": "diverging",
-        "anchorLabel": "Leaf (experimental HFV secondary) vs Berry",
+        "anchorLabel": "Leaf vs Berry",
         "inspiration": {
-          "arm1": "Leaf (experimental HFV secondary)",
+          "arm1": "Leaf",
           "arm2": "Berry"
         },
-        "nudgeNote": "Off Leaf (experimental HFV secondary) (arm 1, hue 118°) and Berry (arm 2, hue 344°): shared chroma target 62 (arm1 source C=73, arm2 source C=87), luminance sweep 28 -> 95 into a shared cream center (H~80, C~10), not a fully neutral one.",
+        "nudgeNote": "Off Leaf (arm 1, hue 118°) and Berry (arm 2, hue 344°): shared chroma target 62 (arm1 source C=73, arm2 source C=87), luminance sweep 28 -> 95 into a shared cream center (H~80, C~10), not a fully neutral one.",
         "variant": "standard",
         "variantLabel": "Standard (linear HCL sweep)",
         "params": {
@@ -588,15 +588,15 @@ const CANDIDATES =
         "warnings": []
       },
       {
-        "id": "hfv-div-leaf-experimental-hfv-secondary-vs-berry-wide_contrast",
+        "id": "hfv-div-leaf-vs-berry-wide_contrast",
         "brand": "hfv",
         "type": "diverging",
-        "anchorLabel": "Leaf (experimental HFV secondary) vs Berry",
+        "anchorLabel": "Leaf vs Berry",
         "inspiration": {
-          "arm1": "Leaf (experimental HFV secondary)",
+          "arm1": "Leaf",
           "arm2": "Berry"
         },
-        "nudgeNote": "Off Leaf (experimental HFV secondary) (arm 1, hue 118°) and Berry (arm 2, hue 344°): shared chroma target 62 (arm1 source C=73, arm2 source C=87), luminance sweep 28 -> 95 into a shared cream center (H~80, C~10), not a fully neutral one.",
+        "nudgeNote": "Off Leaf (arm 1, hue 118°) and Berry (arm 2, hue 344°): shared chroma target 62 (arm1 source C=73, arm2 source C=87), luminance sweep 28 -> 95 into a shared cream center (H~80, C~10), not a fully neutral one.",
         "variant": "wide_contrast",
         "variantLabel": "Wide-contrast (deeper dark end, punchier chroma, eased curve)",
         "params": {
@@ -616,15 +616,15 @@ const CANDIDATES =
         "warnings": []
       },
       {
-        "id": "hfv-div-cerulean-experimental-hfv-secondary-vs-desert-standard",
+        "id": "hfv-div-cerulean-vs-desert-standard",
         "brand": "hfv",
         "type": "diverging",
-        "anchorLabel": "Cerulean (experimental HFV secondary) vs Desert",
+        "anchorLabel": "Cerulean vs Desert",
         "inspiration": {
-          "arm1": "Cerulean (experimental HFV secondary)",
+          "arm1": "Cerulean",
           "arm2": "Desert"
         },
-        "nudgeNote": "Off Cerulean (experimental HFV secondary) (arm 1, hue 220°) and Desert (arm 2, hue 25°): shared chroma target 55 (arm1 source C=44, arm2 source C=96), luminance sweep 28 -> 95 into a shared cream center (H~80, C~10), not a fully neutral one.",
+        "nudgeNote": "Off Cerulean (arm 1, hue 220°) and Desert (arm 2, hue 25°): shared chroma target 55 (arm1 source C=44, arm2 source C=96), luminance sweep 28 -> 95 into a shared cream center (H~80, C~10), not a fully neutral one.",
         "variant": "standard",
         "variantLabel": "Standard (linear HCL sweep)",
         "params": {
@@ -644,15 +644,15 @@ const CANDIDATES =
         "warnings": []
       },
       {
-        "id": "hfv-div-cerulean-experimental-hfv-secondary-vs-desert-wide_contrast",
+        "id": "hfv-div-cerulean-vs-desert-wide_contrast",
         "brand": "hfv",
         "type": "diverging",
-        "anchorLabel": "Cerulean (experimental HFV secondary) vs Desert",
+        "anchorLabel": "Cerulean vs Desert",
         "inspiration": {
-          "arm1": "Cerulean (experimental HFV secondary)",
+          "arm1": "Cerulean",
           "arm2": "Desert"
         },
-        "nudgeNote": "Off Cerulean (experimental HFV secondary) (arm 1, hue 220°) and Desert (arm 2, hue 25°): shared chroma target 55 (arm1 source C=44, arm2 source C=96), luminance sweep 28 -> 95 into a shared cream center (H~80, C~10), not a fully neutral one.",
+        "nudgeNote": "Off Cerulean (arm 1, hue 220°) and Desert (arm 2, hue 25°): shared chroma target 55 (arm1 source C=44, arm2 source C=96), luminance sweep 28 -> 95 into a shared cream center (H~80, C~10), not a fully neutral one.",
         "variant": "wide_contrast",
         "variantLabel": "Wide-contrast (deeper dark end, punchier chroma, eased curve)",
         "params": {
@@ -676,73 +676,19 @@ const CANDIDATES =
   "pha": {
     "sequential": [
       {
-        "id": "pha-seq-dark-blue-cream-standard",
+        "id": "pha-seq-orange-cream-standard",
         "brand": "pha",
         "type": "sequential",
-        "anchorLabel": "Dark Blue -> cream",
+        "anchorLabel": "Orange -> cream",
         "inspiration": {
-          "dark": "Dark Blue",
+          "dark": "Orange",
           "light": "shared cream (H~80, C~10)"
         },
-        "nudgeNote": "Off Dark Blue: hue +0° (source 243° -> final 243°), chroma 53 -> 58 (dark end), luminance 43 -> 26 (dark end); light end anchors to a shared cream tone (H~80, C~10) at L~95, not this color's own hue.",
+        "nudgeNote": "Off Orange: hue +0° (source 32° -> final 32°), chroma 98 -> 90 (dark end), luminance 69 -> 28 (dark end); light end anchors to a shared cream tone (H~80, C~10) at L~95, not this color's own hue.",
         "variant": "standard",
         "variantLabel": "Standard (linear HCL sweep)",
         "params": {
-          "h1": 243.4067,
-          "c1": 58,
-          "l1": 26,
-          "l2": 95,
-          "power": 1,
-          "hc": 80,
-          "cc": 10
-        },
-        "sourceHueDelta": 0,
-        "sourceChromaDelta": 5.4635,
-        "hexSmooth": ["#00447D", "#004B7D", "#00527C", "#00587D", "#005F7D", "#00657D", "#006B7E", "#00717E", "#00767F", "#007C7F", "#008280", "#008781", "#1D8C83", "#339284", "#439786", "#529C88", "#5FA18A", "#6CA78D", "#78AC91", "#83B195", "#8EB699", "#99BB9E", "#A3C0A3", "#AEC5A9", "#B7CAAF", "#C1D0B6", "#CAD5BD", "#D3DAC4", "#DBE0CC", "#E4E5D4", "#EBEBDC", "#F3F1E4"],
-        "hexBinned": ["#00447D", "#00667D", "#008381", "#599F89", "#95B99C", "#C9D4BC", "#F3F1E4"],
-        "warnings": []
-      },
-      {
-        "id": "pha-seq-dark-blue-cream-wide_contrast",
-        "brand": "pha",
-        "type": "sequential",
-        "anchorLabel": "Dark Blue -> cream",
-        "inspiration": {
-          "dark": "Dark Blue",
-          "light": "shared cream (H~80, C~10)"
-        },
-        "nudgeNote": "Off Dark Blue: hue +0° (source 243° -> final 243°), chroma 53 -> 58 (dark end), luminance 43 -> 26 (dark end); light end anchors to a shared cream tone (H~80, C~10) at L~95, not this color's own hue.",
-        "variant": "wide_contrast",
-        "variantLabel": "Wide-contrast (deeper dark end, punchier chroma, eased curve)",
-        "params": {
-          "h1": 243.4067,
-          "c1": 70,
-          "l1": 20,
-          "l2": 96,
-          "power": 1.2,
-          "hc": 80,
-          "cc": 10
-        },
-        "sourceHueDelta": 0,
-        "sourceChromaDelta": 5.4635,
-        "hexSmooth": ["#003B88", "#004381", "#004B7E", "#00537D", "#005A7D", "#00617D", "#00687E", "#006F7E", "#007680", "#007D81", "#008482", "#008A84", "#009186", "#299788", "#419D8A", "#53A38D", "#63A991", "#71AF94", "#7FB599", "#8CBA9D", "#98C0A2", "#A3C5A8", "#AECAAE", "#B9D0B4", "#C2D5BB", "#CCDAC1", "#D5DFC8", "#DDE4CF", "#E4E8D6", "#EBEDDD", "#F1F1E3", "#F6F4E7"],
-        "hexBinned": ["#003B88", "#00627D", "#008683", "#5BA68F", "#9FC3A6", "#D3DEC7", "#F6F4E7"],
-        "warnings": []
-      },
-      {
-        "id": "pha-seq-red-cream-standard",
-        "brand": "pha",
-        "type": "sequential",
-        "anchorLabel": "Red -> cream",
-        "inspiration": {
-          "dark": "Red",
-          "light": "shared cream (H~80, C~10)"
-        },
-        "nudgeNote": "Off Red: hue +0° (source 20° -> final 20°), chroma 104 -> 90 (dark end), luminance 46 -> 28 (dark end); light end anchors to a shared cream tone (H~80, C~10) at L~95, not this color's own hue.",
-        "variant": "standard",
-        "variantLabel": "Standard (linear HCL sweep)",
-        "params": {
-          "h1": 19.6527,
+          "h1": 32.3625,
           "c1": 90,
           "l1": 28,
           "l2": 95,
@@ -751,25 +697,25 @@ const CANDIDATES =
           "cc": 10
         },
         "sourceHueDelta": 0,
-        "sourceChromaDelta": -13.5526,
-        "hexSmooth": ["#841800", "#882300", "#8B2C00", "#8F3500", "#923D00", "#964400", "#994B00", "#9C5308", "#A05A17", "#A36122", "#A6682B", "#A96E34", "#AC753D", "#B07C45", "#B3834E", "#B68956", "#B9905F", "#BC9767", "#BF9D70", "#C3A478", "#C6AB81", "#C9B18A", "#CDB892", "#D0BE9B", "#D4C5A4", "#D8CBAD", "#DCD2B6", "#E0D8BF", "#E4DEC9", "#E9E5D2", "#EEEBDB", "#F3F1E4"],
-        "hexBinned": ["#841800", "#964500", "#A76A2E", "#B78D5B", "#C8AF87", "#DBD0B5", "#F3F1E4"],
+        "sourceChromaDelta": -7.9934,
+        "hexSmooth": ["#7B2700", "#7F2F00", "#833600", "#873D00", "#8B4400", "#8E4B00", "#925100", "#955800", "#995E00", "#9C6500", "#A06B13", "#A37224", "#A77831", "#AA7F3C", "#AE8547", "#B18C51", "#B5925A", "#B89864", "#BC9F6D", "#BFA576", "#C3AC7F", "#C7B288", "#CAB891", "#CEBF9B", "#D2C5A4", "#D7CCAD", "#DBD2B6", "#DFD8BF", "#E4DEC9", "#E9E5D2", "#EEEBDB", "#F3F1E4"],
+        "hexBinned": ["#7B2700", "#8F4C00", "#A16D19", "#B38F55", "#C5B085", "#DAD1B5", "#F3F1E4"],
         "warnings": []
       },
       {
-        "id": "pha-seq-red-cream-wide_contrast",
+        "id": "pha-seq-orange-cream-wide_contrast",
         "brand": "pha",
         "type": "sequential",
-        "anchorLabel": "Red -> cream",
+        "anchorLabel": "Orange -> cream",
         "inspiration": {
-          "dark": "Red",
+          "dark": "Orange",
           "light": "shared cream (H~80, C~10)"
         },
-        "nudgeNote": "Off Red: hue +0° (source 20° -> final 20°), chroma 104 -> 90 (dark end), luminance 46 -> 28 (dark end); light end anchors to a shared cream tone (H~80, C~10) at L~95, not this color's own hue.",
+        "nudgeNote": "Off Orange: hue +0° (source 32° -> final 32°), chroma 98 -> 90 (dark end), luminance 69 -> 28 (dark end); light end anchors to a shared cream tone (H~80, C~10) at L~95, not this color's own hue.",
         "variant": "wide_contrast",
         "variantLabel": "Wide-contrast (deeper dark end, punchier chroma, eased curve)",
         "params": {
-          "h1": 19.6527,
+          "h1": 32.3625,
           "c1": 100,
           "l1": 22,
           "l2": 96,
@@ -778,25 +724,25 @@ const CANDIDATES =
           "cc": 10
         },
         "sourceHueDelta": 0,
-        "sourceChromaDelta": -13.5526,
-        "hexSmooth": ["#780000", "#7D0900", "#821B00", "#872700", "#8C3200", "#913B00", "#964500", "#9A4E00", "#9F5600", "#A35F17", "#A76727", "#AB6F33", "#B0773E", "#B47F49", "#B78753", "#BB8F5D", "#BF9767", "#C39E71", "#C7A67B", "#CAAD84", "#CEB48E", "#D2BB97", "#D5C2A0", "#D9C9A9", "#DDCFB2", "#E1D5BB", "#E5DBC4", "#E8E1CC", "#ECE7D4", "#F0ECDB", "#F3F0E2", "#F6F4E7"],
-        "hexBinned": ["#780000", "#923D00", "#A96A2B", "#BD9362", "#D1B994", "#E4DAC2", "#F6F4E7"],
+        "sourceChromaDelta": -7.9934,
+        "hexSmooth": ["#6E1400", "#741F00", "#792900", "#7F3200", "#843A00", "#894300", "#8E4B00", "#935300", "#985B00", "#9C6300", "#A16B04", "#A57321", "#AA7B32", "#AE8240", "#B28A4C", "#B79158", "#BB9963", "#BFA06E", "#C3A778", "#C7AE82", "#CBB58C", "#CFBC96", "#D3C39F", "#D7C9A9", "#DCD0B2", "#E0D6BB", "#E4DCC4", "#E8E1CC", "#ECE7D4", "#F0ECDB", "#F3F0E2", "#F6F4E7"],
+        "hexBinned": ["#6E1400", "#8A4400", "#A26E11", "#B9955D", "#CEBA93", "#E3DBC2", "#F6F4E7"],
         "warnings": []
       },
       {
-        "id": "pha-seq-green-cream-standard",
+        "id": "pha-seq-teal-cream-standard",
         "brand": "pha",
         "type": "sequential",
-        "anchorLabel": "Green -> cream",
+        "anchorLabel": "Teal -> cream",
         "inspiration": {
-          "dark": "Green",
+          "dark": "Teal",
           "light": "shared cream (H~80, C~10)"
         },
-        "nudgeNote": "Off Green: hue +0° (source 157° -> final 157°), chroma 40 -> 52 (dark end), luminance 64 -> 26 (dark end); light end anchors to a shared cream tone (H~80, C~10) at L~95, not this color's own hue.",
+        "nudgeNote": "Off Teal: hue +0° (source 169° -> final 169°), chroma 40 -> 52 (dark end), luminance 60 -> 26 (dark end); light end anchors to a shared cream tone (H~80, C~10) at L~95, not this color's own hue.",
         "variant": "standard",
         "variantLabel": "Standard (linear HCL sweep)",
         "params": {
-          "h1": 156.875,
+          "h1": 168.5866,
           "c1": 52,
           "l1": 26,
           "l2": 95,
@@ -805,25 +751,25 @@ const CANDIDATES =
           "cc": 10
         },
         "sourceHueDelta": 0,
-        "sourceChromaDelta": 12.4345,
-        "hexSmooth": ["#004F27", "#00542A", "#00582E", "#005D31", "#006235", "#006639", "#016B3D", "#1F7042", "#307546", "#3D7A4B", "#487E51", "#538356", "#5D885C", "#668D62", "#6F9268", "#78986E", "#819D74", "#8AA27B", "#92A782", "#9AAC89", "#A2B290", "#AAB797", "#B2BD9E", "#BAC2A6", "#C1C8AD", "#C9CEB5", "#D0D3BD", "#D7D9C5", "#DEDFCC", "#E5E5D4", "#ECEBDC", "#F3F1E4"],
-        "hexBinned": ["#004F27", "#006739", "#4C8052", "#7D9A71", "#A7B595", "#CFD2BB", "#F3F1E4"],
+        "sourceChromaDelta": 11.5749,
+        "hexSmooth": ["#005037", "#005539", "#00593B", "#005E3E", "#006340", "#006743", "#006C47", "#00714A", "#1E764E", "#317A52", "#3E7F57", "#4B845C", "#568960", "#608E66", "#6A936B", "#749871", "#7D9D77", "#86A37D", "#8FA883", "#97AD8A", "#A0B291", "#A8B898", "#B0BD9F", "#B8C3A6", "#C0C8AE", "#C8CEB5", "#CFD4BD", "#D7D9C5", "#DEDFCC", "#E5E5D4", "#ECEBDC", "#F3F1E4"],
+        "hexBinned": ["#005037", "#006844", "#438158", "#789B74", "#A5B695", "#CED3BC", "#F3F1E4"],
         "warnings": []
       },
       {
-        "id": "pha-seq-green-cream-wide_contrast",
+        "id": "pha-seq-teal-cream-wide_contrast",
         "brand": "pha",
         "type": "sequential",
-        "anchorLabel": "Green -> cream",
+        "anchorLabel": "Teal -> cream",
         "inspiration": {
-          "dark": "Green",
+          "dark": "Teal",
           "light": "shared cream (H~80, C~10)"
         },
-        "nudgeNote": "Off Green: hue +0° (source 157° -> final 157°), chroma 40 -> 52 (dark end), luminance 64 -> 26 (dark end); light end anchors to a shared cream tone (H~80, C~10) at L~95, not this color's own hue.",
+        "nudgeNote": "Off Teal: hue +0° (source 169° -> final 169°), chroma 40 -> 52 (dark end), luminance 60 -> 26 (dark end); light end anchors to a shared cream tone (H~80, C~10) at L~95, not this color's own hue.",
         "variant": "wide_contrast",
         "variantLabel": "Wide-contrast (deeper dark end, punchier chroma, eased curve)",
         "params": {
-          "h1": 156.875,
+          "h1": 168.5866,
           "c1": 64,
           "l1": 20,
           "l2": 96,
@@ -832,28 +778,82 @@ const CANDIDATES =
           "cc": 10
         },
         "sourceHueDelta": 0,
-        "sourceChromaDelta": 12.4345,
-        "hexSmooth": ["#00450F", "#004B14", "#005119", "#00561E", "#005C24", "#00622A", "#006830", "#006E37", "#1B743D", "#317A44", "#41804B", "#4F8652", "#5B8C5A", "#679261", "#729869", "#7C9E71", "#86A479", "#90AA81", "#9AB089", "#A3B691", "#ABBC99", "#B4C1A1", "#BCC7A9", "#C4CDB1", "#CCD3B9", "#D3D8C0", "#DADDC8", "#E1E3CF", "#E7E8D6", "#EDECDD", "#F2F1E3", "#F6F4E7"],
-        "hexBinned": ["#00450F", "#00632B", "#46824E", "#81A175", "#B1C09E", "#D9DCC7", "#F6F4E7"],
+        "sourceChromaDelta": 11.5749,
+        "hexSmooth": ["#004728", "#004C2A", "#00522D", "#005831", "#005D34", "#006339", "#00693D", "#006F42", "#007547", "#1D7B4D", "#348153", "#448759", "#538D5F", "#609366", "#6C996D", "#779F74", "#82A57B", "#8CAB83", "#96B18A", "#A0B692", "#A9BC9A", "#B2C2A2", "#BBC8A9", "#C3CDB1", "#CBD3B9", "#D2D8C0", "#D9DEC8", "#E0E3CF", "#E7E8D6", "#ECECDD", "#F2F1E3", "#F6F4E7"],
+        "hexBinned": ["#004728", "#006439", "#3A8355", "#7CA278", "#AFC09F", "#D8DDC7", "#F6F4E7"],
+        "warnings": []
+      },
+      {
+        "id": "pha-seq-blue-cream-standard",
+        "brand": "pha",
+        "type": "sequential",
+        "anchorLabel": "Blue -> cream",
+        "inspiration": {
+          "dark": "Blue",
+          "light": "shared cream (H~80, C~10)"
+        },
+        "nudgeNote": "Off Blue: hue +0° (source 227° -> final 227°), chroma 49 -> 58 (dark end), luminance 56 -> 26 (dark end); light end anchors to a shared cream tone (H~80, C~10) at L~95, not this color's own hue.",
+        "variant": "standard",
+        "variantLabel": "Standard (linear HCL sweep)",
+        "params": {
+          "h1": 227.0774,
+          "c1": 58,
+          "l1": 26,
+          "l2": 95,
+          "power": 1,
+          "hc": 80,
+          "cc": 10
+        },
+        "sourceHueDelta": 0,
+        "sourceChromaDelta": 9.1309,
+        "hexSmooth": ["#004C73", "#005172", "#005772", "#005D72", "#006272", "#006873", "#006D73", "#007274", "#007875", "#007D76", "#008277", "#008879", "#258D7B", "#3A927D", "#49977F", "#579C82", "#64A185", "#70A689", "#7CAB8D", "#87B091", "#92B596", "#9CBA9C", "#A6C0A1", "#B0C5A8", "#B9CAAE", "#C2CFB5", "#CBD5BD", "#D4DAC4", "#DCE0CC", "#E4E5D4", "#ECEBDC", "#F3F1E4"],
+        "hexBinned": ["#004C73", "#006973", "#008478", "#5E9F83", "#99B99A", "#CAD4BB", "#F3F1E4"],
+        "warnings": []
+      },
+      {
+        "id": "pha-seq-blue-cream-wide_contrast",
+        "brand": "pha",
+        "type": "sequential",
+        "anchorLabel": "Blue -> cream",
+        "inspiration": {
+          "dark": "Blue",
+          "light": "shared cream (H~80, C~10)"
+        },
+        "nudgeNote": "Off Blue: hue +0° (source 227° -> final 227°), chroma 49 -> 58 (dark end), luminance 56 -> 26 (dark end); light end anchors to a shared cream tone (H~80, C~10) at L~95, not this color's own hue.",
+        "variant": "wide_contrast",
+        "variantLabel": "Wide-contrast (deeper dark end, punchier chroma, eased curve)",
+        "params": {
+          "h1": 227.0774,
+          "c1": 70,
+          "l1": 20,
+          "l2": 96,
+          "power": 1.2,
+          "hc": 80,
+          "cc": 10
+        },
+        "sourceHueDelta": 0,
+        "sourceChromaDelta": 9.1309,
+        "hexSmooth": ["#004577", "#004B73", "#005171", "#005770", "#005E70", "#006471", "#006B72", "#007173", "#007874", "#007E76", "#008478", "#008B7A", "#0F917D", "#339780", "#489D83", "#59A387", "#68A98B", "#76AE90", "#83B495", "#8FBA9A", "#9BBFA0", "#A6C5A6", "#B1CAAC", "#BBCFB3", "#C4D5BA", "#CDDAC1", "#D6DFC8", "#DEE4CF", "#E5E8D6", "#EBEDDC", "#F1F1E3", "#F6F4E7"],
+        "hexBinned": ["#004577", "#006571", "#008679", "#61A689", "#A2C3A4", "#D4DEC7", "#F6F4E7"],
         "warnings": []
       }
     ],
     "diverging": [
       {
-        "id": "pha-div-dark-blue-vs-red-standard",
+        "id": "pha-div-blue-vs-orange-standard",
         "brand": "pha",
         "type": "diverging",
-        "anchorLabel": "Dark Blue vs Red",
+        "anchorLabel": "Blue vs Orange",
         "inspiration": {
-          "arm1": "Dark Blue",
-          "arm2": "Red"
+          "arm1": "Blue",
+          "arm2": "Orange"
         },
-        "nudgeNote": "Off Dark Blue (arm 1, hue 243°) and Red (arm 2, hue 20°): shared chroma target 65 (arm1 source C=53, arm2 source C=104), luminance sweep 28 -> 95 into a shared cream center (H~80, C~10), not a fully neutral one.",
+        "nudgeNote": "Off Blue (arm 1, hue 227°) and Orange (arm 2, hue 32°): shared chroma target 65 (arm1 source C=49, arm2 source C=98), luminance sweep 28 -> 95 into a shared cream center (H~80, C~10), not a fully neutral one.",
         "variant": "standard",
         "variantLabel": "Standard (linear HCL sweep)",
         "params": {
-          "h1": 243.4067,
-          "h2": 19.6527,
+          "h1": 227.0774,
+          "h2": 32.3625,
           "c1": 65,
           "l1": 28,
           "l2": 95,
@@ -862,26 +862,26 @@ const CANDIDATES =
           "cc": 10
         },
         "sourceHueDelta": 0,
-        "sourceChromaDelta": -13.0446,
-        "hexSmooth": ["#004988", "#005886", "#006585", "#007185", "#007D85", "#008885", "#0C9387", "#439E89", "#62A88D", "#7DB293", "#95BC9C", "#ABC6A7", "#BFD0B4", "#D2DBC3", "#E3E6D3", "#F3F1E4", "#F3F1E4", "#E8E4D3", "#DED7C2", "#D5CAB2", "#CCBDA1", "#C4B092", "#BCA282", "#B49573", "#AC8864", "#A57B56", "#9D6D49", "#96603C", "#8F532F", "#874523", "#7F3716", "#782709"],
-        "hexBinned": ["#004988", "#008885", "#95BC9C", "#F3F1E4", "#C4B092", "#9D6D49", "#782709"],
+        "sourceChromaDelta": -8.4313,
+        "hexSmooth": ["#00527D", "#005E7B", "#00697A", "#00747A", "#007F7A", "#00897B", "#1E937E", "#4A9D82", "#68A788", "#81B18F", "#98BB99", "#ADC5A6", "#C1D0B3", "#D3DAC3", "#E4E5D3", "#F3F1E4", "#F3F1E4", "#E8E4D3", "#DED7C2", "#D4CAB1", "#CABDA1", "#C1B090", "#B9A480", "#B19770", "#A88A60", "#A07D50", "#997040", "#91632F", "#89561C", "#814A00", "#793C00", "#712F00"],
+        "hexBinned": ["#00527D", "#00897B", "#98BB99", "#F3F1E4", "#C1B090", "#997040", "#712F00"],
         "warnings": []
       },
       {
-        "id": "pha-div-dark-blue-vs-red-wide_contrast",
+        "id": "pha-div-blue-vs-orange-wide_contrast",
         "brand": "pha",
         "type": "diverging",
-        "anchorLabel": "Dark Blue vs Red",
+        "anchorLabel": "Blue vs Orange",
         "inspiration": {
-          "arm1": "Dark Blue",
-          "arm2": "Red"
+          "arm1": "Blue",
+          "arm2": "Orange"
         },
-        "nudgeNote": "Off Dark Blue (arm 1, hue 243°) and Red (arm 2, hue 20°): shared chroma target 65 (arm1 source C=53, arm2 source C=104), luminance sweep 28 -> 95 into a shared cream center (H~80, C~10), not a fully neutral one.",
+        "nudgeNote": "Off Blue (arm 1, hue 227°) and Orange (arm 2, hue 32°): shared chroma target 65 (arm1 source C=49, arm2 source C=98), luminance sweep 28 -> 95 into a shared cream center (H~80, C~10), not a fully neutral one.",
         "variant": "wide_contrast",
         "variantLabel": "Wide-contrast (deeper dark end, punchier chroma, eased curve)",
         "params": {
-          "h1": 243.4067,
-          "h2": 19.6527,
+          "h1": 227.0774,
+          "h2": 32.3625,
           "c1": 77,
           "l1": 22,
           "l2": 96,
@@ -890,26 +890,26 @@ const CANDIDATES =
           "cc": 10
         },
         "sourceHueDelta": 0,
-        "sourceChromaDelta": -13.0446,
-        "hexSmooth": ["#004092", "#005188", "#006085", "#006F85", "#007D85", "#008A87", "#00978A", "#42A38E", "#67AF94", "#85BB9C", "#9FC5A6", "#B6D0B2", "#CADAC0", "#DCE4CE", "#EBEDDC", "#F6F4E7", "#F6F4E7", "#EFEBDC", "#E7E1CD", "#DFD4BE", "#D6C7AD", "#CDB99C", "#C4AB8A", "#BC9C79", "#B38D67", "#AA7D55", "#A16D43", "#975C30", "#8D4C1B", "#833A00", "#792600", "#6E0C00"],
-        "hexBinned": ["#004092", "#008A87", "#9FC5A6", "#F6F4E7", "#CDB99C", "#A16D43", "#6E0C00"],
+        "sourceChromaDelta": -8.4313,
+        "hexSmooth": ["#004B80", "#005779", "#006477", "#007178", "#007E7A", "#008B7C", "#059780", "#4AA386", "#6DAF8E", "#89BA98", "#A2C5A3", "#B8CFB1", "#CCDABF", "#DDE4CE", "#EBEDDC", "#F6F4E7", "#F6F4E7", "#EFECDC", "#E7E1CD", "#DED5BD", "#D4C8AC", "#CBBA9B", "#C2AC89", "#B89D76", "#AF8E63", "#A57F4F", "#9B7039", "#92601F", "#875000", "#7D4000", "#722F00", "#671C00"],
+        "hexBinned": ["#004B80", "#008B7C", "#A2C5A3", "#F6F4E7", "#CBBA9B", "#9B7039", "#671C00"],
         "warnings": []
       },
       {
-        "id": "pha-div-dark-blue-vs-orange-standard",
+        "id": "pha-div-teal-vs-orange-standard",
         "brand": "pha",
         "type": "diverging",
-        "anchorLabel": "Dark Blue vs Orange",
+        "anchorLabel": "Teal vs Orange",
         "inspiration": {
-          "arm1": "Dark Blue",
+          "arm1": "Teal",
           "arm2": "Orange"
         },
-        "nudgeNote": "Off Dark Blue (arm 1, hue 243°) and Orange (arm 2, hue 33°): shared chroma target 60 (arm1 source C=53, arm2 source C=91), luminance sweep 28 -> 95 into a shared cream center (H~80, C~10), not a fully neutral one.",
+        "nudgeNote": "Off Teal (arm 1, hue 169°) and Orange (arm 2, hue 32°): shared chroma target 60 (arm1 source C=40, arm2 source C=98), luminance sweep 28 -> 95 into a shared cream center (H~80, C~10), not a fully neutral one.",
         "variant": "standard",
         "variantLabel": "Standard (linear HCL sweep)",
         "params": {
-          "h1": 243.4067,
-          "h2": 32.7145,
+          "h1": 168.5866,
+          "h2": 32.3625,
           "c1": 60,
           "l1": 28,
           "l2": 95,
@@ -918,26 +918,26 @@ const CANDIDATES =
           "cc": 10
         },
         "sourceHueDelta": 0,
-        "sourceChromaDelta": -12.0097,
-        "hexSmooth": ["#004883", "#005782", "#006482", "#007083", "#007C83", "#008784", "#269286", "#4B9D89", "#67A78E", "#80B195", "#96BB9D", "#ACC5A8", "#C0D0B5", "#D2DAC4", "#E3E6D4", "#F3F1E4", "#F3F1E4", "#E8E4D4", "#DDD7C3", "#D3CAB3", "#CABDA3", "#C1B193", "#B8A483", "#AF9773", "#A78A64", "#9F7D55", "#977145", "#8F6436", "#875725", "#7F4B0F", "#773E00", "#6F3100"],
-        "hexBinned": ["#004883", "#008784", "#96BB9D", "#F3F1E4", "#C1B193", "#977145", "#6F3100"],
+        "sourceChromaDelta": -9.2093,
+        "hexSmooth": ["#00573B", "#00603E", "#006942", "#007348", "#127C4F", "#3D8657", "#579061", "#6D9A6C", "#81A479", "#94AE86", "#A6B894", "#B7C3A3", "#C7CEB3", "#D6D9C3", "#E5E5D4", "#F3F1E4", "#F3F1E4", "#E8E4D4", "#DDD7C3", "#D3CAB3", "#CABDA3", "#C1B193", "#B8A483", "#AF9773", "#A78A64", "#9F7D55", "#977146", "#8F6436", "#875725", "#7F4A10", "#773E00", "#6F3100"],
+        "hexBinned": ["#00573B", "#3D8657", "#A6B894", "#F3F1E4", "#C1B193", "#977146", "#6F3100"],
         "warnings": []
       },
       {
-        "id": "pha-div-dark-blue-vs-orange-wide_contrast",
+        "id": "pha-div-teal-vs-orange-wide_contrast",
         "brand": "pha",
         "type": "diverging",
-        "anchorLabel": "Dark Blue vs Orange",
+        "anchorLabel": "Teal vs Orange",
         "inspiration": {
-          "arm1": "Dark Blue",
+          "arm1": "Teal",
           "arm2": "Orange"
         },
-        "nudgeNote": "Off Dark Blue (arm 1, hue 243°) and Orange (arm 2, hue 33°): shared chroma target 60 (arm1 source C=53, arm2 source C=91), luminance sweep 28 -> 95 into a shared cream center (H~80, C~10), not a fully neutral one.",
+        "nudgeNote": "Off Teal (arm 1, hue 169°) and Orange (arm 2, hue 32°): shared chroma target 60 (arm1 source C=40, arm2 source C=98), luminance sweep 28 -> 95 into a shared cream center (H~80, C~10), not a fully neutral one.",
         "variant": "wide_contrast",
         "variantLabel": "Wide-contrast (deeper dark end, punchier chroma, eased curve)",
         "params": {
-          "h1": 243.4067,
-          "h2": 32.7145,
+          "h1": 168.5866,
+          "h2": 32.3625,
           "c1": 72,
           "l1": 22,
           "l2": 96,
@@ -946,27 +946,27 @@ const CANDIDATES =
           "cc": 10
         },
         "sourceHueDelta": 0,
-        "sourceChromaDelta": -12.0097,
-        "hexSmooth": ["#003F8B", "#005083", "#005F82", "#006E82", "#007C84", "#008986", "#119689", "#4AA38E", "#6BAF94", "#87BA9D", "#A0C5A7", "#B7D0B3", "#CBDAC1", "#DCE4CF", "#EBEDDC", "#F6F4E7", "#F6F4E7", "#EFECDC", "#E6E1CE", "#DDD5BE", "#D4C8AE", "#CABA9C", "#C1AC8B", "#B79E78", "#AD8F66", "#A48053", "#9A703E", "#906127", "#855100", "#7B4100", "#703000", "#651E00"],
-        "hexBinned": ["#003F8B", "#008986", "#A0C5A7", "#F6F4E7", "#CABA9C", "#9A703E", "#651E00"],
+        "sourceChromaDelta": -9.2093,
+        "hexSmooth": ["#004D2B", "#005830", "#006436", "#00703E", "#007C48", "#338854", "#559461", "#709F6F", "#87AB7E", "#9CB78E", "#AFC29E", "#C1CDAE", "#D1D8BE", "#E0E3CE", "#ECECDC", "#F6F4E7", "#F6F4E7", "#EFECDC", "#E6E1CE", "#DDD5BE", "#D4C8AE", "#CABA9C", "#C1AC8B", "#B79E79", "#AD8F66", "#A48053", "#9A703E", "#906127", "#855101", "#7B4100", "#703000", "#651E00"],
+        "hexBinned": ["#004D2B", "#338854", "#AFC29E", "#F6F4E7", "#CABA9C", "#9A703E", "#651E00"],
         "warnings": []
       },
       {
-        "id": "pha-div-purple-vs-green-standard",
+        "id": "pha-div-blue-vs-teal-standard",
         "brand": "pha",
         "type": "diverging",
-        "anchorLabel": "Purple vs Green",
+        "anchorLabel": "Blue vs Teal",
         "inspiration": {
-          "arm1": "Purple",
-          "arm2": "Green"
+          "arm1": "Blue",
+          "arm2": "Teal"
         },
-        "nudgeNote": "Off Purple (arm 1, hue 258°) and Green (arm 2, hue 157°): shared chroma target 45 (arm1 source C=30, arm2 source C=40), luminance sweep 28 -> 95 into a shared cream center (H~80, C~10), not a fully neutral one.",
+        "nudgeNote": "Off Blue (arm 1, hue 227°) and Teal (arm 2, hue 169°): shared chroma target 55 (arm1 source C=49, arm2 source C=40), luminance sweep 28 -> 95 into a shared cream center (H~80, C~10), not a fully neutral one.",
         "variant": "standard",
         "variantLabel": "Standard (linear HCL sweep)",
         "params": {
-          "h1": 258.2729,
-          "h2": 156.875,
-          "c1": 45,
+          "h1": 227.0774,
+          "h2": 168.5866,
+          "c1": 55,
           "l1": 28,
           "l2": 95,
           "power": 1,
@@ -974,27 +974,29 @@ const CANDIDATES =
           "cc": 10
         },
         "sourceHueDelta": 0,
-        "sourceChromaDelta": 10.0981,
-        "hexSmooth": ["#2C4076", "#1F4F7A", "#145D7E", "#146A81", "#227784", "#348388", "#488E8B", "#5D9A8F", "#71A594", "#86AF9B", "#9ABAA3", "#ADC5AD", "#C0CFB9", "#D2DAC6", "#E3E5D5", "#F3F1E4", "#F3F1E4", "#E5E5D5", "#D7D9C5", "#C8CDB6", "#B9C2A8", "#AAB799", "#9AAC8B", "#8AA17E", "#799772", "#688C66", "#55825B", "#417850", "#276E47", "#00653E", "#005B36", "#005230"],
-        "hexBinned": ["#2C4076", "#348388", "#9ABAA3", "#F3F1E4", "#AAB799", "#55825B", "#005230"],
-        "warnings": []
+        "sourceChromaDelta": 10.3529,
+        "hexSmooth": ["#004F74", "#005B74", "#006675", "#007176", "#007C78", "#03877B", "#3A917F", "#579C84", "#70A68A", "#86B092", "#9BBA9D", "#AFC5A8", "#C2CFB6", "#D3DAC4", "#E4E5D4", "#F3F1E4", "#F3F1E4", "#E5E5D4", "#D6D9C4", "#C7CEB4", "#B7C3A5", "#A7B896", "#95AD88", "#83A37B", "#70996F", "#5B8F64", "#43855A", "#237B52", "#00724A", "#006844", "#005F3F", "#00563B"],
+        "hexBinned": ["#004F74", "#03877B", "#9BBA9D", "#F3F1E4", "#A7B896", "#43855A", "#00563B"],
+        "warnings": [
+          "Anchor hues are only 58° apart — too close to read as a genuine diverging scheme (aim for >=60-90°)."
+        ]
       },
       {
-        "id": "pha-div-purple-vs-green-wide_contrast",
+        "id": "pha-div-blue-vs-teal-wide_contrast",
         "brand": "pha",
         "type": "diverging",
-        "anchorLabel": "Purple vs Green",
+        "anchorLabel": "Blue vs Teal",
         "inspiration": {
-          "arm1": "Purple",
-          "arm2": "Green"
+          "arm1": "Blue",
+          "arm2": "Teal"
         },
-        "nudgeNote": "Off Purple (arm 1, hue 258°) and Green (arm 2, hue 157°): shared chroma target 45 (arm1 source C=30, arm2 source C=40), luminance sweep 28 -> 95 into a shared cream center (H~80, C~10), not a fully neutral one.",
+        "nudgeNote": "Off Blue (arm 1, hue 227°) and Teal (arm 2, hue 169°): shared chroma target 55 (arm1 source C=49, arm2 source C=40), luminance sweep 28 -> 95 into a shared cream center (H~80, C~10), not a fully neutral one.",
         "variant": "wide_contrast",
         "variantLabel": "Wide-contrast (deeper dark end, punchier chroma, eased curve)",
         "params": {
-          "h1": 258.2729,
-          "h2": 156.875,
-          "c1": 57,
+          "h1": 227.0774,
+          "h2": 168.5866,
+          "c1": 67,
           "l1": 22,
           "l2": 96,
           "power": 1.2,
@@ -1002,10 +1004,12 @@ const CANDIDATES =
           "cc": 10
         },
         "sourceHueDelta": 0,
-        "sourceChromaDelta": 10.0981,
-        "hexSmooth": ["#00307C", "#00467C", "#00577F", "#006783", "#007787", "#17858B", "#3D938F", "#5AA094", "#74AD9B", "#8CB9A3", "#A2C4AC", "#B7CFB7", "#CBDAC4", "#DCE4D0", "#EBEDDD", "#F6F4E7", "#F6F4E7", "#EDECDD", "#E0E2CF", "#D3D8C1", "#C4CCB1", "#B3C1A2", "#A2B592", "#8FA982", "#7C9D73", "#669064", "#4F8455", "#327848", "#006C3B", "#005F2F", "#005424", "#00481A"],
-        "hexBinned": ["#00307C", "#17858B", "#A2C4AC", "#F6F4E7", "#B3C1A2", "#4F8455", "#00481A"],
-        "warnings": []
+        "sourceChromaDelta": 10.3529,
+        "hexSmooth": ["#004776", "#005472", "#006173", "#006F75", "#007C78", "#00897C", "#2F9581", "#56A288", "#74AD90", "#8EB99A", "#A5C4A6", "#BACFB3", "#CCD9C1", "#DDE3CF", "#EBEDDC", "#F6F4E7", "#F6F4E7", "#ECECDC", "#E0E3CE", "#D2D8BF", "#C2CDAF", "#B0C29F", "#9DB690", "#89AA80", "#729F71", "#599363", "#3A8756", "#007B4B", "#006F41", "#006338", "#005731", "#004C2C"],
+        "hexBinned": ["#004776", "#00897C", "#A5C4A6", "#F6F4E7", "#B0C29F", "#3A8756", "#004C2C"],
+        "warnings": [
+          "Anchor hues are only 58° apart — too close to read as a genuine diverging scheme (aim for >=60-90°)."
+        ]
       }
     ]
   }

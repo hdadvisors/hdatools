@@ -87,31 +87,43 @@
   ),
 
   pha = list(
+    # Palette follows PHA's 2026 brand guidelines. The first four entries are
+    # the guide's own colors, so any chart with four or fewer categories
+    # renders only sanctioned PHA colors; the last two are tints derived from
+    # Orange and Teal (same HCL hue, re-chroma'd and re-lightened) to reach a
+    # six-color discrete palette. The guide dropped the old Red, Light Blue,
+    # and Purple hue families outright.
     palette = c(
-      "Green"      = "#5bab8e",
-      "Light Blue" = "#a6cccc",
-      "Orange"     = "#f39152",
-      "Red"        = "#be451c",
-      "Purple"     = "#a5add0",
-      "Dark Blue"  = "#2b6b9c"
+      "Orange"      = "#f78f49",  # official — primary orange   (H 32.4 / C 98.0 / L 69.4)
+      "Teal"        = "#42a18d",  # official — primary teal     (H 168.6 / C 40.4 / L 60.4)
+      "Blue"        = "#3990b1",  # official — secondary blue   (H 227.1 / C 48.9 / L 56.1)
+      "Navy"        = "#0b242e",  # official — secondary navy   (H 227.1 / C 10.6 / L 12.8)
+      "Orange Deep" = "#a4560c",  # derived  — Orange hue at C 76, L 45
+      "Teal Light"  = "#a0d0c3"   # derived  — Teal hue at C 24.8, L 80
     ),
-    gradient = c("#5bab8e", "#a6cccc", "#f39152", "#be451c"),
+    gradient = NULL,
     na_color = "#e2e4e3",
-    fonts = list(title = "Noto Sans", body = "Noto Sans"),
+    fonts = list(title = "Raleway", body = "Mulish"),
     base_size = 10,
     html_adjust = 0,
     pdf_adjust = 0,
     lineheight = 1,
     theme_fonts = list(
-      title = "Noto Sans", subtitle = "Noto Sans", caption = "Noto Sans", strip = NULL
+      title = "Raleway", subtitle = "Raleway", caption = "Mulish", strip = "Mulish"
     ),
     theme_margins = list(
       title = NULL,
       subtitle = ggplot2::margin(t = 5, b = 20, unit = "pt")
     ),
+    # Re-anchored and re-tuned for the 2026 palette (plans/ramp-lab/REVIEW.md,
+    # 2026-08-24 section). The old anchors read off Red (19.7) and Dark Blue
+    # (243.4), hue families the new guide dropped. Sequential now anchors on
+    # Orange (32.4); diverging pairs Blue/Navy (227.1, one shared hue) against
+    # Orange. The protan inner-pair merge on the diverging ramp is the same
+    # structural property of the shared cream center that HDA's diverging has.
     ramps = list(
-      sequential = list(h1 = 19.7, c1 = 84, l1 = 28, l2 = 95, power = 0.95),
-      diverging  = list(h1 = 243.4, h2 = 19.7, c1 = 72, l1 = 26, l2 = 95, power = 0.90)
+      sequential = list(h1 = 32.4, c1 = 90, l1 = 25, l2 = 95, power = 0.95),
+      diverging  = list(h1 = 227.1, h2 = 32.4, c1 = 89, l1 = 26, l2 = 95, power = 0.85)
     )
   ),
 

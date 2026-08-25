@@ -5,8 +5,10 @@ static-instanced from, files in the [google/fonts](https://github.com/google/fon
 repository, pinned at commit
 [`26c5c976d82d50c24a8f0a7ac455e0a7c639c226`](https://github.com/google/fonts/tree/26c5c976d82d50c24a8f0a7ac455e0a7c639c226) —
 **except Montserrat**, added later and downloaded directly rather than
-verified against that pinned commit; its own `OFL.txt` (redistributed
-alongside it, as with every other family) is the authoritative license.
+verified against that pinned commit, and **except Raleway**, taken from its
+own copyright holders' release (see below); each family's own `OFL.txt`
+(redistributed alongside it, as with every other family) is the authoritative
+license.
 
 ## Manifest
 
@@ -27,10 +29,15 @@ alongside it, as with every other family) is the authoritative license.
 | Noto Sans | `noto-sans/NotoSans-Italic.ttf` | `ofl/notosans/NotoSans-Italic[wdth,wght].ttf`, static-instanced at `wght=400, wdth=100` | OFL 1.1 | 2022 The Noto Project Authors |
 | Montserrat | `montserrat/Montserrat-Regular.ttf` | `ofl/montserrat/Montserrat-Regular.ttf` (current tree, not the pinned commit above) | OFL 1.1 | 2024 The Montserrat.Git Project Authors |
 | Montserrat | `montserrat/Montserrat-SemiBold.ttf` | `ofl/montserrat/Montserrat-SemiBold.ttf` (current tree, not the pinned commit above) | OFL 1.1 | 2024 The Montserrat.Git Project Authors |
+| Raleway | `raleway/Raleway-Regular.ttf` | `static/TTF/Raleway-Regular.ttf` in [theleagueof/raleway release 4.101](https://github.com/theleagueof/raleway/releases/tag/4.101) (not google/fonts) | OFL 1.1 | (c) 2010 The Raleway Project Authors, RFN "Raleway" |
+| Raleway | `raleway/Raleway-Bold.ttf` | `static/TTF/Raleway-Bold.ttf` in [theleagueof/raleway release 4.101](https://github.com/theleagueof/raleway/releases/tag/4.101) (not google/fonts) | OFL 1.1 | (c) 2010 The Raleway Project Authors, RFN "Raleway" |
+| Mulish | `mulish/Mulish-Regular.ttf` | `ofl/mulish/Mulish[wght].ttf`, static-instanced at `wght=400` | OFL 1.1 | 2016 The Mulish Project Authors |
+| Mulish | `mulish/Mulish-Bold.ttf` | `ofl/mulish/Mulish[wght].ttf`, static-instanced at `wght=700` | OFL 1.1 | 2016 The Mulish Project Authors |
+| Mulish | `mulish/Mulish-Italic.ttf` | `ofl/mulish/Mulish-Italic[wght].ttf`, static-instanced at `wght=400` | OFL 1.1 | 2016 The Mulish Project Authors |
 
-**Static-instanced** means: Roboto Slab, Open Sans, and Noto Sans ship in the
-google/fonts repository only as variable fonts (no static per-weight files
-exist there). The variable font file listed above was downloaded unmodified
+**Static-instanced** means: Roboto Slab, Open Sans, Noto Sans, and Mulish ship
+in the google/fonts repository only as variable fonts (no static per-weight
+files exist there). The variable font file listed above was downloaded unmodified
 from google/fonts, then a static instance was cut at the given axis
 coordinates with `fontTools.varLib.instancer` (`updateFontNames=True`, which
 correctly rewrites the `name` table and drops the `fvar` table). No file
@@ -39,6 +46,18 @@ content originates from any source other than google/fonts; each family's own
 subdirectory) permits modification and redistribution of derivative works
 under the same license, which this instancing step satisfies.
 
+**Raleway is the one family that is NOT static-instanced here, deliberately.**
+Its `OFL.txt` declares a Reserved Font Name ("Raleway"); no other bundled
+family declares one. OFL 1.1 clause 3 forbids a Modified Version from using
+the Reserved Font Name as the primary name presented to users, and cutting a
+static instance with `updateFontNames=True` would produce exactly that. So
+Raleway's Regular and Bold faces are taken unmodified from the static TTFs the
+copyright holders themselves ship in `theleagueof/raleway` release 4.101 (the
+upstream repository google/fonts' own `METADATA.pb` names as Raleway's
+source). Those files are Original Versions, so clause 3 never comes into play.
+SHA-256 of the release archive, for verification:
+`3e67715f6e86e4c603326e671f60d29d83a88d05561c22a00c100aea3567ddc8`.
+
 Each family's original `OFL.txt` or `LICENSE.txt` is also kept in its own
 `inst/fonts/<family>/` subdirectory, next to the font files it covers.
 
@@ -46,7 +65,7 @@ Each family's original `OFL.txt` or `LICENSE.txt` is also kept in its own
 
 ## SIL Open Font License, Version 1.1
 
-Covers Lato, Open Sans, Poppins, Noto Sans, and Montserrat.
+Covers Lato, Open Sans, Poppins, Noto Sans, Montserrat, Raleway, and Mulish.
 
 ```
 This Font Software is licensed under the SIL Open Font License, Version 1.1.

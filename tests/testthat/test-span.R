@@ -3,8 +3,8 @@ test_that("span helpers return correct HTML string", {
                    "<span style='color:#445ca9'>hello</span>")
   expect_identical(hfv_span("hello", "Shadow"),
                    "<span style='color:#334a66'>hello</span>")
-  expect_identical(pha_span("hello", "Green"),
-                   "<span style='color:#5bab8e'>hello</span>")
+  expect_identical(pha_span("hello", "Orange"),
+                   "<span style='color:#f78f49'>hello</span>")
   expect_identical(vha_span("hello", "Dark Turq"),
                    "<span style='color:#0C4D4F'>hello</span>")
 })
@@ -19,8 +19,8 @@ test_that("span helpers embed brand hex from the accessor", {
     sprintf("<span style='color:%s'>x</span>", unname(hfv_color("Sky")))
   )
   expect_identical(
-    pha_span("x", "Dark Blue"),
-    sprintf("<span style='color:%s'>x</span>", unname(pha_color("Dark Blue")))
+    pha_span("x", "Navy"),
+    sprintf("<span style='color:%s'>x</span>", unname(pha_color("Navy")))
   )
   expect_identical(
     vha_span("x", "Yellow"),

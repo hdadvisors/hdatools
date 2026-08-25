@@ -1,7 +1,7 @@
 test_that("focus palettes return a character vector of length n", {
   expect_length(hda_focus_pal("Blue",      n = 5), 5L)
   expect_length(hfv_focus_pal("Shadow",    n = 3), 3L)
-  expect_length(pha_focus_pal("Green",     n = 4), 4L)
+  expect_length(pha_focus_pal("Orange",    n = 4), 4L)
   expect_length(vha_focus_pal("Dark Turq", n = 6), 6L)
   expect_type(hda_focus_pal("Blue", n = 4), "character")
 })
@@ -20,7 +20,7 @@ test_that("focus palette muted elements equal the brand na_color", {
   pal <- hfv_focus_pal("Shadow", n = 4)
   expect_identical(pal[-1], rep(hdatools:::.brands$hfv$na_color, 3L))
 
-  pal <- pha_focus_pal("Green", n = 4)
+  pal <- pha_focus_pal("Orange", n = 4)
   expect_identical(pal[-1], rep(hdatools:::.brands$pha$na_color, 3L))
 
   pal <- vha_focus_pal("Dark Turq", n = 4)

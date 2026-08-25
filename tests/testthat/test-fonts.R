@@ -17,7 +17,12 @@ test_that("the bundled font files ship with the package", {
     c("noto-sans",   "NotoSans-Bold.ttf"),
     c("noto-sans",   "NotoSans-Italic.ttf"),
     c("montserrat",  "Montserrat-Regular.ttf"),
-    c("montserrat",  "Montserrat-SemiBold.ttf")
+    c("montserrat",  "Montserrat-SemiBold.ttf"),
+    c("raleway",     "Raleway-Regular.ttf"),
+    c("raleway",     "Raleway-Bold.ttf"),
+    c("mulish",      "Mulish-Regular.ttf"),
+    c("mulish",      "Mulish-Bold.ttf"),
+    c("mulish",      "Mulish-Italic.ttf")
   )
   for (f in files) {
     path <- system.file("fonts", f[[1]], f[[2]], package = "hdatools")
@@ -26,13 +31,14 @@ test_that("the bundled font files ship with the package", {
   }
 })
 
-test_that("register_hda_fonts() registers the six bundled families offline", {
+test_that("register_hda_fonts() registers the eight bundled families offline", {
   expect_true(register_hda_fonts(quiet = TRUE))
   # A family may resolve via hdatools' own registration (registry_fonts()) or,
   # if a same-named font is already installed system-wide (e.g. Open Sans),
   # via system_fonts() instead -- register_font() refuses to shadow those.
   fams <- c(systemfonts::registry_fonts()$family, systemfonts::system_fonts()$family)
-  for (family in c("Lato", "Roboto Slab", "Open Sans", "Poppins", "Noto Sans", "Montserrat")) {
+  for (family in c("Lato", "Roboto Slab", "Open Sans", "Poppins", "Noto Sans",
+                   "Montserrat", "Raleway", "Mulish")) {
     expect_true(family %in% fams, info = family)
   }
 })

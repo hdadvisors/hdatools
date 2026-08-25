@@ -1,3 +1,50 @@
+# hdatools (development version)
+
+## PHA rebrand
+
+PHA issued new brand guidelines in 2026. This release rebuilds `.brands$pha`
+around them: palette, continuous ramps, and fonts all change. Charts built with
+any `*_pha()` function will render in different colors and a different typeface
+after upgrading.
+
+* **New PHA palette (breaking).** `pha_colors` is now Orange `#f78f49`, Teal
+  `#42a18d`, Blue `#3990b1`, Navy `#0b242e`, Orange Deep `#a4560c`, and Teal
+  Light `#a0d0c3`. The first four are PHA's own guide colors, so a chart with
+  four or fewer categories uses only sanctioned brand colors; Orange Deep and
+  Teal Light are tints derived from Orange and Teal, and appear only at five and
+  six categories. The old Green, Light Blue, Red, Purple, and Dark Blue names
+  are gone — the guide dropped those hue families outright, and
+  `pha_color("Green")` now errors. Only `"Orange"` carries over by name, and its
+  hex changed from `#f39152` to `#f78f49`.
+
+* **`gradient` is `NULL` for PHA.** The field has had no reader since the
+  `scale_*_gradient_pha()` functions were removed in 0.5.0, so it is no longer
+  populated, matching `hfv` and `vha`. `na_color` is unchanged at `#e2e4e3`.
+
+* **PHA's continuous ramps are re-anchored.** Both old anchors read their hue
+  off colors the new guide dropped. The sequential ramp now anchors on Orange
+  and the diverging ramp pairs Blue/Navy against Orange, re-tuned and CVD-checked
+  in the Ramp Lab (`plans/ramp-lab/REVIEW.md`, 2026-08-24). Every
+  `scale_*_pha_c()` and `scale_*_pha_b()` output changes. Both tuned ramps beat
+  the retired ones on every CVD separation floor, except the protanopia
+  inner-pair merge on the diverging ramp, which is unchanged and already
+  documented.
+
+* **`theme_pha()` uses Raleway and Mulish.** PHA's guidelines specify Raleway
+  for headings and Mulish for body text, replacing Noto Sans. Both are bundled
+  in `inst/fonts/` and registered by `register_hda_fonts()`. `theme_pha()`'s
+  `base_family` default changes from `"Noto Sans"` to `"Mulish"` — the body
+  font, matching how `theme_hda()` defaults to Lato rather than Roboto Slab.
+  Titles and subtitles take Raleway; captions and strip labels take Mulish.
+  Noto Sans stays bundled and registered, but no brand references it now.
+
+* **Documented CVD limitation: PHA Teal vs Blue.** These two guide colors
+  collapse to delta-E 6.6 under simulated tritanopia. The guide's two cool hues
+  sit at HCL 168.6 and 227.1, which a tritan simulation maps close together, so
+  no fix exists that does not invent an unsanctioned hue. Documented in
+  `vignette("cvd-audit")` rather than worked around, following the same posture
+  as the HDA Green/Sea Green pair. Protanopia and deuteranopia are unaffected.
+
 # hdatools 0.5.0
 
 * Fixed an unwanted stroke outline on `geom_col()`/`geom_bar()` bars: brand

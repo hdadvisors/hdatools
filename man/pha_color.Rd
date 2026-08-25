@@ -7,7 +7,7 @@
 pha_color(name)
 }
 \arguments{
-\item{name}{A single color name, e.g. \code{"Green"} or \code{"Dark Blue"}.}
+\item{name}{A single color name, e.g. \code{"Orange"} or \code{"Teal Light"}.}
 }
 \value{
 A named character scalar (hex color).
@@ -17,8 +17,8 @@ Returns the hex value for the named PHA brand color. Errors with the list
 of valid names when the name is not found.
 }
 \examples{
-pha_color("Green")
-pha_color("Dark Blue")
+pha_color("Orange")
+pha_color("Teal Light")
 
 }
 \seealso{

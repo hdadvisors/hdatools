@@ -1,5 +1,6 @@
 # Pins .ramp_hex_sequential()/.ramp_hex_diverging() at n = 7 to the exact
-# verified hex arrays in plans/ramp-lab/REVIEW.md (signed off 2026-07-18).
+# verified hex arrays in plans/ramp-lab/REVIEW.md (HDA/HFV/VHA signed off
+# 2026-07-18; PHA re-anchored and re-tuned 2026-08-24 for the new palette).
 # These are the numbers the Ramp Lab review actually reviewed and CVD-checked
 # — if one of these ever changes, it should be a deliberate ramp-lab decision,
 # not an incidental side effect of touching R/brands.R or R/ramps.R.
@@ -35,14 +36,14 @@ test_that("HFV diverging ramp pins to the verified 7-class hex", {
 test_that("PHA sequential ramp pins to the verified 7-class hex", {
   expect_identical(
     toupper(.ramp_hex_sequential("pha", 7)),
-    c("#811C00", "#924500", "#A36831", "#B38A5A", "#C4AC84", "#D8CEB2", "#F3F1E4")
+    c("#732000", "#874400", "#9A6600", "#AC884B", "#C0AA7D", "#D6CCAE", "#F3F1E4")
   )
 })
 
 test_that("PHA diverging ramp pins to the verified 7-class hex", {
   expect_identical(
     toupper(.ramp_hex_diverging("pha", 7)),
-    c("#00468E", "#00827F", "#86B48F", "#F3F1E4", "#BDA682", "#996436", "#761E00")
+    c("#005691", "#008572", "#7EB280", "#F3F1E4", "#BAA372", "#976300", "#762300")
   )
 })
 

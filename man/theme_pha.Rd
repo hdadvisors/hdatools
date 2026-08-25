@@ -6,7 +6,7 @@
 \usage{
 theme_pha(
   base_size = 10,
-  base_family = "Noto Sans",
+  base_family = "Mulish",
   flip_gridlines = FALSE,
   output_format = NULL,
   html_adjust = 0,
@@ -17,7 +17,7 @@ theme_pha(
 \arguments{
 \item{base_size}{The base size of text elements; defaults to 10}
 
-\item{base_family}{The base font family; defaults to "Noto Sans"}
+\item{base_family}{The base font family; defaults to "Mulish"}
 
 \item{flip_gridlines}{Orientation of major gridlines; defaults to FALSE for y-axis}
 
@@ -43,7 +43,7 @@ merges theme elements of the same class.
 
 The theme alone carries PHA's brand identity into an otherwise
 unbranded plot: bar/column fills, point colors, and line colors default
-to \code{pha_colors["Green"]} (via \code{ggplot2::element_geom()}), a discrete
+to \code{pha_colors["Orange"]} (via \code{ggplot2::element_geom()}), a discrete
 \code{aes(colour =)}/\code{aes(fill =)} mapping cycles through the full PHA
 palette, and a continuous mapping uses the PHA sequential ramp
 (see \code{\link[=scale_color_pha_c]{scale_color_pha_c()}}) — all with no \verb{scale_*()} call required.

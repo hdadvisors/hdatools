@@ -34,11 +34,16 @@ hfv_colors <- .brands$hfv$palette
 #'
 #' A named character vector of the six PHA brand colors, taken directly from
 #' the internal `.brands` registry. Names are the canonical color labels
-#' (e.g. `"Green"`, `"Orange"`).
+#' (e.g. `"Orange"`, `"Teal"`).
+#'
+#' The first four — `"Orange"`, `"Teal"`, `"Blue"`, `"Navy"` — are PHA's own
+#' guide colors, so a chart with four or fewer categories uses only sanctioned
+#' brand colors. `"Orange Deep"` and `"Teal Light"` are tints derived from the
+#' first two and appear only at five and six categories.
 #'
 #' @examples
 #' pha_colors
-#' pha_colors["Green"]
+#' pha_colors["Orange"]
 #'
 #' @seealso [pha_color()], [hda_colors], [hfv_colors], [vha_colors]
 #' @export
@@ -114,13 +119,13 @@ hfv_color <- .brand_color(.brands$hfv$palette, "HFV")
 #' Returns the hex value for the named PHA brand color. Errors with the list
 #' of valid names when the name is not found.
 #'
-#' @param name A single color name, e.g. `"Green"` or `"Dark Blue"`.
+#' @param name A single color name, e.g. `"Orange"` or `"Teal Light"`.
 #'
 #' @return A named character scalar (hex color).
 #'
 #' @examples
-#' pha_color("Green")
-#' pha_color("Dark Blue")
+#' pha_color("Orange")
+#' pha_color("Teal Light")
 #'
 #' @seealso [pha_colors]
 #' @export
