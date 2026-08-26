@@ -49,6 +49,12 @@ scale_colour_vha_c(
   Other arguments passed on to
   [`ggplot2::continuous_scale()`](https://ggplot2.tidyverse.org/reference/continuous_scale.html)
 
+## Value
+
+A
+[`ggplot2::continuous_scale()`](https://ggplot2.tidyverse.org/reference/continuous_scale.html)
+object.
+
 ## Diverging ramp is provisional
 
 **\[experimental\]** VHA's diverging ramp pairs Dark Turq against
@@ -59,3 +65,13 @@ tuning slip. Still monotonic and distinguishable under
 protanopia/deuteranopia/tritanopia simulation, but — like HDA's
 diverging ramp — a candidate for a follow-up Ramp Lab pass
 (`plans/DECISIONS.md`).
+
+## Examples
+
+``` r
+library(ggplot2)
+ggplot(mtcars, aes(wt, mpg, color = disp)) +
+  geom_point() +
+  scale_color_vha_c()
+
+```

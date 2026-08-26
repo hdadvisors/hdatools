@@ -12,12 +12,12 @@ Source:
 [`DESCRIPTION`](https://github.com/hdadvisors/hdatools/blob/HEAD/DESCRIPTION)
 
 Walker K (2026). *hdatools: Tools and Themes for 'HDAdvisors' Projects*.
-R package version 0.5.0, <https://github.com/hdadvisors/hdatools>.
+R package version 0.5.0.9000, <https://github.com/hdadvisors/hdatools>.
 
     @Manual{,
       title = {hdatools: Tools and Themes for 'HDAdvisors' Projects},
       author = {Kyle Walker},
       year = {2026},
-      note = {R package version 0.5.0},
+      note = {R package version 0.5.0.9000},
       url = {https://github.com/hdadvisors/hdatools},
     }

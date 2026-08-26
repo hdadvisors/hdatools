@@ -13,7 +13,7 @@ pha_color(name)
 
 - name:
 
-  A single color name, e.g. `"Green"` or `"Dark Blue"`.
+  A single color name, e.g. `"Orange"` or `"Teal Light"`.
 
 ## Value
 
@@ -26,10 +26,9 @@ A named character scalar (hex color).
 ## Examples
 
 ``` r
-pha_color("Green")
-#>     Green 
-#> "#5bab8e" 
-pha_color("Dark Blue")
-#> Dark Blue 
-#> "#2b6b9c" 
+pha_color("Orange")
+#>    Orange 
+#> "#f39152" 
+pha_color("Teal Light")
+#> Error: "Teal Light" is not a valid PHA color name. Valid names: Green, Light Blue, Orange, Red, Purple, Dark Blue.
 ```

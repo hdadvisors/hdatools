@@ -53,13 +53,13 @@ hfv_span <- .brand_span(hfv_color)
 #' resolved through [pha_color()], so invalid names error with the valid list.
 #'
 #' @param text Character string to wrap.
-#' @param color A valid PHA color name (e.g. `"Green"`, `"Dark Blue"`).
+#' @param color A valid PHA color name (e.g. `"Orange"`, `"Navy"`).
 #'
 #' @return A character string containing the HTML span tag.
 #'
 #' @examples
-#' pha_span("Partnership for Housing Affordability", "Green")
-#' pha_span("note", "Dark Blue")
+#' pha_span("Partnership for Housing Affordability", "Orange")
+#' pha_span("note", "Navy")
 #'
 #' @seealso [pha_color()], [hda_span()], [hfv_span()], [vha_span()]
 #' @export

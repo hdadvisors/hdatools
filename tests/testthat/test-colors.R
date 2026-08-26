@@ -29,9 +29,10 @@ test_that("hfv_color() returns the correct hex for known names", {
 })
 
 test_that("pha_color() returns the correct hex for known names", {
-  expect_identical(pha_color("Green"),      c(Green      = "#5bab8e"))
-  expect_identical(pha_color("Light Blue"), c(`Light Blue` = "#a6cccc"))
-  expect_identical(pha_color("Dark Blue"),  c(`Dark Blue`  = "#2b6b9c"))
+  expect_identical(pha_color("Orange"),      c(Orange = "#f78f49"))
+  expect_identical(pha_color("Teal"),        c(Teal   = "#42a18d"))
+  expect_identical(pha_color("Navy"),        c(Navy   = "#0b242e"))
+  expect_identical(pha_color("Teal Light"),  c(`Teal Light` = "#a0d0c3"))
 })
 
 test_that("vha_color() returns the correct hex for known names", {
@@ -48,7 +49,7 @@ test_that("accessor errors on unknown name with valid names listed", {
   expect_error(hfv_color("Neon"),    "Sky",                  fixed = FALSE)
 
   expect_error(pha_color("Gold"),    "valid PHA color name", fixed = FALSE)
-  expect_error(pha_color("Gold"),    "Green",                fixed = FALSE)
+  expect_error(pha_color("Gold"),    "Orange",               fixed = FALSE)
 
   expect_error(vha_color("Magenta"), "valid VHA color name", fixed = FALSE)
   expect_error(vha_color("Magenta"), "Dark Turq",            fixed = FALSE)

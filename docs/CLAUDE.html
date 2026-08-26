@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">hdatools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -99,7 +99,7 @@
 <li>Commit; tag annotated <code>vX.Y.Z</code>; <code>git push --tags</code>.</li>
 <li>Commit messages: <strong>no Claude/Anthropic co-author line.</strong>
 </li>
-</ol><p>Consumer rollout (pinned repos: pha-update-2026, fhfh, faar) happens in those repos’ own sessions — bump the pin, <code><a href="https://rstudio.github.io/renv/reference/snapshot.html" class="external-link">renv::snapshot()</a></code>, re-render, compare. Never force a consumer bump as a drive-by.</p>
+</ol><p>Consumer rollout (pinned repos: pha-update-2026, fhfh, faar) happens in those repos’ own sessions — bump the pin, <code><a href="https://rstudio.github.io/renv/reference/snapshot.html" class="external-link">renv::snapshot()</a></code>, re-render, compare. Never force a consumer bump as a drive-by. See <a href="plans/consumer-rollout.html"><code>plans/consumer-rollout.md</code></a> for the reusable procedure.</p>
 </div>
 <div class="section level2">
 <h2 id="skills">Skills<a class="anchor" aria-label="anchor" href="#skills"></a></h2>
@@ -113,13 +113,17 @@
 </ul><p>They assume R is on PATH with inline <code>Rscript -e</code>; use the temp-file convention above instead.</p>
 </div>
 <div class="section level2">
-<h2 id="development-dashboard">Development dashboard<a class="anchor" aria-label="anchor" href="#development-dashboard"></a></h2>
-<p>A local HTML dashboard at <code>plans/dashboard/</code> tracks phases, branches/PRs, decisions, and release state, generated from ROADMAP.md, DECISIONS.md, the phase plans, NEWS.md, DESCRIPTION, and live git/gh data. <strong>Re-run the generator after any commit that changes project state</strong> (phase status, NEWS, DESCRIPTION, branch/PR changes): <code>python plans/dashboard/generate_dashboard.py</code>, or double-click <code>plans\dashboard\update-dashboard.bat</code> to regenerate and open it. <code>dashboard.html</code> and <code>gh-cache.json</code> are gitignored (generated, not committed). The plan docs are the source of truth — when the dashboard shows consistency warnings, fix the docs by hand; never treat the dashboard itself as authoritative.</p>
+<h2 id="contributing-and-dev-process">Contributing and dev process<a class="anchor" aria-label="anchor" href="#contributing-and-dev-process"></a></h2>
+<p>See <a href="CONTRIBUTING.html"><code>CONTRIBUTING.md</code></a> for the getting-started guide, versioning convention, release-when-ready flow, NEWS/test/docs rules, and how to file issues. The release checklist below is the authoritative step list; CONTRIBUTING.md references it.</p>
 </div>
 <div class="section level2">
 <h2 id="planning-docs">Planning docs<a class="anchor" aria-label="anchor" href="#planning-docs"></a></h2>
-<p><code>plans/</code> holds working notes and is build-ignored (<code>^plans$</code> in <code>.Rbuildignore</code>). Executed plans move to <code>plans/archive/</code> with a short completion header; their content is left intact for history.</p>
-</div>
+<p><code>plans/</code> is build-ignored (<code>^plans$</code> in <code>.Rbuildignore</code>) and contains two kinds of content:</p>
+<ul><li>
+<strong>Durable reference docs</strong> — <code>DECISIONS.md</code> (append-only log of settled design decisions) and <code>consumer-rollout.md</code> (reusable release rollout procedure). Both are actively referenced from CONTRIBUTING.md and this file; don’t archive them.</li>
+<li>
+<strong>Working notes</strong> — everything else. Executed phase plans move to <code>plans/archive/</code> with a short completion header; their content is left intact for history.</li>
+</ul></div>
 </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

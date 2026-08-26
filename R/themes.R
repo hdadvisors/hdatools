@@ -270,7 +270,7 @@ theme_hfv <- function(
 #' Use a PHA-branded ggplot2 theme
 #'
 #' @param base_size The base size of text elements; defaults to 10
-#' @param base_family The base font family; defaults to "Noto Sans"
+#' @param base_family The base font family; defaults to "Mulish"
 #' @param flip_gridlines Orientation of major gridlines; defaults to FALSE for y-axis
 #' @param output_format Optional manual specification of output format
 #' @param html_adjust Amount subtracted from base_size for HTML output; defaults to 0
@@ -284,7 +284,7 @@ theme_hfv <- function(
 #'
 #'   The theme alone carries PHA's brand identity into an otherwise
 #'   unbranded plot: bar/column fills, point colors, and line colors default
-#'   to `pha_colors["Green"]` (via `ggplot2::element_geom()`), a discrete
+#'   to `pha_colors["Orange"]` (via `ggplot2::element_geom()`), a discrete
 #'   `aes(colour =)`/`aes(fill =)` mapping cycles through the full PHA
 #'   palette, and a continuous mapping uses the PHA sequential ramp
 #'   (see [scale_color_pha_c()]) — all with no `scale_*()` call required.
@@ -301,7 +301,7 @@ theme_hfv <- function(
 #' @export
 theme_pha <- function(
     base_size = 10,
-    base_family = "Noto Sans",
+    base_family = "Mulish",
     flip_gridlines = FALSE,
     output_format = NULL,
     html_adjust = 0,

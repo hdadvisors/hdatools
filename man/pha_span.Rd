@@ -9,7 +9,7 @@ pha_span(text, color)
 \arguments{
 \item{text}{Character string to wrap.}
 
-\item{color}{A valid PHA color name (e.g. \code{"Green"}, \code{"Dark Blue"}).}
+\item{color}{A valid PHA color name (e.g. \code{"Orange"}, \code{"Navy"}).}
 }
 \value{
 A character string containing the HTML span tag.
@@ -20,8 +20,8 @@ Produces a \verb{<span style='color:#…'>text</span>} tag for use with
 resolved through \code{\link[=pha_color]{pha_color()}}, so invalid names error with the valid list.
 }
 \examples{
-pha_span("Partnership for Housing Affordability", "Green")
-pha_span("note", "Dark Blue")
+pha_span("Partnership for Housing Affordability", "Orange")
+pha_span("note", "Navy")
 
 }
 \seealso{

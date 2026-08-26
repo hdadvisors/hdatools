@@ -253,10 +253,12 @@ scale_fill_vha <- function(direction = 1, repeat_pal = FALSE, ...) {
 #'   `plans/DECISIONS.md` (2026-07-18).
 #'
 #' @section HDA diverging is provisional: `r lifecycle::badge("experimental")`
-#'   HDA's diverging ramp (Blue vs Coral) is a near-twin of PHA's (Dark Blue
-#'   vs Red) and is pending a follow-up Ramp Lab pass to differentiate it
-#'   before final adoption (see `plans/DECISIONS.md`, 2026-07-18). It ships
-#'   now so the scale matrix is complete; treat it as subject to change.
+#'   HDA's diverging ramp (Blue vs Coral) is pending a follow-up Ramp Lab pass
+#'   before final adoption (see `plans/DECISIONS.md`, 2026-07-18). PHA's 2026
+#'   rebrand moved its diverging arms to Blue vs Orange, which widened the
+#'   cool-arm gap between the two brands from 16 to 32 degrees, but the HDA
+#'   pass is still open on its own terms. It ships now so the scale matrix is
+#'   complete; treat it as subject to change.
 #'
 #' @param palette One of `"sequential"` (default) or `"diverging"`
 #' @param direction For `palette = "sequential"`, `1` (default) maps higher
@@ -301,10 +303,12 @@ scale_colour_hda_c <- scale_color_hda_c
 #'   `plans/DECISIONS.md` (2026-07-18).
 #'
 #' @section HDA diverging is provisional: `r lifecycle::badge("experimental")`
-#'   HDA's diverging ramp (Blue vs Coral) is a near-twin of PHA's (Dark Blue
-#'   vs Red) and is pending a follow-up Ramp Lab pass to differentiate it
-#'   before final adoption (see `plans/DECISIONS.md`, 2026-07-18). It ships
-#'   now so the scale matrix is complete; treat it as subject to change.
+#'   HDA's diverging ramp (Blue vs Coral) is pending a follow-up Ramp Lab pass
+#'   before final adoption (see `plans/DECISIONS.md`, 2026-07-18). PHA's 2026
+#'   rebrand moved its diverging arms to Blue vs Orange, which widened the
+#'   cool-arm gap between the two brands from 16 to 32 degrees, but the HDA
+#'   pass is still open on its own terms. It ships now so the scale matrix is
+#'   complete; treat it as subject to change.
 #'
 #' @param palette One of `"sequential"` (default) or `"diverging"`
 #' @param direction For `palette = "sequential"`, `1` (default) maps higher
@@ -346,10 +350,12 @@ scale_fill_hda_c <- function(palette = c("sequential", "diverging"),
 #'   `plans/DECISIONS.md` (2026-07-18).
 #'
 #' @section HDA diverging is provisional: `r lifecycle::badge("experimental")`
-#'   HDA's diverging ramp (Blue vs Coral) is a near-twin of PHA's (Dark Blue
-#'   vs Red) and is pending a follow-up Ramp Lab pass to differentiate it
-#'   before final adoption (see `plans/DECISIONS.md`, 2026-07-18). It ships
-#'   now so the scale matrix is complete; treat it as subject to change.
+#'   HDA's diverging ramp (Blue vs Coral) is pending a follow-up Ramp Lab pass
+#'   before final adoption (see `plans/DECISIONS.md`, 2026-07-18). PHA's 2026
+#'   rebrand moved its diverging arms to Blue vs Orange, which widened the
+#'   cool-arm gap between the two brands from 16 to 32 degrees, but the HDA
+#'   pass is still open on its own terms. It ships now so the scale matrix is
+#'   complete; treat it as subject to change.
 #'
 #' @param palette One of `"sequential"` (default) or `"diverging"`
 #' @param direction For `palette = "sequential"`, `1` (default) maps higher
@@ -397,10 +403,12 @@ scale_colour_hda_b <- scale_color_hda_b
 #'   `plans/DECISIONS.md` (2026-07-18).
 #'
 #' @section HDA diverging is provisional: `r lifecycle::badge("experimental")`
-#'   HDA's diverging ramp (Blue vs Coral) is a near-twin of PHA's (Dark Blue
-#'   vs Red) and is pending a follow-up Ramp Lab pass to differentiate it
-#'   before final adoption (see `plans/DECISIONS.md`, 2026-07-18). It ships
-#'   now so the scale matrix is complete; treat it as subject to change.
+#'   HDA's diverging ramp (Blue vs Coral) is pending a follow-up Ramp Lab pass
+#'   before final adoption (see `plans/DECISIONS.md`, 2026-07-18). PHA's 2026
+#'   rebrand moved its diverging arms to Blue vs Orange, which widened the
+#'   cool-arm gap between the two brands from 16 to 32 degrees, but the HDA
+#'   pass is still open on its own terms. It ships now so the scale matrix is
+#'   complete; treat it as subject to change.
 #'
 #' @param palette One of `"sequential"` (default) or `"diverging"`
 #' @param direction For `palette = "sequential"`, `1` (default) maps higher

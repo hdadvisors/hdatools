@@ -62,13 +62,13 @@ hfv_focus_pal <- .brand_focus_pal(hfv_color, .brands$hfv$na_color, "HFV")
 #' the result to [ggplot2::scale_fill_manual()] or
 #' [ggplot2::scale_colour_manual()].
 #'
-#' @param color A valid PHA color name (e.g. `"Green"`, `"Orange"`).
+#' @param color A valid PHA color name (e.g. `"Orange"`, `"Teal"`).
 #' @param n Total number of series (focus + muted). Must be a positive integer.
 #'
 #' @return An unnamed character vector of length `n`.
 #'
 #' @examples
-#' pha_focus_pal("Green", n = 4)
+#' pha_focus_pal("Orange", n = 4)
 #'
 #' @seealso [pha_color()], [hda_focus_pal()], [hfv_focus_pal()], [vha_focus_pal()]
 #' @export

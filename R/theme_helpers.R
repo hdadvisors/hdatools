@@ -1,7 +1,7 @@
 #' Register hdatools' bundled fonts for use in plots and knitr output
 #'
 #' Registers the font faces bundled in `inst/fonts/` (Lato and Roboto Slab for
-#' `theme_hda()`, Open Sans and Poppins for `theme_hfv()`, Noto Sans for
+#' `theme_hda()`, Open Sans for `theme_hfv()`, Raleway and Mulish for
 #' `theme_pha()`, Montserrat for `theme_vha()`) with \pkg{systemfonts}, making
 #' them available by name to \pkg{ragg} graphics devices (and any other
 #' systemfonts-aware device). Everything is read from files installed with
@@ -68,6 +68,15 @@ register_hda_fonts <- function(quiet = FALSE) {
       plain  = font_path("noto-sans", "NotoSans-Regular.ttf"),
       bold   = font_path("noto-sans", "NotoSans-Bold.ttf"),
       italic = font_path("noto-sans", "NotoSans-Italic.ttf")
+    ),
+    "Raleway" = list(
+      plain = font_path("raleway", "Raleway-Regular.ttf"),
+      bold  = font_path("raleway", "Raleway-Bold.ttf")
+    ),
+    "Mulish" = list(
+      plain  = font_path("mulish", "Mulish-Regular.ttf"),
+      bold   = font_path("mulish", "Mulish-Bold.ttf"),
+      italic = font_path("mulish", "Mulish-Italic.ttf")
     ),
     "Montserrat" = list(
       plain = font_path("montserrat", "Montserrat-Regular.ttf"),

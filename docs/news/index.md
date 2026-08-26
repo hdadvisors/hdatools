@@ -1,5 +1,61 @@
 # Changelog
 
+## hdatools (development version)
+
+### PHA rebrand
+
+PHA issued new brand guidelines in 2026. This release rebuilds
+`.brands$pha` around them: palette, continuous ramps, and fonts all
+change. Charts built with any `*_pha()` function will render in
+different colors and a different typeface after upgrading.
+
+- **New PHA palette (breaking).** `pha_colors` is now Orange `#f78f49`,
+  Teal `#42a18d`, Blue `#3990b1`, Navy `#0b242e`, Orange Deep `#a4560c`,
+  and Teal Light `#a0d0c3`. The first four are PHA’s own guide colors,
+  so a chart with four or fewer categories uses only sanctioned brand
+  colors; Orange Deep and Teal Light are tints derived from Orange and
+  Teal, and appear only at five and six categories. The old Green, Light
+  Blue, Red, Purple, and Dark Blue names are gone — the guide dropped
+  those hue families outright, and `pha_color("Green")` now errors. Only
+  `"Orange"` carries over by name, and its hex changed from `#f39152` to
+  `#f78f49`.
+
+- **`gradient` is `NULL` for PHA.** The field has had no reader since
+  the `scale_*_gradient_pha()` functions were removed in 0.5.0, so it is
+  no longer populated, matching `hfv` and `vha`. `na_color` is unchanged
+  at `#e2e4e3`.
+
+- **PHA’s continuous ramps are re-anchored.** Both old anchors read
+  their hue off colors the new guide dropped. The sequential ramp now
+  anchors on Orange and the diverging ramp pairs Blue/Navy against
+  Orange, re-tuned and CVD-checked in the Ramp Lab
+  (`plans/ramp-lab/REVIEW.md`, 2026-08-24). Every `scale_*_pha_c()` and
+  `scale_*_pha_b()` output changes. Both tuned ramps beat the retired
+  ones on every CVD separation floor, except the protanopia inner-pair
+  merge on the diverging ramp, which is unchanged and already
+  documented.
+
+- **[`theme_pha()`](https://hdadvisors.github.io/hdatools/reference/theme_pha.md)
+  uses Raleway and Mulish.** PHA’s guidelines specify Raleway for
+  headings and Mulish for body text, replacing Noto Sans. Both are
+  bundled in `inst/fonts/` and registered by
+  [`register_hda_fonts()`](https://hdadvisors.github.io/hdatools/reference/register_hda_fonts.md).
+  [`theme_pha()`](https://hdadvisors.github.io/hdatools/reference/theme_pha.md)’s
+  `base_family` default changes from `"Noto Sans"` to `"Mulish"` — the
+  body font, matching how
+  [`theme_hda()`](https://hdadvisors.github.io/hdatools/reference/theme_hda.md)
+  defaults to Lato rather than Roboto Slab. Titles and subtitles take
+  Raleway; captions and strip labels take Mulish. Noto Sans stays
+  bundled and registered, but no brand references it now.
+
+- **Documented CVD limitation: PHA Teal vs Blue.** These two guide
+  colors collapse to delta-E 6.6 under simulated tritanopia. The guide’s
+  two cool hues sit at HCL 168.6 and 227.1, which a tritan simulation
+  maps close together, so no fix exists that does not invent an
+  unsanctioned hue. Documented in `vignette("cvd-audit")` rather than
+  worked around, following the same posture as the HDA Green/Sea Green
+  pair. Protanopia and deuteranopia are unaffected.
+
 ## hdatools 0.5.0
 
 - Fixed an unwanted stroke outline on
@@ -40,11 +96,17 @@
   sets `knitr::opts_chunk$set(fig.showtext = TRUE)` as a load-time
   global side effect.
 
-- Removed `hda_pal_discrete()`, `hfv_pal_discrete()`,
-  `pha_pal_discrete()`, `scale_color_gradient_hda()`,
-  `scale_colour_gradient_hda()`, `scale_color_gradient_pha()`,
-  `scale_colour_gradient_pha()`, and `scale_fill_gradient_pha()` — all
-  soft-deprecated in 0.3.0. Use the discrete scales
+- Removed
+  [`hda_pal_discrete()`](https://rdrr.io/pkg/hdatools/man/hda_pal_discrete.html),
+  [`hfv_pal_discrete()`](https://rdrr.io/pkg/hdatools/man/hfv_pal_discrete.html),
+  [`pha_pal_discrete()`](https://rdrr.io/pkg/hdatools/man/pha_pal_discrete.html),
+  [`scale_color_gradient_hda()`](https://rdrr.io/pkg/hdatools/man/scale_color_gradient_hda.html),
+  [`scale_colour_gradient_hda()`](https://rdrr.io/pkg/hdatools/man/scale_color_gradient_hda.html),
+  [`scale_color_gradient_pha()`](https://rdrr.io/pkg/hdatools/man/scale_color_gradient_pha.html),
+  [`scale_colour_gradient_pha()`](https://rdrr.io/pkg/hdatools/man/scale_color_gradient_pha.html),
+  and
+  [`scale_fill_gradient_pha()`](https://rdrr.io/pkg/hdatools/man/scale_fill_gradient_pha.html)
+  — all soft-deprecated in 0.3.0. Use the discrete scales
   ([`scale_color_hda()`](https://hdadvisors.github.io/hdatools/reference/scale_color_hda.md)
   /
   [`scale_fill_hda()`](https://hdadvisors.github.io/hdatools/reference/scale_fill_hda.md)
@@ -162,9 +224,11 @@
   map with a legend or direct labels (documented on every new scale’s
   help page).
 
-- `scale_color_gradient_hda()`, `scale_color_gradient_pha()`, and
-  `scale_fill_gradient_pha()`’s existing soft-deprecation notices now
-  name their replacement
+- [`scale_color_gradient_hda()`](https://rdrr.io/pkg/hdatools/man/scale_color_gradient_hda.html),
+  [`scale_color_gradient_pha()`](https://rdrr.io/pkg/hdatools/man/scale_color_gradient_pha.html),
+  and
+  [`scale_fill_gradient_pha()`](https://rdrr.io/pkg/hdatools/man/scale_fill_gradient_pha.html)’s
+  existing soft-deprecation notices now name their replacement
   (e.g. [`scale_color_hda_c()`](https://hdadvisors.github.io/hdatools/reference/scale_color_hda_c.md))
   via `lifecycle`’s `use_instead`, now that one exists.
 
@@ -200,14 +264,21 @@
   [`scale_colour_hda()`](https://hdadvisors.github.io/hdatools/reference/scale_color_hda.md),
   [`scale_colour_hfv()`](https://hdadvisors.github.io/hdatools/reference/scale_color_hfv.md),
   [`scale_colour_pha()`](https://hdadvisors.github.io/hdatools/reference/scale_color_pha.md),
-  `scale_colour_gradient_hda()`, and `scale_colour_gradient_pha()` —
-  British- spelling aliases of the existing `scale_color_*()` exports,
+  [`scale_colour_gradient_hda()`](https://rdrr.io/pkg/hdatools/man/scale_color_gradient_hda.html),
+  and
+  [`scale_colour_gradient_pha()`](https://rdrr.io/pkg/hdatools/man/scale_color_gradient_pha.html)
+  — British- spelling aliases of the existing `scale_color_*()` exports,
   for parity with ggplot2’s own `colour`/`color` aliasing. No change to
   any existing export.
 
-- `hda_pal_discrete()`, `hfv_pal_discrete()`, `pha_pal_discrete()`,
-  `scale_color_gradient_hda()`, `scale_color_gradient_pha()`, and
-  `scale_fill_gradient_pha()` are now soft-deprecated
+- [`hda_pal_discrete()`](https://rdrr.io/pkg/hdatools/man/hda_pal_discrete.html),
+  [`hfv_pal_discrete()`](https://rdrr.io/pkg/hdatools/man/hfv_pal_discrete.html),
+  [`pha_pal_discrete()`](https://rdrr.io/pkg/hdatools/man/pha_pal_discrete.html),
+  [`scale_color_gradient_hda()`](https://rdrr.io/pkg/hdatools/man/scale_color_gradient_hda.html),
+  [`scale_color_gradient_pha()`](https://rdrr.io/pkg/hdatools/man/scale_color_gradient_pha.html),
+  and
+  [`scale_fill_gradient_pha()`](https://rdrr.io/pkg/hdatools/man/scale_fill_gradient_pha.html)
+  are now soft-deprecated
   ([`lifecycle:: deprecate_soft()`](https://lifecycle.r-lib.org/reference/deprecate_soft.html));
   they keep working exactly as before, but calling them directly will
   surface a one-time deprecation notice. `lifecycle` moves to Imports.
@@ -235,8 +306,11 @@
   reference index now groups exports into **Themes**, **Palettes &
   scales**, **Helpers**, and **Analysis utils**. Fixed “depreciated” →
   “deprecated” wording in the `space` parameter docs for
-  `scale_color_gradient_hda()`, `scale_color_gradient_pha()`, and
-  `scale_fill_gradient_pha()`. No behavior change.
+  [`scale_color_gradient_hda()`](https://rdrr.io/pkg/hdatools/man/scale_color_gradient_hda.html),
+  [`scale_color_gradient_pha()`](https://rdrr.io/pkg/hdatools/man/scale_color_gradient_pha.html),
+  and
+  [`scale_fill_gradient_pha()`](https://rdrr.io/pkg/hdatools/man/scale_fill_gradient_pha.html).
+  No behavior change.
 
 - Internal cleanup only, no behavior changes: enabled Roxygen markdown
   so help pages and the pkgdown site render `code`/**bold** correctly,
@@ -367,10 +441,12 @@
 
 - Merges updates in `jtk` branch to original build-out in `main`.
 - Adds new color scale functions, including `scale_color_gradient_*`.
-- Adds new color palette (`pha_pal_discrete()`) for the Partnership for
-  Housing Affordability (PHA).
+- Adds new color palette
+  ([`pha_pal_discrete()`](https://rdrr.io/pkg/hdatools/man/pha_pal_discrete.html))
+  for the Partnership for Housing Affordability (PHA).
 - Theme helper functions now load more Google Font options and include
   [`flip_gridlines()`](https://hdadvisors.github.io/hdatools/reference/flip_gridlines.md)
   shortcut.
-- `hda_pal_discrete()` now includes `repeat_pal` option to loop colors
-  for data with more than six variables.
+- [`hda_pal_discrete()`](https://rdrr.io/pkg/hdatools/man/hda_pal_discrete.html)
+  now includes `repeat_pal` option to loop colors for data with more
+  than six variables.

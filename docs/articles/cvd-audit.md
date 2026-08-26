@@ -24,8 +24,9 @@ space via `colorspace`:
 Delta-E below **10** is generally considered indistinguishable; values
 of **10–20** are borderline; values above **20** are comfortably
 distinct. The audit focuses on the first four palette slots — the range
-almost always used in a categorical plot — plus two pairs flagged during
-the 0.4.0 design review.
+almost always used in a categorical plot — plus the pairs flagged for
+each brand: HDA Green vs Sea Green (from the 0.4.0 design review) and
+PHA Teal vs Blue (from the 2026-08 rebrand).
 
 ------------------------------------------------------------------------
 
@@ -113,40 +114,59 @@ Recommendations:
 
 ## PHA
 
-Palette: Green `#5bab8e`, Light Blue `#a6cccc`, Orange `#f39152`, Red
-`#be451c`, Purple `#a5add0`, Dark Blue `#2b6b9c`
+Palette: Orange `#f78f49`, Teal `#42a18d`, Blue `#3990b1`, Navy
+`#0b242e`, Orange Deep `#a4560c`, Teal Light `#a0d0c3`
 
-| color1     | color2     | Normal | Protan | Deutan | Tritan | Flag |
-|:-----------|:-----------|-------:|-------:|-------:|-------:|:-----|
-| Green      | Light Blue |   26.9 |   19.8 |   18.5 |   21.3 |      |
-| Green      | Orange     |   75.6 |   32.0 |   47.6 |   86.3 |      |
-| Green      | Red        |   90.1 |   39.5 |   48.2 |  105.9 |      |
-| Light Blue | Orange     |   69.5 |   48.7 |   57.0 |   72.8 |      |
-| Light Blue | Red        |   85.7 |   59.3 |   63.2 |   96.3 |      |
-| Orange     | Red        |   27.8 |   25.6 |   22.5 |   28.9 |      |
-
-PHA palette — pairwise delta-E by CVD type {.table}
-
-**Green vs Light Blue is the tightest pair** (delta-E ≈ 18.5–21.3 across
-CVD types). Both are cool desaturated colors that lose further
-differentiation under red-green CVD. No pair falls below 10.
-
-### PHA: Orange vs Red (flagged pair)
+The first four are PHA’s own 2026 guide colors; the last two are tints
+derived from Orange and Teal. This section covers the palette adopted in
+2026-08; the previous PHA palette (Green, Light Blue, Orange, Red,
+Purple, Dark Blue) was retired with the rebrand.
 
 | color1 | color2 | Normal | Protan | Deutan | Tritan | Flag |
 |:-------|:-------|-------:|-------:|-------:|-------:|:-----|
-| Orange | Red    |   27.8 |   25.6 |   22.5 |   28.9 |      |
+| Orange | Teal   |   84.4 |   41.8 |   58.5 |   92.6 |      |
+| Orange | Blue   |   93.1 |   70.7 |   85.7 |   90.3 |      |
+| Orange | Navy   |   93.1 |   76.0 |   89.5 |   87.6 |      |
+| Teal   | Blue   |   32.5 |   29.0 |   27.3 |    6.6 | ⚠️   |
+| Teal   | Navy   |   56.0 |   51.3 |   47.3 |   52.9 |      |
+| Blue   | Navy   |   46.9 |   46.8 |   45.5 |   48.9 |      |
 
-PHA — Orange vs Red palette — pairwise delta-E by CVD type {.table}
+PHA palette — pairwise delta-E by CVD type {.table}
 
-**Not confirmed as a failure.** The flagged Orange/Red pair maintains
-delta-E ≥ 22 under all CVD types; the lightness difference (Orange is
-substantially lighter) provides the primary perceptual cue and it is
-preserved under CVD simulation.
+Separation is strong across the first four under red-green CVD: every
+pair clears delta-E 27 under protanopia and deuteranopia, and 32 under
+normal vision. Under tritanopia every pair clears 52 except one, covered
+next.
 
-Recommendation: no action needed for the Orange/Red pair. For Green vs
-Light Blue in 4-category plots, consider adding a secondary encoding if
-tritanopic accessibility is a concern.
+### PHA: Teal vs Blue (documented limitation)
+
+| color1 | color2 | Normal | Protan | Deutan | Tritan | Flag |
+|:-------|:-------|-------:|-------:|-------:|-------:|:-----|
+| Teal   | Blue   |   32.5 |     29 |   27.3 |    6.6 | ⚠️   |
+
+PHA — Teal vs Blue palette — pairwise delta-E by CVD type {.table}
+
+**Confirmed limitation.** Teal and Blue collapse to delta-E ≈ 6.6 under
+full tritanopia — below the threshold where two colors reliably read as
+different. Protanopia and deuteranopia are unaffected (29.0 and 27.3).
+
+This is inherent to PHA’s own guide. Its two cool hues sit at HCL 168.6
+and 227.1, and a tritan simulation maps that hue range close together.
+Correcting it would mean substituting a hue the brand guidelines do not
+sanction, so it is documented rather than worked around — the same
+posture taken for HDA’s Green/Sea Green pair.
+
+Recommendations:
+
+- **Avoid using Teal and Blue as the only two series colors** in a chart
+  where tritanopic accessibility matters. Add a shape, pattern, or
+  direct-label encoding alongside color if both are needed.
+- In 3-category and 4-category plots, order series so Teal and Blue are
+  not adjacent in a legend, where label proximity compensates for color
+  proximity.
+- Navy is a safe substitute for Blue in a two-color chart: Teal vs Navy
+  holds delta-E 52.9 under tritanopia, and Navy is an official guide
+  color.
 
 ------------------------------------------------------------------------
 
@@ -199,6 +219,8 @@ assertions that the first four colors of each brand palette maintain the
 minimum pairwise delta-E thresholds observed above. These tests guard
 against future palette edits that silently reduce CVD
 distinguishability; they do not validate the absolute CVD safety of the
-palettes, and they do not test the HDA Green/Sea Green tritanopia
-failure (which is a documented limitation, not a threshold a future edit
-could improve accidentally).
+palettes. They do not test the two documented tritanopia failures — HDA
+Green/Sea Green and PHA Teal/Blue — which are limitations rather than
+thresholds a future edit could improve accidentally. For PHA the tritan
+guard still runs across the other five first-4 pairs, with Teal/Blue
+excluded, so the collapse does not mask them.

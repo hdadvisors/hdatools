@@ -9,7 +9,9 @@
 # Thresholds are set conservatively below each brand's observed minimum:
 #   HDA first-4: min observed ~22.7 (deutan) → threshold 20
 #   HFV first-4: min observed ~12.1 (deutan) → threshold 10
-#   PHA first-4: min observed ~18.5 (deutan) → threshold 15
+#   PHA first-4: min observed ~27.3 (deutan) → threshold 22, but tritan is
+#     handled separately: Teal vs Blue collapses there (see the flagged-pair
+#     test at the bottom of this file)
 #   VHA first-4: min observed ~16.5 (deutan) → threshold 12
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
@@ -36,6 +38,19 @@
   .pairwise_min_delta_e(sim)
 }
 
+# Same as .sim_min_delta_e(), minus one named pair. Used where a palette has a
+# single documented CVD collapse that would otherwise mask every other pair's
+# separation, so the rest still gets a real regression guard.
+.sim_min_delta_e_excluding <- function(hex_vec, cvd_fn, exclude) {
+  sim   <- cvd_fn(unname(hex_vec), sev = 1)
+  pairs <- combn(seq_along(sim), 2)
+  keep  <- !apply(pairs, 2, function(p) setequal(names(hex_vec)[p], exclude))
+  dEs <- apply(pairs[, keep, drop = FALSE], 2, function(p) {
+    sqrt(sum((.hex_to_lab(sim[p[1L]]) - .hex_to_lab(sim[p[2L]]))^2))
+  })
+  min(dEs)
+}
+
 # ── HDA first-4 (Blue / Green / Yellow / Coral) ──────────────────────────────
 
 test_that("HDA first-4 colors maintain min delta-E >= 20 under CVD", {
@@ -56,13 +71,25 @@ test_that("HFV first-4 colors maintain min delta-E >= 10 under CVD", {
   expect_gte(.sim_min_delta_e(pal4, colorspace::tritan), 10)
 })
 
-# ── PHA first-4 (Green / Light Blue / Orange / Red) ──────────────────────────
+# ── PHA first-4 (Orange / Teal / Blue / Navy) ────────────────────────────────
+# All four are PHA's own 2026 guide colors. Protan and deutan are strong
+# across every pair (min observed 29.0 and 27.3). Tritan is strong too — 52.9
+# — for every pair EXCEPT Teal vs Blue, which collapses to 6.6; that pair gets
+# its own test below and is excluded here so this one still guards the other
+# five pairs under tritanopia instead of pinning to the collapse.
 
-test_that("PHA first-4 colors maintain min delta-E >= 15 under CVD", {
+test_that("PHA first-4 colors maintain min delta-E >= 22 under protan and deutan", {
   pal4 <- hdatools:::`.brands`$pha$palette[1:4]
-  expect_gte(.sim_min_delta_e(pal4, colorspace::protan), 15)
-  expect_gte(.sim_min_delta_e(pal4, colorspace::deutan), 15)
-  expect_gte(.sim_min_delta_e(pal4, colorspace::tritan), 15)
+  expect_gte(.sim_min_delta_e(pal4, colorspace::protan), 22)
+  expect_gte(.sim_min_delta_e(pal4, colorspace::deutan), 22)
+})
+
+test_that("PHA first-4 colors hold up under tritan apart from Teal/Blue", {
+  pal4 <- hdatools:::`.brands`$pha$palette[1:4]
+  expect_gte(
+    .sim_min_delta_e_excluding(pal4, colorspace::tritan, c("Teal", "Blue")),
+    40
+  )
 })
 
 # ── VHA first-4 (Dark Turq / Light Green / Yellow / Light Turq) ──────────────
@@ -93,15 +120,21 @@ test_that("HDA Green/Sea Green pair passes protan and deutan (tritan documented 
   expect_gte(.sim_min_delta_e(pair, colorspace::deutan), 15)
 })
 
-# ── Flagged pair: PHA Orange vs Red ──────────────────────────────────────────
-# Design review flagged this pair; audit found it passes all CVD types (≥ 22).
+# ── Flagged pair: PHA Teal vs Blue ───────────────────────────────────────────
+# Positions 2 and 3 in the PHA palette, both official 2026 guide colors.
+# Under TRITANOPIA this pair collapses to delta-E 6.6 — a documented
+# limitation (see vignettes/articles/cvd-audit.Rmd). The guide's two cool hues
+# sit at 168.6 and 227.1, which a tritan simulation maps close together; no
+# fix exists that does not invent an unsanctioned hue, so this is documented
+# rather than worked around (per Q7, plans/DECISIONS.md, 2026-07-18).
+# Protan and deutan are strong (29.0 and 27.3); the tritan failure is NOT
+# tested here since any threshold below 7 would not guard a real regression.
 
-test_that("PHA Orange/Red pair maintains distinguishability under all CVD types", {
+test_that("PHA Teal/Blue pair passes protan and deutan (tritan documented failure)", {
   pair <- c(
-    hdatools:::`.brands`$pha$palette["Orange"],
-    hdatools:::`.brands`$pha$palette["Red"]
+    hdatools:::`.brands`$pha$palette["Teal"],
+    hdatools:::`.brands`$pha$palette["Blue"]
   )
-  expect_gte(.sim_min_delta_e(pair, colorspace::protan), 20)
-  expect_gte(.sim_min_delta_e(pair, colorspace::deutan), 20)
-  expect_gte(.sim_min_delta_e(pair, colorspace::tritan), 20)
+  expect_gte(.sim_min_delta_e(pair, colorspace::protan), 22)
+  expect_gte(.sim_min_delta_e(pair, colorspace::deutan), 22)
 })

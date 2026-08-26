@@ -9,11 +9,17 @@ pha_colors
 \description{
 A named character vector of the six PHA brand colors, taken directly from
 the internal \code{.brands} registry. Names are the canonical color labels
-(e.g. \code{"Green"}, \code{"Orange"}).
+(e.g. \code{"Orange"}, \code{"Teal"}).
+}
+\details{
+The first four — \code{"Orange"}, \code{"Teal"}, \code{"Blue"}, \code{"Navy"} — are PHA's own
+guide colors, so a chart with four or fewer categories uses only sanctioned
+brand colors. \code{"Orange Deep"} and \code{"Teal Light"} are tints derived from the
+first two and appear only at five and six categories.
 }
 \examples{
 pha_colors
-pha_colors["Green"]
+pha_colors["Orange"]
 
 }
 \seealso{

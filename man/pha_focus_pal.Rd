@@ -7,7 +7,7 @@
 pha_focus_pal(color, n = 5)
 }
 \arguments{
-\item{color}{A valid PHA color name (e.g. \code{"Green"}, \code{"Orange"}).}
+\item{color}{A valid PHA color name (e.g. \code{"Orange"}, \code{"Teal"}).}
 
 \item{n}{Total number of series (focus + muted). Must be a positive integer.}
 }
@@ -22,7 +22,7 @@ the result to \code{\link[ggplot2:scale_fill_manual]{ggplot2::scale_fill_manual(
 \code{\link[ggplot2:scale_colour_manual]{ggplot2::scale_colour_manual()}}.
 }
 \examples{
-pha_focus_pal("Green", n = 4)
+pha_focus_pal("Orange", n = 4)
 
 }
 \seealso{

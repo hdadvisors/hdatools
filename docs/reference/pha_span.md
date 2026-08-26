@@ -22,7 +22,7 @@ pha_span(text, color)
 
 - color:
 
-  A valid PHA color name (e.g. `"Green"`, `"Dark Blue"`).
+  A valid PHA color name (e.g. `"Orange"`, `"Navy"`).
 
 ## Value
 
@@ -38,8 +38,8 @@ A character string containing the HTML span tag.
 ## Examples
 
 ``` r
-pha_span("Partnership for Housing Affordability", "Green")
-#> [1] "<span style='color:#5bab8e'>Partnership for Housing Affordability</span>"
-pha_span("note", "Dark Blue")
-#> [1] "<span style='color:#2b6b9c'>note</span>"
+pha_span("Partnership for Housing Affordability", "Orange")
+#> [1] "<span style='color:#f39152'>Partnership for Housing Affordability</span>"
+pha_span("note", "Navy")
+#> Error: "Navy" is not a valid PHA color name. Valid names: Green, Light Blue, Orange, Red, Purple, Dark Blue.
 ```

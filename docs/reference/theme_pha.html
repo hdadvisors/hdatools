@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hdatools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,7 +47,7 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">theme_pha</span><span class="op">(</span></span>
 <span>  base_size <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  base_family <span class="op">=</span> <span class="st">"Noto Sans"</span>,</span>
+<span>  base_family <span class="op">=</span> <span class="st">"Mulish"</span>,</span>
 <span>  flip_gridlines <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  output_format <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  html_adjust <span class="op">=</span> <span class="fl">0</span>,</span>
@@ -65,7 +65,7 @@
 
 
 <dt id="arg-base-family">base_family<a class="anchor" aria-label="anchor" href="#arg-base-family"></a></dt>
-<dd><p>The base font family; defaults to "Noto Sans"</p></dd>
+<dd><p>The base font family; defaults to "Mulish"</p></dd>
 
 
 <dt id="arg-flip-gridlines">flip_gridlines<a class="anchor" aria-label="anchor" href="#arg-flip-gridlines"></a></dt>
@@ -100,7 +100,7 @@ branded strip element is a ggtext markdown element, and ggplot2 4.0 only
 merges theme elements of the same class.</p>
 <p>The theme alone carries PHA's brand identity into an otherwise
 unbranded plot: bar/column fills, point colors, and line colors default
-to <code>pha_colors["Green"]</code> (via <code><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">ggplot2::element_geom()</a></code>), a discrete
+to <code>pha_colors["Orange"]</code> (via <code><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">ggplot2::element_geom()</a></code>), a discrete
 <code>aes(colour =)</code>/<code>aes(fill =)</code> mapping cycles through the full PHA
 palette, and a continuous mapping uses the PHA sequential ramp
 (see <code><a href="scale_color_pha_c.html">scale_color_pha_c()</a></code>) — all with no <code>scale_*()</code> call required.

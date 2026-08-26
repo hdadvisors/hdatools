@@ -326,3 +326,162 @@ Key: `hdatools-ramp-lab-v1`
 
 (The in-dashboard notes as actually recorded are longer; the full text lives
 in the per-slot sections above.)
+
+---
+
+# Ramp Lab review — PHA re-anchor for the 2026 palette
+
+**Date:** 2026-08-24 · **Reviewer:** Claude (implementation session) ·
+**Status:** adopted into `R/brands.R` (see `plans/DECISIONS.md`, 2026-08-24 /
+ref 2.6). **Scope: PHA only.** HDA, HFV, and VHA are untouched — the
+2026-07-18 sections above remain the accurate record for those three.
+
+PHA's 2026 brand guidelines replaced the palette the 2026-07-18 picks were
+built on. Both old PHA anchors read their hue off colors the new guide
+dropped: the sequential off Red (H 19.7) and the diverging off Dark Blue
+(H 243.4) vs Red. Neither hue family survives, so both ramps were
+re-anchored from the new palette and re-tuned from scratch.
+
+**New anchors.** `plans/ramp-lab/generate_candidates.R`'s `anchor_specs$pha`
+now offers three sequential candidates (Orange, Teal, Blue) and three
+diverging pairs (Blue vs Orange, Teal vs Orange, Blue vs Teal), two variants
+each. Blue and Navy share hue 227.1, so only one of them needs to stand as a
+cool anchor. Blue vs Teal is generated deliberately even though it trips the
+`check_diverging_arms()` guardrail at 58.5 degrees apart — the warning is the
+answer to "can PHA's two cool hues diverge against each other?", and the
+numbers below confirm they cannot.
+
+**Method.** Same as 2026-07-18: CIE76 ΔE between adjacent binned classes
+(sequential) or mirrored cross-arm classes (diverging), after Machado
+full-severity CVD simulation, on the 7-class binned output. Same reading:
+ΔE ≥ 12 comfortable, 8–12 usable with a legend, < 8 a real merge risk. This
+session added one measurement the 2026-07-18 pass did not report for
+diverging ramps — the **adjacent-class** floor within each arm — because the
+diverging tuning ran into a direct trade-off between cross-arm separation and
+within-arm readability that the cross-arm number alone hides.
+
+**Visual pass.** Candidates and finalists were rendered as 7-class swatch
+strips through `ragg` and reviewed as images. The `dashboard.html` tool itself
+was not driven this session; its `candidates.js` was regenerated and matches
+the R output exactly, same as the original review verified across all 36
+candidates.
+
+## PHA sequential — **Orange → cream (standard), tuned**
+
+- **Base:** `pha-seq-orange-cream-standard`.
+- **Final sliders:** hue 32.4 · chroma **90** (unchanged) · lum (dark) **25**
+  (was 28) · cream 80 / 10 / 95 · power **0.95** (was 1.00).
+- **R snippet (verified: exact match, and identical to
+  `.ramp_hex_sequential("pha", 7)` after transcription):**
+
+  ```r
+  colorspace::sequential_hcl(
+    n = 7,
+    h = c(32.4, 80.0),
+    c = c(90.0, 10.0),
+    l = c(25.0, 95.0),
+    power = 0.95
+  )
+  # R: #732000 #874400 #9A6600 #AC884B #C0AA7D #D6CCAE #F3F1E4
+  ```
+
+- **Rationale.** Orange is the direct continuation of the old Red-anchored
+  warm sequential and the one color whose hue barely moved in the rebrand
+  (32.4 vs 19.7). It also wins the slot on numbers: Teal and Blue both bottom
+  out near ΔE 9.5–10.7 under deuteranopia as generated, below the comfortable
+  line, and neither improved past Orange under tuning. Dropping the dark end
+  to L 25 and easing the curve to 0.95 improves **every** floor over the
+  generated default (normal 14.0 → 15.6, protan 14.3 → 15.6, deutan
+  10.3 → 13.1, tritan 12.4 → 13.9) and clears the ≥ 12 bar on all four — the
+  generated default did not, at deutan 10.3. The tuned ramp also beats the
+  retired Red pick on all four floors (14.8 / 12.8 / 12.6 / 13.5). Chroma was
+  left at the generated 90; pushing it to 94–96 bought about 0.8 ΔE on normal
+  vision while turning the third class into a loud mustard. Reads brick →
+  russet → ochre → tan → cream: warmer and more golden than the retired
+  oxide-red ramp, which is what moving the anchor hue +12.7 degrees does.
+  Checked under all three CVD modes.
+- **Residual concerns.** None specific to this ramp beyond the general
+  cream-system notes. Worth a human eye on whether the ochre midtones read as
+  intended against PHA's own Orange in the same chart — the ramp's mid
+  classes are darker and less saturated than the brand Orange itself.
+
+## PHA diverging — **Blue vs Orange (standard), tuned**
+
+- **Base:** `pha-div-blue-vs-orange-standard`.
+- **Final sliders:** hue arm 1 227.1 · hue arm 2 32.4 · chroma **89**
+  (was 65) · lum (arms) **26** (was 28) · cream center 80 / 10 / 95 ·
+  power **0.85** (was 1.00).
+- **R snippet (verified: exact match, and identical to
+  `.ramp_hex_diverging("pha", 7)` after transcription):**
+
+  ```r
+  n <- 7
+  n2 <- ceiling(n / 2)
+  arm <- function(h) colorspace::sequential_hcl(
+    n2, h = c(h, 80.0), c = c(89.0, 10.0),
+    l = c(26.0, 95.0), power = 0.85
+  )
+  diverging_hex <- c(arm(227.1), rev(arm(32.4)))
+  if (floor(n / 2) < n2) diverging_hex <- diverging_hex[-n2]
+  diverging_hex
+  # R: #005691 #008572 #7EB280 #F3F1E4 #BAA372 #976300 #762300
+  ```
+
+- **Rationale.** Blue vs Orange is the only structurally sound pair in the
+  slot, and it continues the retired Dark-Blue-vs-Red axis. The other two
+  fail on evidence: Teal vs Orange collapses to cross-arm ΔE 1.5 under
+  protanopia and 2.4 under deuteranopia, and Blue vs Teal fails outright at
+  ΔE 5.8 even under **normal** vision — the guardrail warning about its 58.5
+  degree arm separation is correct. Tuning moved chroma from 65 to 89 and the
+  curve from 1.00 to 0.85; every cross-arm line improved over the generated
+  default (normal 20.2 → 29.8, protan 2.9 → 4.8, deutan 7.2 → 11.4, tritan
+  25.2 → 36.3), and the tuned ramp beats the retired Dark-Blue-vs-Red pick on
+  normal (27.0 → 29.8), deutan (10.0 → 11.4), and tritan (33.6 → 36.3).
+  Checked under all three CVD modes.
+- **Where the tuning stopped, and why.** Cross-arm separation keeps improving
+  as power drops and chroma rises — there is no numerical knee. What stops it
+  is the **adjacent-class floor within each arm**, which moves the opposite
+  way: at power 0.60 the cross-arm protan floor reaches 7.9 but the adjacent
+  tritan floor falls to 14.1, and each arm starts reading as three steps
+  instead of a ramp. Power 0.85 at chroma 89 holds the adjacent floor at 18.0
+  (the retired pick sat at 20.0, HDA's diverging at 19.2) while taking most of
+  the cross-arm gain. Power 0.80 was the runner-up — it buys protan 4.8 → 6.0
+  but costs adjacent 18.0 → 17.4 and leaves the 0.85–0.95 curve band the other
+  three brands' divergings share. Both values sit in merge-risk territory for
+  protanopia regardless, so the 1.2 ΔE was not worth the trade.
+- **Residual concerns.** The same protan inner-pair merge (ΔE ~4.8) that HDA's
+  diverging has, and for the same structural reason: the shared cream center
+  makes both inner classes low-chroma yellowish tints under protanopia. The
+  documented usage rule from 2026-07-18 still applies — keep legends and
+  direct labels on 7-class diverging maps. The outer classes are unusually
+  strong here (cross-arm tips 36.3 under tritanopia), so the ramp reads well
+  everywhere except immediately around zero.
+
+## Cross-brand coherence, revisited
+
+The 2026-07-18 review flagged HDA's diverging (cool arm 259.2) and PHA's
+(cool arm 243.4) as visual siblings, 16 degrees apart, and named HDA's
+diverging as the lever if differentiation ever mattered. PHA's new cool arm
+sits at 227.1, which widens that gap to 32 degrees without touching HDA. PHA's
+warm arm also moved from 19.7 to 32.4, away from HDA's 20.4. The two ramps are
+now distinguishable side by side: PHA's cool arm is cerulean where HDA's is
+navy-violet, and PHA's warm arm runs through ochre where HDA's runs through
+sienna. **This does not close the 2026-07-18 decision** about differentiating
+HDA's diverging — that decision was about HDA's ramp on its own terms and
+stays open.
+
+The PHA sequential's identity changed with it: the three-brand system reads
+navy-teal (HDA) / leaf-green (HFV) / brick-ochre (PHA) instead of the previous
+navy-teal / leaf-green / oxide-red.
+
+## Palette-level CVD finding (not a ramp finding)
+
+Recorded here because it came out of the same measurement pass. Among PHA's
+four official guide colors, every pair clears ΔE 27 under protanopia and
+deuteranopia and 32 under normal vision, **except Teal vs Blue under simulated
+tritanopia, at ΔE 6.6** — merge risk on this file's own scale. The guide's two
+cool hues (168.6 and 227.1) sit adjacent under a tritan simulation. There is
+no fix that does not invent an unsanctioned hue, so it is documented rather
+than worked around, per the Q7 precedent in `plans/DECISIONS.md`. See
+`vignettes/articles/cvd-audit.Rmd` and the flagged-pair test in
+`tests/testthat/test-cvd.R`.

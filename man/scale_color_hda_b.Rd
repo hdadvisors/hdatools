@@ -59,10 +59,12 @@ protanopia (structural to the shared cream center) — always pair a
 
 \section{HDA diverging is provisional}{
  \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-HDA's diverging ramp (Blue vs Coral) is a near-twin of PHA's (Dark Blue
-vs Red) and is pending a follow-up Ramp Lab pass to differentiate it
-before final adoption (see \code{plans/DECISIONS.md}, 2026-07-18). It ships
-now so the scale matrix is complete; treat it as subject to change.
+HDA's diverging ramp (Blue vs Coral) is pending a follow-up Ramp Lab pass
+before final adoption (see \code{plans/DECISIONS.md}, 2026-07-18). PHA's 2026
+rebrand moved its diverging arms to Blue vs Orange, which widened the
+cool-arm gap between the two brands from 16 to 32 degrees, but the HDA
+pass is still open on its own terms. It ships now so the scale matrix is
+complete; treat it as subject to change.
 }
 
 \examples{

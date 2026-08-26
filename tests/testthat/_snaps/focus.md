@@ -20,7 +20,7 @@
       pha_focus_pal("Gold", n = 3)
     Condition
       Error:
-      ! "Gold" is not a valid PHA color name. Valid names: Green, Light Blue, Orange, Red, Purple, Dark Blue.
+      ! "Gold" is not a valid PHA color name. Valid names: Orange, Teal, Blue, Navy, Orange Deep, Teal Light.
 
 ---
 

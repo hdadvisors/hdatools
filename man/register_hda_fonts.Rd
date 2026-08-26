@@ -20,7 +20,7 @@ the opt-out or if a family failed to register for an unexpected reason.
 }
 \description{
 Registers the font faces bundled in \verb{inst/fonts/} (Lato and Roboto Slab for
-\code{theme_hda()}, Open Sans and Poppins for \code{theme_hfv()}, Noto Sans for
+\code{theme_hda()}, Open Sans for \code{theme_hfv()}, Raleway and Mulish for
 \code{theme_pha()}, Montserrat for \code{theme_vha()}) with \pkg{systemfonts}, making
 them available by name to \pkg{ragg} graphics devices (and any other
 systemfonts-aware device). Everything is read from files installed with

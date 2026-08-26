@@ -13,7 +13,7 @@ test_that("scale_fill_pha(direction = -1) reverses fills in the built plot", {
     ggplot2::ggplot(d, ggplot2::aes(x, y, fill = g)) +
       ggplot2::geom_col() + scale_fill_pha(direction = -1)
   )
-  expect_identical(unique(bd$data[[1]]$fill), c("#f39152", "#a6cccc", "#5bab8e"))
+  expect_identical(unique(bd$data[[1]]$fill), c("#3990b1", "#42a18d", "#f78f49"))
 })
 
 test_that("scale_fill_vha maps palette hexes into the built plot", {
@@ -78,7 +78,7 @@ test_that("scale_color_pha maps palette hexes into the built plot", {
     ggplot2::ggplot(d, ggplot2::aes(x, y, colour = g)) +
       ggplot2::geom_point() + scale_color_pha()
   )
-  expect_identical(unique(bd$data[[1]]$colour), c("#5bab8e", "#a6cccc", "#f39152"))
+  expect_identical(unique(bd$data[[1]]$colour), c("#f78f49", "#42a18d", "#3990b1"))
 })
 
 # --- scale_colour_*() aliases (item 1.4, new in 0.3.0) ---
@@ -111,7 +111,7 @@ test_that("continuous sequential scales default to higher value = darker (dark =
 
   pha_c <- scale_color_pha_c()
   expect_identical(toupper(pha_c$palette(0)), "#F3F1E4")
-  expect_identical(toupper(pha_c$palette(1)), "#811C00")
+  expect_identical(toupper(pha_c$palette(1)), "#732000")
 
   vha_c <- scale_color_vha_c()
   expect_identical(toupper(vha_c$palette(0)), "#F3F1E4")
@@ -124,8 +124,8 @@ test_that("continuous diverging scales keep the ramp's own arm1 -> arm2 order", 
   expect_identical(toupper(hda_div$palette(1)), "#781C00")
 
   pha_div <- scale_color_pha_c(palette = "diverging")
-  expect_identical(toupper(pha_div$palette(0)), "#00468E")
-  expect_identical(toupper(pha_div$palette(1)), "#761E00")
+  expect_identical(toupper(pha_div$palette(0)), "#005691")
+  expect_identical(toupper(pha_div$palette(1)), "#762300")
 
   # VHA's diverging ramp is provisional (Yellow arm reads golden/olive, not
   # bright yellow, at l1 — see roxygen @section and plans/DECISIONS.md).

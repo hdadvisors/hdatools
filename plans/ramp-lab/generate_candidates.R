@@ -7,7 +7,8 @@
 #
 # Never run inline (-e); always `Rscript plans/ramp-lab/generate_candidates.R`.
 
-setwd("R:/hda/hdatools")
+# Repo root differs by machine; use whichever checkout exists here.
+for (p in c("R:/hda/hdatools", "C:/repos/hda/hdatools")) if (dir.exists(p)) setwd(p)
 devtools::load_all(".", quiet = TRUE)
 library(colorspace)
 
@@ -244,15 +245,23 @@ anchor_specs <- list(
     )
   ),
   pha = list(
+    # Re-anchored for PHA's 2026 palette (2026-08-24). The old anchors read
+    # off Red and Dark Blue, hue families the new guide dropped. Orange is the
+    # one color whose hue survived the rebrand almost unmoved (32.4 vs the old
+    # Red's 19.7), so it takes over the warm sequential and the warm diverging
+    # arm. Blue and Navy share hue 227.1, so only one of them needs to appear
+    # as a cool anchor. Blue vs Teal is generated deliberately even though its
+    # arms are 58.5 degrees apart -- the guardrail warning it trips is the
+    # answer to "can PHA's two cool hues diverge against each other?".
     sequential = list(
-      seq_anchor("pha", "Dark Blue", h_nudge = 0, c1 = 58, l1 = 26),
-      seq_anchor("pha", "Red", h_nudge = 0, c1 = 90, l1 = 28),
-      seq_anchor("pha", "Green", h_nudge = 0, c1 = 52, l1 = 26)
+      seq_anchor("pha", "Orange", h_nudge = 0, c1 = 90, l1 = 28),
+      seq_anchor("pha", "Teal", h_nudge = 0, c1 = 52, l1 = 26),
+      seq_anchor("pha", "Blue", h_nudge = 0, c1 = 58, l1 = 26)
     ),
     diverging = list(
-      div_anchor("pha", "Dark Blue", "Red", c1 = 65),
-      div_anchor("pha", "Dark Blue", "Orange", c1 = 60),
-      div_anchor("pha", "Purple", "Green", c1 = 45)
+      div_anchor("pha", "Blue", "Orange", c1 = 65),
+      div_anchor("pha", "Teal", "Orange", c1 = 60),
+      div_anchor("pha", "Blue", "Teal", c1 = 55)
     )
   )
 )

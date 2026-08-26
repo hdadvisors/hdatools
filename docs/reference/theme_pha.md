@@ -7,7 +7,7 @@ Use a PHA-branded ggplot2 theme
 ``` r
 theme_pha(
   base_size = 10,
-  base_family = "Noto Sans",
+  base_family = "Mulish",
   flip_gridlines = FALSE,
   output_format = NULL,
   html_adjust = 0,
@@ -24,7 +24,7 @@ theme_pha(
 
 - base_family:
 
-  The base font family; defaults to "Noto Sans"
+  The base font family; defaults to "Mulish"
 
 - flip_gridlines:
 
@@ -46,6 +46,12 @@ theme_pha(
 
   Additional arguments passed to ggplot2::theme()
 
+## Value
+
+A
+[`ggplot2::theme()`](https://ggplot2.tidyverse.org/reference/theme.html)
+object.
+
 ## Details
 
 When overriding strip text under ggplot2 \>= 4.0, use
@@ -57,7 +63,7 @@ only merges theme elements of the same class.
 
 The theme alone carries PHA's brand identity into an otherwise unbranded
 plot: bar/column fills, point colors, and line colors default to
-`pha_colors["Green"]` (via
+`pha_colors["Orange"]` (via
 [`ggplot2::element_geom()`](https://ggplot2.tidyverse.org/reference/element.html)),
 a discrete `aes(colour =)`/`aes(fill =)` mapping cycles through the full
 PHA palette, and a continuous mapping uses the PHA sequential ramp (see
@@ -65,3 +71,13 @@ PHA palette, and a continuous mapping uses the PHA sequential ramp (see
 — all with no `scale_*()` call required. An explicit `scale_*()` (or a
 manual [`aes()`](https://ggplot2.tidyverse.org/reference/aes.html)
 value) always overrides these theme-carried defaults.
+
+## Examples
+
+``` r
+library(ggplot2)
+ggplot(mtcars, aes(wt, mpg, color = factor(cyl))) +
+  geom_point() +
+  theme_pha(base_family = "")
+
+```
