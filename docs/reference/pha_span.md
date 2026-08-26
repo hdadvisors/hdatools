@@ -39,7 +39,7 @@ A character string containing the HTML span tag.
 
 ``` r
 pha_span("Partnership for Housing Affordability", "Orange")
-#> [1] "<span style='color:#f39152'>Partnership for Housing Affordability</span>"
+#> [1] "<span style='color:#f78f49'>Partnership for Housing Affordability</span>"
 pha_span("note", "Navy")
-#> Error: "Navy" is not a valid PHA color name. Valid names: Green, Light Blue, Orange, Red, Purple, Dark Blue.
+#> [1] "<span style='color:#0b242e'>note</span>"
 ```

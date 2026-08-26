@@ -28,7 +28,8 @@ A named character scalar (hex color).
 ``` r
 pha_color("Orange")
 #>    Orange 
-#> "#f39152" 
+#> "#f78f49" 
 pha_color("Teal Light")
-#> Error: "Teal Light" is not a valid PHA color name. Valid names: Green, Light Blue, Orange, Red, Purple, Dark Blue.
+#> Teal Light 
+#>  "#a0d0c3" 
 ```

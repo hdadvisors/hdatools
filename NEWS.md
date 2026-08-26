@@ -1,4 +1,4 @@
-# hdatools (development version)
+# hdatools 0.6.0
 
 ## PHA rebrand
 

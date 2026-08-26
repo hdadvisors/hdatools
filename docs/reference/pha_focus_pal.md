@@ -39,5 +39,5 @@ An unnamed character vector of length `n`.
 
 ``` r
 pha_focus_pal("Orange", n = 4)
-#> [1] "#f39152" "#e2e4e3" "#e2e4e3" "#e2e4e3"
+#> [1] "#f78f49" "#e2e4e3" "#e2e4e3" "#e2e4e3"
 ```

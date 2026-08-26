@@ -1,6 +1,6 @@
 # Changelog
 
-## hdatools (development version)
+## hdatools 0.6.0
 
 ### PHA rebrand
 
@@ -96,17 +96,11 @@ different colors and a different typeface after upgrading.
   sets `knitr::opts_chunk$set(fig.showtext = TRUE)` as a load-time
   global side effect.
 
-- Removed
-  [`hda_pal_discrete()`](https://rdrr.io/pkg/hdatools/man/hda_pal_discrete.html),
-  [`hfv_pal_discrete()`](https://rdrr.io/pkg/hdatools/man/hfv_pal_discrete.html),
-  [`pha_pal_discrete()`](https://rdrr.io/pkg/hdatools/man/pha_pal_discrete.html),
-  [`scale_color_gradient_hda()`](https://rdrr.io/pkg/hdatools/man/scale_color_gradient_hda.html),
-  [`scale_colour_gradient_hda()`](https://rdrr.io/pkg/hdatools/man/scale_color_gradient_hda.html),
-  [`scale_color_gradient_pha()`](https://rdrr.io/pkg/hdatools/man/scale_color_gradient_pha.html),
-  [`scale_colour_gradient_pha()`](https://rdrr.io/pkg/hdatools/man/scale_color_gradient_pha.html),
-  and
-  [`scale_fill_gradient_pha()`](https://rdrr.io/pkg/hdatools/man/scale_fill_gradient_pha.html)
-  — all soft-deprecated in 0.3.0. Use the discrete scales
+- Removed `hda_pal_discrete()`, `hfv_pal_discrete()`,
+  `pha_pal_discrete()`, `scale_color_gradient_hda()`,
+  `scale_colour_gradient_hda()`, `scale_color_gradient_pha()`,
+  `scale_colour_gradient_pha()`, and `scale_fill_gradient_pha()` — all
+  soft-deprecated in 0.3.0. Use the discrete scales
   ([`scale_color_hda()`](https://hdadvisors.github.io/hdatools/reference/scale_color_hda.md)
   /
   [`scale_fill_hda()`](https://hdadvisors.github.io/hdatools/reference/scale_fill_hda.md)
@@ -224,11 +218,9 @@ different colors and a different typeface after upgrading.
   map with a legend or direct labels (documented on every new scale’s
   help page).
 
-- [`scale_color_gradient_hda()`](https://rdrr.io/pkg/hdatools/man/scale_color_gradient_hda.html),
-  [`scale_color_gradient_pha()`](https://rdrr.io/pkg/hdatools/man/scale_color_gradient_pha.html),
-  and
-  [`scale_fill_gradient_pha()`](https://rdrr.io/pkg/hdatools/man/scale_fill_gradient_pha.html)’s
-  existing soft-deprecation notices now name their replacement
+- `scale_color_gradient_hda()`, `scale_color_gradient_pha()`, and
+  `scale_fill_gradient_pha()`’s existing soft-deprecation notices now
+  name their replacement
   (e.g. [`scale_color_hda_c()`](https://hdadvisors.github.io/hdatools/reference/scale_color_hda_c.md))
   via `lifecycle`’s `use_instead`, now that one exists.
 
@@ -264,21 +256,14 @@ different colors and a different typeface after upgrading.
   [`scale_colour_hda()`](https://hdadvisors.github.io/hdatools/reference/scale_color_hda.md),
   [`scale_colour_hfv()`](https://hdadvisors.github.io/hdatools/reference/scale_color_hfv.md),
   [`scale_colour_pha()`](https://hdadvisors.github.io/hdatools/reference/scale_color_pha.md),
-  [`scale_colour_gradient_hda()`](https://rdrr.io/pkg/hdatools/man/scale_color_gradient_hda.html),
-  and
-  [`scale_colour_gradient_pha()`](https://rdrr.io/pkg/hdatools/man/scale_color_gradient_pha.html)
-  — British- spelling aliases of the existing `scale_color_*()` exports,
+  `scale_colour_gradient_hda()`, and `scale_colour_gradient_pha()` —
+  British- spelling aliases of the existing `scale_color_*()` exports,
   for parity with ggplot2’s own `colour`/`color` aliasing. No change to
   any existing export.
 
-- [`hda_pal_discrete()`](https://rdrr.io/pkg/hdatools/man/hda_pal_discrete.html),
-  [`hfv_pal_discrete()`](https://rdrr.io/pkg/hdatools/man/hfv_pal_discrete.html),
-  [`pha_pal_discrete()`](https://rdrr.io/pkg/hdatools/man/pha_pal_discrete.html),
-  [`scale_color_gradient_hda()`](https://rdrr.io/pkg/hdatools/man/scale_color_gradient_hda.html),
-  [`scale_color_gradient_pha()`](https://rdrr.io/pkg/hdatools/man/scale_color_gradient_pha.html),
-  and
-  [`scale_fill_gradient_pha()`](https://rdrr.io/pkg/hdatools/man/scale_fill_gradient_pha.html)
-  are now soft-deprecated
+- `hda_pal_discrete()`, `hfv_pal_discrete()`, `pha_pal_discrete()`,
+  `scale_color_gradient_hda()`, `scale_color_gradient_pha()`, and
+  `scale_fill_gradient_pha()` are now soft-deprecated
   ([`lifecycle:: deprecate_soft()`](https://lifecycle.r-lib.org/reference/deprecate_soft.html));
   they keep working exactly as before, but calling them directly will
   surface a one-time deprecation notice. `lifecycle` moves to Imports.
@@ -306,11 +291,8 @@ different colors and a different typeface after upgrading.
   reference index now groups exports into **Themes**, **Palettes &
   scales**, **Helpers**, and **Analysis utils**. Fixed “depreciated” →
   “deprecated” wording in the `space` parameter docs for
-  [`scale_color_gradient_hda()`](https://rdrr.io/pkg/hdatools/man/scale_color_gradient_hda.html),
-  [`scale_color_gradient_pha()`](https://rdrr.io/pkg/hdatools/man/scale_color_gradient_pha.html),
-  and
-  [`scale_fill_gradient_pha()`](https://rdrr.io/pkg/hdatools/man/scale_fill_gradient_pha.html).
-  No behavior change.
+  `scale_color_gradient_hda()`, `scale_color_gradient_pha()`, and
+  `scale_fill_gradient_pha()`. No behavior change.
 
 - Internal cleanup only, no behavior changes: enabled Roxygen markdown
   so help pages and the pkgdown site render `code`/**bold** correctly,
@@ -441,12 +423,10 @@ different colors and a different typeface after upgrading.
 
 - Merges updates in `jtk` branch to original build-out in `main`.
 - Adds new color scale functions, including `scale_color_gradient_*`.
-- Adds new color palette
-  ([`pha_pal_discrete()`](https://rdrr.io/pkg/hdatools/man/pha_pal_discrete.html))
-  for the Partnership for Housing Affordability (PHA).
+- Adds new color palette (`pha_pal_discrete()`) for the Partnership for
+  Housing Affordability (PHA).
 - Theme helper functions now load more Google Font options and include
   [`flip_gridlines()`](https://hdadvisors.github.io/hdatools/reference/flip_gridlines.md)
   shortcut.
-- [`hda_pal_discrete()`](https://rdrr.io/pkg/hdatools/man/hda_pal_discrete.html)
-  now includes `repeat_pal` option to loop colors for data with more
-  than six variables.
+- `hda_pal_discrete()` now includes `repeat_pal` option to loop colors
+  for data with more than six variables.

@@ -28,9 +28,9 @@ derived from the first two and appear only at five and six categories.
 
 ``` r
 pha_colors
-#>      Green Light Blue     Orange        Red     Purple  Dark Blue 
-#>  "#5bab8e"  "#a6cccc"  "#f39152"  "#be451c"  "#a5add0"  "#2b6b9c" 
+#>      Orange        Teal        Blue        Navy Orange Deep  Teal Light 
+#>   "#f78f49"   "#42a18d"   "#3990b1"   "#0b242e"   "#a4560c"   "#a0d0c3" 
 pha_colors["Orange"]
 #>    Orange 
-#> "#f39152" 
+#> "#f78f49" 
 ```
